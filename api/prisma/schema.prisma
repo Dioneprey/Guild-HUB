@@ -13,6 +13,204 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model init {
-  id Int @id @default(autoincrement())
+// M = “Masculino” | F = “Feminino” | O = “outros"
+enum GenderOptions {
+  M
+  F
+  O
+}
+
+enum FriendshipStatus {
+  active
+  pending
+}
+
+// P = presencial | O = online | H = hibrído
+enum TabletopType {
+  P
+  O
+  H
+}
+
+model User {
+  id        String         @id @default(uuid()) @db.Char(50)
+  name      String?        @db.Char(100)
+  nickname  String?        @db.Char(50)
+  bio       String?        @db.Char(1000)
+  gender    GenderOptions?
+  email     String         @db.Char(100)
+  password  String?        @db.Char(100)
+  avatarUrl String?        @map("avatar_url") @db.Char(1000)
+  cityId    String?        @map("city_id") @db.Char(20)
+  countryId String?        @map("country_id") @db.Char(20)
+  birthdate DateTime?
+  createdAt DateTime       @default(now()) @map("created_at")
+  updatedAt DateTime?      @updatedAt @map("updated_at")
+
+  city    City?    @relation(fields: [cityId], references: [id])
+  country Country? @relation(fields: [countryId], references: [id])
+
+  requesters UserFriends[] @relation("requested_by")
+  recipients UserFriends[] @relation("received_by")
+
+  userChat     ChatUsers[]
+  message      ChatMessage[]
+  messageViews ChatMessageViews[]
+
+  tabletopUsers         TabletopUsers[]
+  tabletopEntryRequests TabletopEntryRequests[]
+
+  @@index([id, email])
+  @@map("users")
+}
+
+model UserFriends {
+  requesterId         String            @default(uuid()) @map("user_id") @db.Char(50)
+  recipientId         String            @default(uuid()) @map("friend_id") @db.Char(50)
+  status              FriendshipStatus?
+  friendshipStartDate DateTime?         @map("friendship_start_date")
+  createdAt           DateTime          @default(now()) @map("created_at")
+
+  requester User @relation("requested_by", fields: [requesterId], references: [id])
+  recipient User @relation("received_by", fields: [recipientId], references: [id])
+
+  @@id([requesterId, recipientId])
+  @@map("users_friends")
+}
+
+model Chat {
+  id        String   @id @default(uuid()) @db.VarChar(50)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  chatUsers ChatUsers[]
+  message   ChatMessage[]
+
+  @@map("chats")
+}
+
+model ChatUsers {
+  chatId    String   @map("chat_id") @db.VarChar(50)
+  userId    String   @map("user_id") @db.VarChar(50)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User  @relation(fields: [userId], references: [id])
+  chat Chat? @relation(fields: [chatId], references: [id])
+
+  @@id([chatId, userId])
+  @@index([userId])
+  @@map("users_chats")
+}
+
+model ChatMessage {
+  id        Int      @id @default(autoincrement())
+  chatId    String   @db.VarChar(50)
+  senderId  String   @map("sender_id") @db.VarChar(50)
+  content   String?
+  imageUrl  String?
+  createdAt DateTime @default(now())
+
+  chat       Chat @relation(fields: [chatId], references: [id])
+  senderUser User @relation(fields: [senderId], references: [id])
+
+  messageViews ChatMessageViews[]
+
+  @@index([senderId, content, chatId])
+  @@map("chat_messages")
+}
+
+model ChatMessageViews {
+  id        Int      @id @default(autoincrement())
+  messageId Int      @map("message_id")
+  viewerId  String   @map("viewer_id") @db.VarChar(50)
+  createdAt DateTime @default(now())
+
+  message ChatMessage @relation(fields: [messageId], references: [id])
+  viewer  User        @relation(fields: [viewerId], references: [id])
+
+  @@map("chat_messages_views")
+}
+
+model City {
+  id   String @id @db.VarChar(20)
+  uf   String @db.VarChar(2)
+  name String @db.VarChar(100)
+
+  state State @relation(fields: [uf], references: [uf])
+
+  user User[]
+
+  @@index([id, uf])
+  @@map("cities")
+}
+
+model Tabletop {
+  id           String        @id @default(uuid()) @db.VarChar(50)
+  ownerId      String        @map("owner_id") @db.Char(50)
+  name         String?       @db.Char(100)
+  description  String?       @db.Char(500)
+  playersLimit Int?          @map("players_limit") @db.SmallInt()
+  systemName   String?       @map("system_name") @db.Char(100)
+  avatarUrl    String?       @map("avatar_url") @db.Char(1000)
+  minAge       Int?          @map("min_age") @db.SmallInt()
+  type         TabletopType?
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime?     @updatedAt @map("updated_at")
+
+  tabletopUsers         TabletopUsers[]
+  tabletopEntryRequests TabletopEntryRequests[]
+
+  @@index([ownerId, playersLimit, systemName, type, minAge])
+  @@map("tabletop")
+}
+
+model TabletopUsers {
+  tabletopId String   @map("tabletop_id") @db.VarChar(50)
+  userId     String   @map("user_id") @db.VarChar(50)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  tabletop Tabletop @relation(fields: [tabletopId], references: [id])
+  user     User     @relation(fields: [userId], references: [id])
+
+  @@id([tabletopId, userId])
+  @@map("tabletop_users")
+}
+
+model TabletopEntryRequests {
+  tabletopId String   @map("tabletop_id") @db.VarChar(50)
+  userId     String   @map("user_id") @db.VarChar(50)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  tabletop Tabletop @relation(fields: [tabletopId], references: [id])
+  user     User     @relation(fields: [userId], references: [id])
+
+  @@id([tabletopId, userId])
+  @@map("tabletop_entry_requests")
+}
+
+model TabletopMapMarks {
+  tabletopId String  @id @map("tabletop_id") @db.VarChar(50)
+  cityId     String? @map("city_id") @db.Char(20)
+  latitude   Float?
+  longitude  Float?
+
+  @@map("tabletop_map_marks")
+}
+
+model State {
+  uf   String @id @db.VarChar(2)
+  name String @db.VarChar(100)
+
+  city City[]
+
+  @@index([uf])
+  @@map("states")
+}
+
+model Country {
+  id   String @id @db.VarChar(20)
+  name String @db.VarChar(100)
+
+  user User[]
+
+  @@map("countries")
 }

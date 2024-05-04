@@ -22,7 +22,7 @@ async function bootstrap() {
   const port = envService.get('PORT')
 
   await app.listen(port, '0.0.0.0').then(() => {
-    console.log(`[?] HTTP server running on port: ${port}!`)
+    console.log(`[Guild HUB] HTTP server running on port: ${port}!`)
   })
 }
 
