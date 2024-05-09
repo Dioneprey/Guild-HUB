@@ -67,8 +67,9 @@ model User {
 }
 
 model UserFriends {
-  requesterId         String            @default(uuid()) @map("requester_id") @db.Char(50)
-  receiverId          String            @default(uuid()) @map("receiver_id") @db.Char(50)
+  id                  String            @id @default(uuid()) @db.Char(50)
+  requesterId         String            @map("requester_id") @db.Char(50)
+  receiverId          String            @map("receiver_id") @db.Char(50)
   status              FriendshipStatus?
   friendshipStartDate DateTime?         @map("friendship_start_date")
   createdAt           DateTime          @default(now()) @map("created_at")
@@ -76,7 +77,7 @@ model UserFriends {
   requester User @relation("FriendshipRequester", fields: [requesterId], references: [id])
   receiver  User @relation("FriendshipReceiver", fields: [receiverId], references: [id])
 
-  @@id([requesterId, receiverId])
+  @@index([requesterId, receiverId])
   @@map("users_friends")
 }
 
