@@ -50,8 +50,10 @@ model User {
   city    City?    @relation(fields: [cityId], references: [id])
   country Country? @relation(fields: [countryId], references: [id])
 
-  requesters UserFriends[] @relation("requested_by")
-  recipients UserFriends[] @relation("received_by")
+  friendshipRequester UserFriends[]         @relation("FriendshipRequester")
+  friendshipReceiver  UserFriends[]         @relation("FriendshipReceiver")
+  requestsSent        UserFriendsRequests[] @relation("RequestsSent")
+  requestsReceived    UserFriendsRequests[] @relation("RequestsReceived")
 
   userChat     ChatUsers[]
   message      ChatMessage[]
@@ -65,17 +67,29 @@ model User {
 }
 
 model UserFriends {
-  requesterId         String            @default(uuid()) @map("user_id") @db.Char(50)
-  recipientId         String            @default(uuid()) @map("friend_id") @db.Char(50)
+  requesterId         String            @default(uuid()) @map("requester_id") @db.Char(50)
+  receiverId          String            @default(uuid()) @map("receiver_id") @db.Char(50)
   status              FriendshipStatus?
   friendshipStartDate DateTime?         @map("friendship_start_date")
   createdAt           DateTime          @default(now()) @map("created_at")
 
-  requester User @relation("requested_by", fields: [requesterId], references: [id])
-  recipient User @relation("received_by", fields: [recipientId], references: [id])
+  requester User @relation("FriendshipRequester", fields: [requesterId], references: [id])
+  receiver  User @relation("FriendshipReceiver", fields: [receiverId], references: [id])
 
-  @@id([requesterId, recipientId])
+  @@id([requesterId, receiverId])
   @@map("users_friends")
+}
+
+model UserFriendsRequests {
+  requesterId String   @default(uuid()) @map("requester_id") @db.Char(50)
+  receiverId  String   @default(uuid()) @map("receiver_id") @db.Char(50)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  requester User @relation("RequestsSent", fields: [requesterId], references: [id])
+  receiver  User @relation("RequestsReceived", fields: [receiverId], references: [id])
+
+  @@id([requesterId, receiverId])
+  @@map("users_friends_requests")
 }
 
 model Chat {
