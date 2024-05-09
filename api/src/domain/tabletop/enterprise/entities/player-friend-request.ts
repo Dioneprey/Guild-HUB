@@ -2,15 +2,14 @@ import { Entity } from 'src/core/entities/entity'
 import { UniqueEntityID } from 'src/core/entities/unique-entity-id'
 import { Optional } from 'src/core/types/optional'
 
-export interface PlayerFriendProps {
+export interface PlayerFriendRequestProps {
   requesterId: UniqueEntityID
   receiverId: UniqueEntityID
-  friendshipStartDate?: Date | null
   createdAt: Date
   updatedAt?: Date | null
 }
 
-export class PlayerFriend extends Entity<PlayerFriendProps> {
+export class PlayerFriendRequest extends Entity<PlayerFriendRequestProps> {
   get requesterId() {
     return this.props.requesterId
   }
@@ -29,15 +28,6 @@ export class PlayerFriend extends Entity<PlayerFriendProps> {
     this.touch()
   }
 
-  get friendshipStartDate() {
-    return this.props.friendshipStartDate
-  }
-
-  set friendshipStartDate(friendshipStartDate: Date | null | undefined) {
-    this.props.friendshipStartDate = friendshipStartDate
-    this.touch()
-  }
-
   get createdAt() {
     return this.props.createdAt
   }
@@ -51,14 +41,14 @@ export class PlayerFriend extends Entity<PlayerFriendProps> {
   }
 
   static create(
-    props: Optional<PlayerFriendProps, 'createdAt'>,
+    props: Optional<PlayerFriendRequestProps, 'createdAt'>,
     id?: UniqueEntityID,
   ) {
-    const playerFriend = new PlayerFriend(
+    const playerFriendRequest = new PlayerFriendRequest(
       { ...props, createdAt: props.createdAt ?? new Date() },
       id,
     )
 
-    return playerFriend
+    return playerFriendRequest
   }
 }

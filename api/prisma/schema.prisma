@@ -20,11 +20,6 @@ enum GenderOptions {
   O
 }
 
-enum FriendshipStatus {
-  active
-  pending
-}
-
 // P = presencial | O = online | H = hibrído
 enum TabletopType {
   P
@@ -67,12 +62,12 @@ model User {
 }
 
 model UserFriends {
-  id                  String            @id @default(uuid()) @db.Char(50)
-  requesterId         String            @map("requester_id") @db.Char(50)
-  receiverId          String            @map("receiver_id") @db.Char(50)
-  status              FriendshipStatus?
-  friendshipStartDate DateTime?         @map("friendship_start_date")
-  createdAt           DateTime          @default(now()) @map("created_at")
+  id                  String    @id @default(uuid()) @db.Char(50)
+  requesterId         String    @map("requester_id") @db.Char(50)
+  receiverId          String    @map("receiver_id") @db.Char(50)
+  friendshipStartDate DateTime? @map("friendship_start_date")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime? @updatedAt @map("updated_at")
 
   requester User @relation("FriendshipRequester", fields: [requesterId], references: [id])
   receiver  User @relation("FriendshipReceiver", fields: [receiverId], references: [id])
@@ -82,14 +77,16 @@ model UserFriends {
 }
 
 model UserFriendsRequests {
-  requesterId String   @default(uuid()) @map("requester_id") @db.Char(50)
-  receiverId  String   @default(uuid()) @map("receiver_id") @db.Char(50)
-  createdAt   DateTime @default(now()) @map("created_at")
+  id          String    @id @default(uuid()) @db.Char(50)
+  requesterId String    @map("requester_id") @db.Char(50)
+  receiverId  String    @map("receiver_id") @db.Char(50)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
 
   requester User @relation("RequestsSent", fields: [requesterId], references: [id])
   receiver  User @relation("RequestsReceived", fields: [receiverId], references: [id])
 
-  @@id([requesterId, receiverId])
+  @@index([requesterId, receiverId])
   @@map("users_friends_requests")
 }
 
@@ -145,19 +142,6 @@ model ChatMessageViews {
   @@map("chat_messages_views")
 }
 
-model City {
-  id   String @id @db.VarChar(20)
-  uf   String @db.VarChar(2)
-  name String @db.VarChar(100)
-
-  state State @relation(fields: [uf], references: [uf])
-
-  user User[]
-
-  @@index([id, uf])
-  @@map("cities")
-}
-
 model Tabletop {
   id           String        @id @default(uuid()) @db.VarChar(50)
   ownerId      String        @map("owner_id") @db.Char(50)
@@ -173,6 +157,8 @@ model Tabletop {
 
   tabletopUsers         TabletopUsers[]
   tabletopEntryRequests TabletopEntryRequests[]
+
+  tabletopMapMarks TabletopMapMarks[]
 
   @@index([ownerId, playersLimit, systemName, type, minAge])
   @@map("tabletop")
@@ -203,16 +189,39 @@ model TabletopEntryRequests {
 }
 
 model TabletopMapMarks {
-  tabletopId String  @id @map("tabletop_id") @db.VarChar(50)
+  id         String  @id @default(uuid()) @db.VarChar(50)
+  tabletopId String  @map("tabletop_id") @db.VarChar(50)
   cityId     String? @map("city_id") @db.Char(20)
+  countryId  String? @map("country_id") @db.Char(20)
   latitude   Float?
   longitude  Float?
+
+  city     City?    @relation(fields: [cityId], references: [id])
+  country  Country? @relation(fields: [countryId], references: [id])
+  tabletop Tabletop @relation(fields: [tabletopId], references: [id])
 
   @@map("tabletop_map_marks")
 }
 
+model City {
+  id        String @id @db.VarChar(20)
+  uf        String @db.VarChar(2)
+  name      String @db.VarChar(100)
+  countryId String @db.VarChar(20)
+
+  state   State   @relation(fields: [uf], references: [uf])
+  country Country @relation(fields: [countryId], references: [id])
+
+  user             User[]
+  tabletopMapMarks TabletopMapMarks[]
+
+  @@index([id, uf])
+  @@map("cities")
+}
+
 model State {
-  uf   String @id @db.VarChar(2)
+  id   String @id @db.VarChar(20)
+  uf   String @unique @db.VarChar(2)
   name String @db.VarChar(100)
 
   city City[]
@@ -225,7 +234,9 @@ model Country {
   id   String @id @db.VarChar(20)
   name String @db.VarChar(100)
 
-  user User[]
+  user             User[]
+  city             City[]
+  tabletopMapMarks TabletopMapMarks[]
 
   @@map("countries")
 }

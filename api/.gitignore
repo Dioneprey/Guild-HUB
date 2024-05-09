@@ -41,6 +41,7 @@ lerna-debug.log*
 
 # Lock \
 pnpm-lock.yaml
+package-lock.json
 
 # Docker volume
 
