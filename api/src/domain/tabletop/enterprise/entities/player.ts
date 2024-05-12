@@ -9,17 +9,26 @@ export enum GenderOptions {
   OTHER = 'O',
 }
 
+// A = admin | U = user
+export enum RoleOptions {
+  admin = 'A',
+  user = 'U',
+}
+
 export interface PlayerProps {
   name?: string | null
   nickname?: string | null
   bio?: string | null
   gender?: GenderOptions | null
   email: string
-  password?: string | null
+  password: string
   avatarUrl?: string | null
   cityId?: string | null
   countryId?: string | null
   birthdate?: Date | null
+  registrationCompletedAt?: Date | null
+  registrationValidatedAt?: Date | null
+  role: RoleOptions
   createdAt: Date
   updatedAt?: Date | null
 }
@@ -74,7 +83,7 @@ export class Player extends Entity<PlayerProps> {
     return this.props.password
   }
 
-  set password(password: string | undefined | null) {
+  set password(password: string) {
     this.props.password = password
     this.touch()
   }
@@ -115,6 +124,37 @@ export class Player extends Entity<PlayerProps> {
     this.touch()
   }
 
+  get registrationCompletedAt() {
+    return this.props.registrationCompletedAt
+  }
+
+  set registrationCompletedAt(
+    registrationCompletedAt: Date | undefined | null,
+  ) {
+    this.props.registrationCompletedAt = registrationCompletedAt
+    this.touch()
+  }
+
+  get registrationValidatedAt() {
+    return this.props.registrationValidatedAt
+  }
+
+  set registrationValidatedAt(
+    registrationValidatedAt: Date | undefined | null,
+  ) {
+    this.props.registrationValidatedAt = registrationValidatedAt
+    this.touch()
+  }
+
+  get role() {
+    return this.props.role
+  }
+
+  set role(role: RoleOptions) {
+    this.props.role = role
+    this.touch()
+  }
+
   get createdAt() {
     return this.props.createdAt
   }
@@ -128,11 +168,15 @@ export class Player extends Entity<PlayerProps> {
   }
 
   static create(
-    props: Optional<PlayerProps, 'createdAt'>,
+    props: Optional<PlayerProps, 'createdAt' | 'role'>,
     id?: UniqueEntityID,
   ) {
     const player = new Player(
-      { ...props, createdAt: props.createdAt ?? new Date() },
+      {
+        ...props,
+        createdAt: props.createdAt ?? new Date(),
+        role: props.role ?? RoleOptions.user,
+      },
       id,
     )
 

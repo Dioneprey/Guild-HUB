@@ -20,6 +20,12 @@ enum GenderOptions {
   O
 }
 
+// A = admin | U = user
+enum RoleOptions {
+  A
+  U
+}
+
 // P = presencial | O = online | H = hibrído
 enum TabletopType {
   P
@@ -28,19 +34,22 @@ enum TabletopType {
 }
 
 model User {
-  id        String         @id @default(uuid()) @db.Char(50)
-  name      String?        @db.Char(100)
-  nickname  String?        @db.Char(50)
-  bio       String?        @db.Char(1000)
-  gender    GenderOptions?
-  email     String         @db.Char(100)
-  password  String?        @db.Char(100)
-  avatarUrl String?        @map("avatar_url") @db.Char(1000)
-  cityId    String?        @map("city_id") @db.Char(20)
-  countryId String?        @map("country_id") @db.Char(20)
-  birthdate DateTime?
-  createdAt DateTime       @default(now()) @map("created_at")
-  updatedAt DateTime?      @updatedAt @map("updated_at")
+  id                      String         @id @default(uuid()) @db.VarChar(50)
+  name                    String?        @db.VarChar(100)
+  nickname                String?        @db.VarChar(50)
+  bio                     String?        @db.VarChar(1000)
+  gender                  GenderOptions?
+  email                   String         @db.VarChar(100)
+  password                String         @db.VarChar(100)
+  avatarUrl               String?        @map("avatar_url") @db.VarChar(1000)
+  cityId                  String?        @map("city_id") @db.VarChar(20)
+  countryId               String?        @map("country_id") @db.VarChar(20)
+  birthdate               DateTime?
+  registrationValidatedAt DateTime?      @map("registration_validated_at")
+  registrationCompletedAt DateTime?      @map("registration_completed_at")
+  role                    RoleOptions?
+  createdAt               DateTime       @default(now()) @map("created_at")
+  updatedAt               DateTime?      @updatedAt @map("updated_at")
 
   city    City?    @relation(fields: [cityId], references: [id])
   country Country? @relation(fields: [countryId], references: [id])
@@ -62,9 +71,9 @@ model User {
 }
 
 model UserFriends {
-  id                  String    @id @default(uuid()) @db.Char(50)
-  requesterId         String    @map("requester_id") @db.Char(50)
-  receiverId          String    @map("receiver_id") @db.Char(50)
+  id                  String    @id @default(uuid()) @db.VarChar(50)
+  requesterId         String    @map("requester_id") @db.VarChar(50)
+  receiverId          String    @map("receiver_id") @db.VarChar(50)
   friendshipStartDate DateTime? @map("friendship_start_date")
   createdAt           DateTime  @default(now()) @map("created_at")
   updatedAt           DateTime? @updatedAt @map("updated_at")
@@ -77,9 +86,9 @@ model UserFriends {
 }
 
 model UserFriendsRequests {
-  id          String    @id @default(uuid()) @db.Char(50)
-  requesterId String    @map("requester_id") @db.Char(50)
-  receiverId  String    @map("receiver_id") @db.Char(50)
+  id          String    @id @default(uuid()) @db.VarChar(50)
+  requesterId String    @map("requester_id") @db.VarChar(50)
+  receiverId  String    @map("receiver_id") @db.VarChar(50)
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime? @updatedAt @map("updated_at")
 
@@ -144,12 +153,12 @@ model ChatMessageViews {
 
 model Tabletop {
   id           String        @id @default(uuid()) @db.VarChar(50)
-  ownerId      String        @map("owner_id") @db.Char(50)
-  name         String?       @db.Char(100)
-  description  String?       @db.Char(500)
+  ownerId      String        @map("owner_id") @db.VarChar(50)
+  name         String?       @db.VarChar(100)
+  description  String?       @db.VarChar(500)
   playersLimit Int?          @map("players_limit") @db.SmallInt()
-  systemName   String?       @map("system_name") @db.Char(100)
-  avatarUrl    String?       @map("avatar_url") @db.Char(1000)
+  systemName   String?       @map("system_name") @db.VarChar(100)
+  avatarUrl    String?       @map("avatar_url") @db.VarChar(1000)
   minAge       Int?          @map("min_age") @db.SmallInt()
   type         TabletopType?
   createdAt    DateTime      @default(now()) @map("created_at")
@@ -191,8 +200,8 @@ model TabletopEntryRequests {
 model TabletopMapMarks {
   id         String  @id @default(uuid()) @db.VarChar(50)
   tabletopId String  @map("tabletop_id") @db.VarChar(50)
-  cityId     String? @map("city_id") @db.Char(20)
-  countryId  String? @map("country_id") @db.Char(20)
+  cityId     String? @map("city_id") @db.VarChar(20)
+  countryId  String? @map("country_id") @db.VarChar(20)
   latitude   Float?
   longitude  Float?
 
