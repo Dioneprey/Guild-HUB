@@ -26,6 +26,7 @@ export interface PlayerProps {
   cityId?: string | null
   countryId?: string | null
   birthdate?: Date | null
+  registrationValidateCode?: string | null
   registrationCompletedAt?: Date | null
   registrationValidatedAt?: Date | null
   role: RoleOptions
@@ -121,6 +122,17 @@ export class Player extends Entity<PlayerProps> {
 
   set birthdate(birthdate: Date | undefined | null) {
     this.props.birthdate = birthdate
+    this.touch()
+  }
+
+  get registrationValidateCode() {
+    return this.props.registrationValidateCode
+  }
+
+  set registrationValidateCode(
+    registrationValidateCode: string | undefined | null,
+  ) {
+    this.props.registrationValidateCode = registrationValidateCode
     this.touch()
   }
 

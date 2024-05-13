@@ -35,17 +35,21 @@ export class PrismaPlayerMapper {
     return {
       id: player.id.toString(),
       name: player.name,
-      email: player.email,
-      password: player.password,
       nickname: player.nickname,
       bio: player.bio,
       gender,
+      email: player.email,
+      password: player.password,
       avatarUrl: player.avatarUrl,
       cityId: player.cityId,
       countryId: player.countryId,
       birthdate: player.birthdate,
+      registrationValidateCode: player.registrationValidateCode,
       registrationCompletedAt: player.registrationCompletedAt,
+      registrationValidatedAt: player.registrationValidatedAt,
       role,
+      createdAt: player.createdAt,
+      updatedAt: player.updatedAt,
     }
   }
 }
