@@ -5,7 +5,13 @@ import { EnvService } from 'src/infra/env/env.service'
 import { MailModule } from 'src/infra/mail/mail.module'
 import { HttpModule } from 'src/infra/http/http.module'
 import { DatabaseModule } from 'src/infra/database/database.module'
-import { HandleInvalidateCodesProcessor } from './processor/invalidate-codes.processor'
+import {
+  InvalidateCodesProcessor,
+  INVALIDATE_CODES_QUEUE,
+} from './processor/invalidate-codes.processor'
+import { BullBoardModule } from '@bull-board/nestjs'
+import { FastifyAdapter } from '@bull-board/fastify'
+import { BullAdapter } from '@bull-board/api/bullAdapter'
 
 @Module({
   imports: [
@@ -23,10 +29,18 @@ import { HandleInvalidateCodesProcessor } from './processor/invalidate-codes.pro
       }),
     }),
     BullModule.registerQueue({
-      name: 'invalidate-codes-processor',
+      name: INVALIDATE_CODES_QUEUE,
+    }),
+    BullBoardModule.forRoot({
+      route: '/queues',
+      adapter: FastifyAdapter,
+    }),
+    BullBoardModule.forFeature({
+      name: INVALIDATE_CODES_QUEUE,
+      adapter: BullAdapter,
     }),
   ],
-  providers: [HandleInvalidateCodesProcessor],
+  providers: [InvalidateCodesProcessor],
   exports: [BullModule],
 })
 export class BullConfigModule {}

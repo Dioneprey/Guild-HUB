@@ -19,6 +19,9 @@
     "test:e2e:watch": "vitest --config ./vitest.config.e2e.ts"
   },
   "dependencies": {
+    "@bull-board/api": "^5.17.1",
+    "@bull-board/fastify": "^5.17.1",
+    "@bull-board/nestjs": "^5.17.1",
     "@nestjs-modules/mailer": "^2.0.2",
     "@nestjs/bull": "^10.1.1",
     "@nestjs/common": "^10.0.0",

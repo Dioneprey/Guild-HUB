@@ -8,6 +8,7 @@ import { randomUUID } from 'crypto'
 import { Encrypter } from '../../cryptography/encrypter'
 import { InjectQueue } from '@nestjs/bull'
 import { Queue } from 'bull'
+import { INVALIDATE_CODES_QUEUE } from 'src/infra/schedules/bull/processor/invalidate-codes.processor'
 
 interface SendAccountValidationCodeUseCaseRequest {
   email: string
@@ -24,8 +25,8 @@ export class SendAccountValidationCodeUseCase {
     private playerRepository: PlayerRepository,
     private sendEmail: SendEmail,
     private encrypter: Encrypter,
-    @InjectQueue('invalidate-codes-processor')
-    private handleInvalidateCodesProcessor: Queue,
+    @InjectQueue(INVALIDATE_CODES_QUEUE)
+    private invalidateCodesProcessor: Queue,
   ) {}
 
   async execute({
@@ -48,26 +49,36 @@ export class SendAccountValidationCodeUseCase {
     })
 
     if (env.NODE_ENV !== 'production') {
-      console.log(registrationValidateCodeToken)
+      console.log({
+        recipientEmail: playerExists.email,
+        subject: 'Finalize seu cadastro - GuildHUB',
+        message: `${env.FRONT_END_URL}/verify-account?token=${registrationValidateCodeToken}`,
+      })
     } else {
       this.sendEmail
         .send({
           recipientEmail: playerExists.email,
-          subject: 'Seu Link Exclusivo para Entrar no Prazer Oculto',
+          subject: 'Finalize seu cadastro - GuildHUB',
           message: `${env.FRONT_END_URL}/verify-account?token=${registrationValidateCodeToken}`,
         })
         .then(() => console.log('Email enviado'))
         .catch(() => console.log('Erro no envio de email'))
     }
 
-    this.handleInvalidateCodesProcessor
-      .add(
-        'invalidate-registration-validate-code',
-        playerExists.id.toString(),
-        {
-          delay: 1000 * 60 * 5, // 5 minutos
-        },
-      )
+    const jobId = `${playerExists.id.toString()}.invalidate-registration-code`
+
+    this.invalidateCodesProcessor
+      .removeJobs(jobId)
+      .then(() => {
+        this.invalidateCodesProcessor
+          .add(`invalidate-registration-code`, playerExists.id.toString(), {
+            delay: 1000 * 60 * 5, // 5 minutos
+            jobId,
+          })
+          .catch((err) =>
+            console.log('Redis connection error, more details: ', err),
+          )
+      })
       .catch((err) =>
         console.log('Redis connection error, more details: ', err),
       )
