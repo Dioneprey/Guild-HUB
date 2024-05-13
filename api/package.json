@@ -19,6 +19,11 @@
     "test:e2e:watch": "vitest --config ./vitest.config.e2e.ts"
   },
   "dependencies": {
+    "@bull-board/api": "^5.17.1",
+    "@bull-board/fastify": "^5.17.1",
+    "@bull-board/nestjs": "^5.17.1",
+    "@nestjs-modules/mailer": "^2.0.2",
+    "@nestjs/bull": "^10.1.1",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.2",
     "@nestjs/core": "^10.0.0",
@@ -29,6 +34,7 @@
     "@nestjs/platform-fastify": "^10.3.8",
     "@prisma/client": "^5.13.0",
     "bcryptjs": "^2.4.3",
+    "bull": "^4.12.3",
     "dotenv": "^16.4.5",
     "mongoose": "^8.3.3",
     "passport-jwt": "^4.0.1",

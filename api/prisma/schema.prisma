@@ -34,22 +34,23 @@ enum TabletopType {
 }
 
 model User {
-  id                      String         @id @default(uuid()) @db.VarChar(50)
-  name                    String?        @db.VarChar(100)
-  nickname                String?        @db.VarChar(50)
-  bio                     String?        @db.VarChar(1000)
-  gender                  GenderOptions?
-  email                   String         @db.VarChar(100)
-  password                String         @db.VarChar(100)
-  avatarUrl               String?        @map("avatar_url") @db.VarChar(1000)
-  cityId                  String?        @map("city_id") @db.VarChar(20)
-  countryId               String?        @map("country_id") @db.VarChar(20)
-  birthdate               DateTime?
-  registrationValidatedAt DateTime?      @map("registration_validated_at")
-  registrationCompletedAt DateTime?      @map("registration_completed_at")
-  role                    RoleOptions?
-  createdAt               DateTime       @default(now()) @map("created_at")
-  updatedAt               DateTime?      @updatedAt @map("updated_at")
+  id                       String         @id @default(uuid()) @db.VarChar(50)
+  name                     String?        @db.VarChar(100)
+  nickname                 String?        @db.VarChar(50)
+  bio                      String?        @db.VarChar(1000)
+  gender                   GenderOptions?
+  email                    String         @db.VarChar(100)
+  password                 String         @db.VarChar(100)
+  avatarUrl                String?        @map("avatar_url") @db.VarChar(1000)
+  cityId                   String?        @map("city_id") @db.VarChar(20)
+  countryId                String?        @map("country_id") @db.VarChar(20)
+  birthdate                DateTime?
+  registrationValidateCode String?        @map("registration_validate_code")
+  registrationValidatedAt  DateTime?      @map("registration_validated_at")
+  registrationCompletedAt  DateTime?      @map("registration_completed_at")
+  role                     RoleOptions?
+  createdAt                DateTime       @default(now()) @map("created_at")
+  updatedAt                DateTime?      @updatedAt @map("updated_at")
 
   city    City?    @relation(fields: [cityId], references: [id])
   country Country? @relation(fields: [countryId], references: [id])
