@@ -14,6 +14,10 @@ import { ValidateAccountController } from './controllers/accounts/validate-accou
 import { ValidateAccountUseCase } from 'src/domain/tabletop/application/use-cases/accounts/validate-account'
 import { MailModule } from '../mail/mail.module'
 import { BullConfigModule } from '../schedules/bull/bull.module'
+import { RegisterTabletopController } from './controllers/tabletop/register-tabletop.controller'
+import { RegisterTabletopLocationController } from './controllers/tabletop/register-tabletop-location.controller'
+import { RegisterTabletopUseCase } from 'src/domain/tabletop/application/use-cases/tabletop/register-tabletop'
+import { RegisterTabletopLocationUseCase } from 'src/domain/tabletop/application/use-cases/tabletop/register-tabletop-location'
 
 @Module({
   imports: [
@@ -24,18 +28,36 @@ import { BullConfigModule } from '../schedules/bull/bull.module'
     MailModule,
   ],
   controllers: [
+    // Accounts
     RegisterAccountController,
-    UpdatePlayerController,
-    CredentialsAuthenticateController,
     SendAccountValidationCodeController,
     ValidateAccountController,
+
+    // Sessions
+    CredentialsAuthenticateController,
+
+    // Player
+    UpdatePlayerController,
+
+    // Tabletop
+    RegisterTabletopController,
+    RegisterTabletopLocationController,
   ],
   providers: [
+    // Accounts
     RegisterAccountUseCase,
-    UpdatePlayerUseCase,
-    CredentialsAuthenticateUseCase,
     SendAccountValidationCodeUseCase,
     ValidateAccountUseCase,
+
+    // Sessions
+    CredentialsAuthenticateUseCase,
+
+    // Player
+    UpdatePlayerUseCase,
+
+    // Tabletop
+    RegisterTabletopUseCase,
+    RegisterTabletopLocationUseCase,
   ],
 })
 export class HttpModule {}

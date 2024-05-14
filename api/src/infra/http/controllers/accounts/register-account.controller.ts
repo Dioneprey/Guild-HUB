@@ -12,26 +12,26 @@ import { ZodValidationPipe } from '../../pipes/zod-validation.pipe'
 import { RegisterAccountUseCase } from 'src/domain/tabletop/application/use-cases/accounts/register-account'
 import { PlayerAlreadyExistsError } from 'src/domain/tabletop/application/use-cases/@errors/player-already-exists.error'
 
-const RegisterAccountBodySchema = z.object({
+const registerAccountBodySchema = z.object({
   name: z.string(),
   email: z.string().email(),
   password: z.string().min(3),
 })
 
-type RegisterAccountBodySchema = z.infer<typeof RegisterAccountBodySchema>
-const bodyValidationPipe = new ZodValidationPipe(RegisterAccountBodySchema)
+type RegisterAccountBodySchema = z.infer<typeof registerAccountBodySchema>
+const bodyValidationPipe = new ZodValidationPipe(registerAccountBodySchema)
 
 @Public()
 @Controller('/accounts')
 export class RegisterAccountController {
-  constructor(private readonly RegisterAccount: RegisterAccountUseCase) {}
+  constructor(private readonly registerAccount: RegisterAccountUseCase) {}
 
   @Post()
   @HttpCode(201)
   async handle(@Body(bodyValidationPipe) body: RegisterAccountBodySchema) {
-    const { name, email, password } = RegisterAccountBodySchema.parse(body)
+    const { name, email, password } = registerAccountBodySchema.parse(body)
 
-    const result = await this.RegisterAccount.execute({
+    const result = await this.registerAccount.execute({
       name,
       email,
       password,

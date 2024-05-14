@@ -64,8 +64,9 @@ model User {
   message      ChatMessage[]
   messageViews ChatMessageViews[]
 
-  tabletopUsers         TabletopUsers[]
-  tabletopEntryRequests TabletopEntryRequests[]
+  tabletopUsers                      TabletopUsers[]
+  tabletopEntryRequests              TabletopEntryRequests[]
+  tabletopSchedulePlayerAvailability TabletopSchedulePlayerAvailability[]
 
   @@index([id, email])
   @@map("users")
@@ -168,7 +169,8 @@ model Tabletop {
   tabletopUsers         TabletopUsers[]
   tabletopEntryRequests TabletopEntryRequests[]
 
-  tabletopMapMarks TabletopMapMarks[]
+  tabletopLocation TabletopLocation[]
+  tabletopSchedule TabletopSchedule[]
 
   @@index([ownerId, playersLimit, systemName, type, minAge])
   @@map("tabletop")
@@ -186,6 +188,38 @@ model TabletopUsers {
   @@map("tabletop_users")
 }
 
+model TabletopSchedule {
+  id               String    @id @default(uuid()) @db.VarChar(50)
+  tabletopId       String    @map("tabletop_id") @db.VarChar(50)
+  dayOfWeek        Int?      @map("day_of_week")
+  startTimeMinutes Int?      @map("start_time_minutes")
+  endTimeMinutes   Int?      @map("end_time_minutes")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime? @updatedAt @map("updated_at")
+
+  tabletop                           Tabletop                             @relation(fields: [tabletopId], references: [id])
+  tabletopSchedulePlayerAvailability TabletopSchedulePlayerAvailability[]
+
+  @@index([tabletopId, dayOfWeek])
+  @@map("tabletop_schedule")
+}
+
+model TabletopSchedulePlayerAvailability {
+  id           Int       @id @default(autoincrement())
+  scheduleId   String    @map("schedule_id") @db.VarChar(50)
+  userId       String    @map("user_id")
+  availability Boolean?
+  observation  String?   @db.VarChar(500)
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime? @updatedAt @map("updated_at")
+
+  tabletopSchedule TabletopSchedule @relation(fields: [scheduleId], references: [id])
+  user             User             @relation(fields: [userId], references: [id])
+
+  @@index([scheduleId, userId])
+  @@map("tabletop_schedule_player_availability")
+}
+
 model TabletopEntryRequests {
   tabletopId String   @map("tabletop_id") @db.VarChar(50)
   userId     String   @map("user_id") @db.VarChar(50)
@@ -198,19 +232,23 @@ model TabletopEntryRequests {
   @@map("tabletop_entry_requests")
 }
 
-model TabletopMapMarks {
-  id         String  @id @default(uuid()) @db.VarChar(50)
-  tabletopId String  @map("tabletop_id") @db.VarChar(50)
-  cityId     String? @map("city_id") @db.VarChar(20)
-  countryId  String? @map("country_id") @db.VarChar(20)
-  latitude   Float?
-  longitude  Float?
+model TabletopLocation {
+  id           String  @id @default(uuid()) @db.VarChar(50)
+  tabletopId   String  @map("tabletop_id") @db.VarChar(50)
+  postalCode   String? @map("postal_code") @db.VarChar(20)
+  cityId       String? @map("city_id") @db.VarChar(20)
+  countryId    String? @map("country_id") @db.VarChar(20)
+  streetName   String? @map("street_name") @db.VarChar(20)
+  streetNumber String? @map("street_number") @db.VarChar(10)
+  neighborhood String? @db.VarChar(200)
+  latitude     Float?
+  longitude    Float?
 
   city     City?    @relation(fields: [cityId], references: [id])
   country  Country? @relation(fields: [countryId], references: [id])
   tabletop Tabletop @relation(fields: [tabletopId], references: [id])
 
-  @@map("tabletop_map_marks")
+  @@map("tabletop_location")
 }
 
 model City {
@@ -223,7 +261,7 @@ model City {
   country Country @relation(fields: [countryId], references: [id])
 
   user             User[]
-  tabletopMapMarks TabletopMapMarks[]
+  tabletopLocation TabletopLocation[]
 
   @@index([id, uf])
   @@map("cities")
@@ -246,7 +284,7 @@ model Country {
 
   user             User[]
   city             City[]
-  tabletopMapMarks TabletopMapMarks[]
+  tabletopLocation TabletopLocation[]
 
   @@map("countries")
 }

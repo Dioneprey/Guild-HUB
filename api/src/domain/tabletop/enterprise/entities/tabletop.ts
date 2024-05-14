@@ -1,7 +1,8 @@
 import { Entity } from 'src/core/entities/entity'
 import { UniqueEntityID } from 'src/core/entities/unique-entity-id'
 import { TabletopPlayer } from './tabletop-player'
-import { TabletopMapMark } from './tabletop-map-marks'
+import { TabletopLocation } from './tabletop-location'
+import { Optional } from 'src/core/types/optional'
 
 export enum TabletopType {
   offline = 'P',
@@ -18,9 +19,9 @@ export interface TabletopProps {
   avatarUrl?: string | null
   minAge?: number | null
   type?: TabletopType | null
+  tabletopPlayers?: TabletopPlayer[] | null
+  tabletopLocations?: TabletopLocation[] | null
   createdAt: Date
-  tabletopPlayers: TabletopPlayer[]
-  tabletopMapMarks: TabletopMapMark[]
   updatedAt?: Date | null
 }
 
@@ -101,17 +102,19 @@ export class Tabletop extends Entity<TabletopProps> {
     return this.props.tabletopPlayers
   }
 
-  set tabletopPlayers(tabletopPlayers: TabletopPlayer[]) {
+  set tabletopPlayers(tabletopPlayers: TabletopPlayer[] | null | undefined) {
     this.props.tabletopPlayers = tabletopPlayers
     this.touch()
   }
 
-  get tabletopMapMarks() {
-    return this.props.tabletopMapMarks
+  get tabletopLocations() {
+    return this.props.tabletopLocations
   }
 
-  set tabletopMapMarks(tabletopMapMarks: TabletopMapMark[]) {
-    this.props.tabletopMapMarks = tabletopMapMarks
+  set tabletopLocations(
+    tabletopLocations: TabletopLocation[] | null | undefined,
+  ) {
+    this.props.tabletopLocations = tabletopLocations
     this.touch()
   }
 
@@ -127,8 +130,17 @@ export class Tabletop extends Entity<TabletopProps> {
     this.props.updatedAt = new Date()
   }
 
-  static create(props: TabletopProps, id?: UniqueEntityID) {
-    const tabletop = new Tabletop(props, id)
+  static create(
+    props: Optional<TabletopProps, 'createdAt'>,
+    id?: UniqueEntityID,
+  ) {
+    const tabletop = new Tabletop(
+      {
+        ...props,
+        createdAt: props.createdAt ?? new Date(),
+      },
+      id,
+    )
 
     return tabletop
   }
