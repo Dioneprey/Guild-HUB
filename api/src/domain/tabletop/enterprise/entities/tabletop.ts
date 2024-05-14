@@ -18,9 +18,9 @@ export interface TabletopProps {
   avatarUrl?: string | null
   minAge?: number | null
   type?: TabletopType | null
-  createdAt: Date
   tabletopPlayers: TabletopPlayer[]
   tabletopMapMarks: TabletopMapMark[]
+  createdAt: Date
   updatedAt?: Date | null
 }
 
