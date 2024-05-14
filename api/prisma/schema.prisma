@@ -169,7 +169,7 @@ model Tabletop {
   tabletopUsers         TabletopUsers[]
   tabletopEntryRequests TabletopEntryRequests[]
 
-  tabletopMapMarks TabletopMapMarks[]
+  tabletopLocation TabletopLocation[]
   tabletopSchedule TabletopSchedule[]
 
   @@index([ownerId, playersLimit, systemName, type, minAge])
@@ -232,19 +232,23 @@ model TabletopEntryRequests {
   @@map("tabletop_entry_requests")
 }
 
-model TabletopMapMarks {
-  id         String  @id @default(uuid()) @db.VarChar(50)
-  tabletopId String  @map("tabletop_id") @db.VarChar(50)
-  cityId     String? @map("city_id") @db.VarChar(20)
-  countryId  String? @map("country_id") @db.VarChar(20)
-  latitude   Float?
-  longitude  Float?
+model TabletopLocation {
+  id           String  @id @default(uuid()) @db.VarChar(50)
+  tabletopId   String  @map("tabletop_id") @db.VarChar(50)
+  postalCode   String? @map("postal_code") @db.VarChar(20)
+  cityId       String? @map("city_id") @db.VarChar(20)
+  countryId    String? @map("country_id") @db.VarChar(20)
+  streetName   String? @map("street_name") @db.VarChar(20)
+  streetNumber String? @map("street_number") @db.VarChar(10)
+  neighborhood String? @db.VarChar(200)
+  latitude     Float?
+  longitude    Float?
 
   city     City?    @relation(fields: [cityId], references: [id])
   country  Country? @relation(fields: [countryId], references: [id])
   tabletop Tabletop @relation(fields: [tabletopId], references: [id])
 
-  @@map("tabletop_map_marks")
+  @@map("tabletop_location")
 }
 
 model City {
@@ -257,7 +261,7 @@ model City {
   country Country @relation(fields: [countryId], references: [id])
 
   user             User[]
-  tabletopMapMarks TabletopMapMarks[]
+  tabletopLocation TabletopLocation[]
 
   @@index([id, uf])
   @@map("cities")
@@ -280,7 +284,7 @@ model Country {
 
   user             User[]
   city             City[]
-  tabletopMapMarks TabletopMapMarks[]
+  tabletopLocation TabletopLocation[]
 
   @@map("countries")
 }
