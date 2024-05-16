@@ -5,7 +5,7 @@ import { Player } from './player'
 
 export interface TabletopPlayerProps {
   playerId: UniqueEntityID
-  player: Player
+  player?: Player | null
   createdAt: Date
 }
 
@@ -22,7 +22,7 @@ export class TabletopPlayer extends Entity<TabletopPlayerProps> {
     return this.props.player
   }
 
-  set player(player: Player) {
+  set player(player: Player | undefined | null) {
     this.props.player = player
   }
 

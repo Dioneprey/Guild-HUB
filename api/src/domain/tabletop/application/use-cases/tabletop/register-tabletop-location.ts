@@ -45,7 +45,9 @@ export class RegisterTabletopLocationUseCase {
         key: 'id',
         value: masterId,
       }),
-      this.tabletopRepository.findById(tabletopId),
+      this.tabletopRepository.findById({
+        id: tabletopId,
+      }),
     ])
 
     if (!masterExists) return left(new ResourceNotFoundError(masterId))

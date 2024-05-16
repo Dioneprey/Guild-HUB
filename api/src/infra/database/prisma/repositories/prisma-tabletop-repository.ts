@@ -1,16 +1,28 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
-import { TabletopRepository } from 'src/domain/tabletop/application/repositories/tabletop-repository'
+import {
+  TabletopRepository,
+  TabletopRepositoryFindByIdProps,
+} from 'src/domain/tabletop/application/repositories/tabletop-repository'
 import { Tabletop } from 'src/domain/tabletop/enterprise/entities/tabletop'
 import { PrismaTabletopMapper } from '../mapper/prisma-tabletop-mapper'
 
 @Injectable()
 export class PrismaTabletopRepository implements TabletopRepository {
   constructor(private prisma: PrismaService) {}
-  async findById(id: string) {
+  async findById({ id, include }: TabletopRepositoryFindByIdProps) {
     const tabletop = await this.prisma.tabletop.findFirst({
       where: {
         id,
+      },
+      include: {
+        tabletopUsers: include?.tabletopPlayers
+          ? {
+              include: {
+                user: true,
+              },
+            }
+          : false,
       },
     })
 
@@ -18,6 +30,7 @@ export class PrismaTabletopRepository implements TabletopRepository {
       return null
     }
 
+    // @ts-expect-error Tipagem
     return PrismaTabletopMapper.toDomain(tabletop)
   }
 

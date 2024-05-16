@@ -1,8 +1,8 @@
 import { Entity } from 'src/core/entities/entity'
 import { UniqueEntityID } from 'src/core/entities/unique-entity-id'
-import { TabletopPlayer } from './tabletop-player'
 import { TabletopLocation } from './tabletop-location'
 import { Optional } from 'src/core/types/optional'
+import { TabletopPlayer } from './tabletop-player'
 
 export enum TabletopType {
   offline = 'P',

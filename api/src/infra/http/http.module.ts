@@ -20,6 +20,8 @@ import { RegisterTabletopUseCase } from 'src/domain/tabletop/application/use-cas
 import { RegisterTabletopLocationUseCase } from 'src/domain/tabletop/application/use-cases/tabletop/register-tabletop-location'
 import { FetchNearbyTabletopUseCase } from 'src/domain/tabletop/application/use-cases/tabletop/fetch-nearby-tabletop'
 import { FetchNearbyTabletopController } from './controllers/tabletop/fetch-nearby-tabletop.controller'
+import { GetTabletopDetailsController } from './controllers/tabletop/get-tabletop-tabletop.controller'
+import { GetTabletopDetailsUseCase } from 'src/domain/tabletop/application/use-cases/tabletop/get-tabletop-details'
 
 @Module({
   imports: [
@@ -45,6 +47,7 @@ import { FetchNearbyTabletopController } from './controllers/tabletop/fetch-near
     RegisterTabletopController,
     RegisterTabletopLocationController,
     FetchNearbyTabletopController,
+    GetTabletopDetailsController,
   ],
   providers: [
     // Accounts
@@ -62,6 +65,7 @@ import { FetchNearbyTabletopController } from './controllers/tabletop/fetch-near
     RegisterTabletopUseCase,
     RegisterTabletopLocationUseCase,
     FetchNearbyTabletopUseCase,
+    GetTabletopDetailsUseCase,
   ],
 })
 export class HttpModule {}
