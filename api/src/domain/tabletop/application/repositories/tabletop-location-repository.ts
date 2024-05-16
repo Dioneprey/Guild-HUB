@@ -1,8 +1,26 @@
 import { TabletopLocation } from '../../enterprise/entities/tabletop-location'
 
+export interface RawTabletopLocation {
+  id: string
+  tabletop_id: string
+  postal_code: string
+  city_id: string | null
+  country_id: string | null
+  street_name: string
+  street_number: string
+  neighborhood: string
+  latitude: number
+  longitude: number
+}
 export interface TabletopLocationRepositoryFindManyNearbyParams {
   latitude: number
   longitude: number
+  filters: {
+    distanceRangeInKm: number
+    onlyOpenSlots?: boolean
+    minAge?: number
+    onlyVerifiedTabletop?: boolean
+  }
 }
 
 export abstract class TabletopLocationRepository {
@@ -10,6 +28,7 @@ export abstract class TabletopLocationRepository {
   abstract findManyNearby({
     latitude,
     longitude,
+    filters,
   }: TabletopLocationRepositoryFindManyNearbyParams): Promise<
     TabletopLocation[]
   >
