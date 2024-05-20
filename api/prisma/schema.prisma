@@ -26,11 +26,26 @@ enum RoleOptions {
   U
 }
 
-// P = presencial | O = online | H = hibrído
+// R = role-playing-game | W = Wargaming Table | B = Board Gaming Table
 enum TabletopType {
-  P
+  R
+  W
+  B
+}
+
+// B = Iniciante | I = Intermediario | A = Avançado
+enum TabletopExpertise {
+  B
+  I
+  A
+}
+
+// O = One - shot | S = semanal | Q = Quinzenal | M = mensal
+enum TabletopCadence {
   O
-  H
+  S
+  Q
+  M
 }
 
 model User {
@@ -67,6 +82,7 @@ model User {
   tabletopUsers                      TabletopUsers[]
   tabletopEntryRequests              TabletopEntryRequests[]
   tabletopSchedulePlayerAvailability TabletopSchedulePlayerAvailability[]
+  Tabletop                           Tabletop[]
 
   @@index([id, email])
   @@map("users")
@@ -154,17 +170,26 @@ model ChatMessageViews {
 }
 
 model Tabletop {
-  id           String        @id @default(uuid()) @db.VarChar(50)
-  ownerId      String        @map("owner_id") @db.VarChar(50)
-  name         String?       @db.VarChar(100)
-  description  String?       @db.VarChar(500)
-  playersLimit Int?          @map("players_limit") @db.SmallInt()
-  systemName   String?       @map("system_name") @db.VarChar(100)
-  avatarUrl    String?       @map("avatar_url") @db.VarChar(1000)
-  minAge       Int?          @map("min_age") @db.SmallInt()
-  type         TabletopType?
-  createdAt    DateTime      @default(now()) @map("created_at")
-  updatedAt    DateTime?     @updatedAt @map("updated_at")
+  id               String             @id @default(uuid()) @db.VarChar(50)
+  ownerId          String             @map("owner_id") @db.VarChar(50)
+  name             String?            @db.VarChar(100)
+  description      String?            @db.VarChar(500)
+  playersLimit     Int?               @map("players_limit") @db.SmallInt()
+  tabletopSystemId String?            @map("tabletop_system_id") @db.VarChar(50)
+  expertiseLevel   TabletopExpertise? @map("expertise_level")
+  cadence          TabletopCadence?
+  avatarId         String?            @map("avatar_id") @db.VarChar(1000)
+  coverId          String?            @map("cover_id") @db.VarChar(1000)
+  minAge           Int?               @map("min_age") @db.SmallInt()
+  hasDungeonMaster Boolean?           @map("has_dungeon_master")
+  type             TabletopType?
+  online           Boolean?
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime?          @updatedAt @map("updated_at")
+
+  owner User @relation(fields: [ownerId], references: [id])
+
+  tabletopSystem TabletopSystem? @relation(fields: [tabletopSystemId], references: [id])
 
   tabletopUsers         TabletopUsers[]
   tabletopEntryRequests TabletopEntryRequests[]
@@ -172,11 +197,24 @@ model Tabletop {
   tabletopLocation TabletopLocation[]
   tabletopSchedule TabletopSchedule[]
 
-  @@index([ownerId, playersLimit, systemName, type, minAge])
+  @@index([ownerId, playersLimit, tabletopSystemId, type, minAge])
   @@map("tabletop")
 }
 
 model TabletopUsers {
+  tabletopId String   @map("tabletop_id") @db.VarChar(50)
+  userId     String   @map("user_id") @db.VarChar(50)
+  gameMaster Boolean? @map("game_master")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  tabletop Tabletop @relation(fields: [tabletopId], references: [id])
+  user     User     @relation(fields: [userId], references: [id])
+
+  @@id([tabletopId, userId])
+  @@map("tabletop_users")
+}
+
+model TabletopEntryRequests {
   tabletopId String   @map("tabletop_id") @db.VarChar(50)
   userId     String   @map("user_id") @db.VarChar(50)
   createdAt  DateTime @default(now()) @map("created_at")
@@ -185,7 +223,7 @@ model TabletopUsers {
   user     User     @relation(fields: [userId], references: [id])
 
   @@id([tabletopId, userId])
-  @@map("tabletop_users")
+  @@map("tabletop_entry_requests")
 }
 
 model TabletopSchedule {
@@ -220,18 +258,6 @@ model TabletopSchedulePlayerAvailability {
   @@map("tabletop_schedule_player_availability")
 }
 
-model TabletopEntryRequests {
-  tabletopId String   @map("tabletop_id") @db.VarChar(50)
-  userId     String   @map("user_id") @db.VarChar(50)
-  createdAt  DateTime @default(now()) @map("created_at")
-
-  tabletop Tabletop @relation(fields: [tabletopId], references: [id])
-  user     User     @relation(fields: [userId], references: [id])
-
-  @@id([tabletopId, userId])
-  @@map("tabletop_entry_requests")
-}
-
 model TabletopLocation {
   id           String  @id @default(uuid()) @db.VarChar(50)
   tabletopId   String  @map("tabletop_id") @db.VarChar(50)
@@ -249,6 +275,14 @@ model TabletopLocation {
   tabletop Tabletop @relation(fields: [tabletopId], references: [id])
 
   @@map("tabletop_location")
+}
+
+model TabletopSystem {
+  id       String     @id @default(uuid()) @db.VarChar(50)
+  name     String     @db.VarChar(100)
+  Tabletop Tabletop[]
+
+  @@map("tabletop_system")
 }
 
 model City {
