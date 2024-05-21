@@ -4,8 +4,8 @@ import {
   User as PrismaPlayer,
 } from '@prisma/client'
 import { UniqueEntityID } from 'src/core/entities/unique-entity-id'
-import { TabletopPlayer } from 'src/domain/tabletop/enterprise/entities/tabletop-player'
-import { PrismaPlayerMapper } from './prisma-player-mapper'
+import { TabletopPlayer } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop-player'
+import { PrismaPlayerMapper } from '../prisma-player-mapper'
 
 export class PrismaTabletopPlayerMapper {
   static toDomain(

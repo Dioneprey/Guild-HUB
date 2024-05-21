@@ -1,6 +1,4 @@
-import { TabletopType as PrismaTabletopType } from '@prisma/client'
-import { Tabletop } from 'src/domain/tabletop/enterprise/entities/tabletop'
-import { TabletopPlayerPresenter } from './tabletop-player-presenter'
+import { Tabletop } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop'
 
 export class TabletopPresenter {
   static toHTTP(tabletop: Tabletop | null) {
@@ -11,18 +9,20 @@ export class TabletopPresenter {
     return {
       id: tabletop.id.toString(),
       ownerId: tabletop.ownerId.toString(),
-      type: tabletop.type ? PrismaTabletopType[tabletop.type] : null,
-      name: tabletop.name,
-      description: tabletop.description,
-      playersLimit: tabletop.playersLimit,
-      systemName: tabletop.systemName,
-      avatarUrl: tabletop.avatarUrl,
-      minAge: tabletop.minAge,
-      tabletopPlayers: tabletop.tabletopPlayers
-        ? tabletop.tabletopPlayers.map(TabletopPlayerPresenter.toHTTP)
-        : [],
-      createdAt: tabletop.createdAt,
-      updatedAt: tabletop.updatedAt,
+      type: tabletop.type ?? null,
+      name: tabletop.name ?? null,
+      description: tabletop.description ?? null,
+      playersLimit: tabletop.playersLimit ?? null,
+      tabletopSystemId: tabletop.tabletopSystem?.id.toString() ?? null,
+      expertiseLevel: tabletop.expertiseLevel ?? null,
+      cadence: tabletop.cadence ?? null,
+      avatarFileId: tabletop.avatarFile?.id.toString() ?? null,
+      coverFileId: tabletop.coverFile?.id.toString() ?? null,
+      online: tabletop.online ?? null,
+      minAge: tabletop.minAge ?? null,
+      hasDungeonMaster: tabletop.hasDungeonMaster ?? null,
+      createdAt: tabletop.createdAt ?? null,
+      updatedAt: tabletop.updatedAt ?? null,
     }
   }
 }

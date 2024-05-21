@@ -1,7 +1,7 @@
 import { Either, right } from 'src/core/either'
 import { Injectable } from '@nestjs/common'
 import { ResourceNotFoundError } from '../@errors/resource-not-found.error'
-import { TabletopLocation } from 'src/domain/tabletop/enterprise/entities/tabletop-location'
+import { TabletopLocation } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop-location'
 import { TabletopLocationRepository } from '../../repositories/tabletop-location-repository'
 
 interface FetchNearbyTabletopUseCaseRequest {

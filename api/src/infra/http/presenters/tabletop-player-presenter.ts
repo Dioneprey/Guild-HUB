@@ -1,4 +1,4 @@
-import { TabletopPlayer } from 'src/domain/tabletop/enterprise/entities/tabletop-player'
+import { TabletopPlayer } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop-player'
 import { PlayerPresenter } from './player-presenter'
 
 export class TabletopPlayerPresenter {
@@ -13,7 +13,7 @@ export class TabletopPlayerPresenter {
       player: tabletopPlayer?.player
         ? PlayerPresenter.toHTTP(tabletopPlayer.player)
         : null,
-      createdAt: tabletopPlayer.createdAt,
+      createdAt: tabletopPlayer.createdAt ?? null,
     }
   }
 }

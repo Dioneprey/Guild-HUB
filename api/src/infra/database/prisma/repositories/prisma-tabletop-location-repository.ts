@@ -5,8 +5,8 @@ import {
   TabletopLocationRepository,
   TabletopLocationRepositoryFindManyNearbyParams,
 } from 'src/domain/tabletop/application/repositories/tabletop-location-repository'
-import { PrismaTabletopLocationMapper } from '../mapper/prisma-tabletop-location-mapper'
-import { TabletopLocation } from 'src/domain/tabletop/enterprise/entities/tabletop-location'
+import { PrismaTabletopLocationMapper } from '../mapper/tabletop/prisma-tabletop-location-mapper'
+import { TabletopLocation } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop-location'
 
 @Injectable()
 export class PrismaTabletopLocationRepository

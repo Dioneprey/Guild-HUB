@@ -4,7 +4,7 @@ import { TabletopRepository } from '../../repositories/tabletop-repository'
 import { PlayerRepository } from '../../repositories/player-repository'
 import { ResourceNotFoundError } from '../@errors/resource-not-found.error'
 import { UniqueEntityID } from 'src/core/entities/unique-entity-id'
-import { TabletopLocation } from 'src/domain/tabletop/enterprise/entities/tabletop-location'
+import { TabletopLocation } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop-location'
 import { TabletopLocationRepository } from '../../repositories/tabletop-location-repository'
 
 interface RegisterTabletopLocationUseCaseRequest {

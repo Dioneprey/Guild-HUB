@@ -1,15 +1,15 @@
 import { Entity } from 'src/core/entities/entity'
 import { UniqueEntityID } from 'src/core/entities/unique-entity-id'
 import { Optional } from 'src/core/types/optional'
-import { Player } from './player'
+import { Player } from '../player'
 
-export interface TabletopEntryRequestProps {
+export interface TabletopPlayerProps {
   playerId: UniqueEntityID
-  player: Player
+  player?: Player | null
   createdAt: Date
 }
 
-export class TabletopEntryRequest extends Entity<TabletopEntryRequestProps> {
+export class TabletopPlayer extends Entity<TabletopPlayerProps> {
   get playerId() {
     return this.props.playerId
   }
@@ -22,7 +22,7 @@ export class TabletopEntryRequest extends Entity<TabletopEntryRequestProps> {
     return this.props.player
   }
 
-  set player(player: Player) {
+  set player(player: Player | undefined | null) {
     this.props.player = player
   }
 
@@ -31,14 +31,14 @@ export class TabletopEntryRequest extends Entity<TabletopEntryRequestProps> {
   }
 
   static create(
-    props: Optional<TabletopEntryRequestProps, 'createdAt'>,
+    props: Optional<TabletopPlayerProps, 'createdAt'>,
     id?: UniqueEntityID,
   ) {
-    const tabletopEntryRequest = new TabletopEntryRequest(
+    const tabletopPlayer = new TabletopPlayer(
       { ...props, createdAt: props.createdAt ?? new Date() },
       id,
     )
 
-    return tabletopEntryRequest
+    return tabletopPlayer
   }
 }

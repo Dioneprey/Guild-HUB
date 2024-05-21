@@ -40,7 +40,7 @@ export class PrismaPlayerMapper {
       gender,
       email: player.email,
       password: player.password,
-      avatarUrl: player.avatarUrl,
+      avatarFileId: Number(player.avatarFileId),
       cityId: player.cityId,
       countryId: player.countryId,
       birthdate: player.birthdate,

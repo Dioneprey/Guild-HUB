@@ -1,4 +1,4 @@
-import { TabletopLocation } from '../../enterprise/entities/tabletop-location'
+import { TabletopLocation } from '../../enterprise/entities/tabletop/tabletop-location'
 
 export interface RawTabletopLocation {
   id: string

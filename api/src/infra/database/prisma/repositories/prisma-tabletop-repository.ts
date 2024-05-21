@@ -4,8 +4,8 @@ import {
   TabletopRepository,
   TabletopRepositoryFindByIdProps,
 } from 'src/domain/tabletop/application/repositories/tabletop-repository'
-import { Tabletop } from 'src/domain/tabletop/enterprise/entities/tabletop'
-import { PrismaTabletopMapper } from '../mapper/prisma-tabletop-mapper'
+import { Tabletop } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop'
+import { PrismaTabletopMapper } from '../mapper/tabletop/prisma-tabletop-mapper'
 
 @Injectable()
 export class PrismaTabletopRepository implements TabletopRepository {
@@ -16,13 +16,18 @@ export class PrismaTabletopRepository implements TabletopRepository {
         id,
       },
       include: {
-        tabletopUsers: include?.tabletopPlayers
-          ? {
-              include: {
-                user: true,
-              },
-            }
-          : false,
+        ...(include?.tabletopPlayers && {
+          tabletopUsers: include?.tabletopPlayers
+            ? {
+                include: {
+                  user: true,
+                },
+              }
+            : false,
+        }),
+        tabletopSystem: true,
+        avatarFile: true,
+        coverFile: true,
       },
     })
 
@@ -30,30 +35,42 @@ export class PrismaTabletopRepository implements TabletopRepository {
       return null
     }
 
-    // @ts-expect-error Tipagem
     return PrismaTabletopMapper.toDomain(tabletop)
   }
 
   async create(tabletop: Tabletop) {
     const data = PrismaTabletopMapper.toPrisma(tabletop)
 
-    const newTabletop = await this.prisma.tabletop.create({
+    await this.prisma.tabletop.create({
       data,
     })
+  }
 
-    return PrismaTabletopMapper.toDomain(newTabletop)
+  async createTabletopLanguage({
+    tabletopId,
+    language,
+  }: {
+    tabletopId: string
+    language: number[]
+  }) {
+    await this.prisma.tabletopLanguage.createMany({
+      data: language.map((item) => {
+        return {
+          tabletopId,
+          languageId: item,
+        }
+      }),
+    })
   }
 
   async save(tabletop: Tabletop) {
     const data = PrismaTabletopMapper.toPrisma(tabletop)
 
-    const updatedTabletop = await this.prisma.tabletop.update({
+    await this.prisma.tabletop.update({
       where: {
         id: data.id,
       },
       data,
     })
-
-    return PrismaTabletopMapper.toDomain(updatedTabletop)
   }
 }

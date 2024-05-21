@@ -1,4 +1,4 @@
-import { Tabletop } from '../../enterprise/entities/tabletop'
+import { Tabletop } from '../../enterprise/entities/tabletop/tabletop'
 
 export interface TabletopRepositoryFindByIdProps {
   id: string
@@ -12,6 +12,14 @@ export abstract class TabletopRepository {
     include,
   }: TabletopRepositoryFindByIdProps): Promise<Tabletop | null>
 
-  abstract create(tabletop: Tabletop): Promise<Tabletop>
-  abstract save(tabletop: Tabletop): Promise<Tabletop>
+  abstract create(tabletop: Tabletop): Promise<void>
+  abstract createTabletopLanguage({
+    tabletopId,
+    language,
+  }: {
+    tabletopId: string
+    language: number[]
+  }): Promise<void>
+
+  abstract save(tabletop: Tabletop): Promise<void>
 }

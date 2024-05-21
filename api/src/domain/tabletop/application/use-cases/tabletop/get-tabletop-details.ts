@@ -2,7 +2,7 @@ import { Either, left, right } from 'src/core/either'
 import { Injectable } from '@nestjs/common'
 import { ResourceNotFoundError } from '../@errors/resource-not-found.error'
 import { TabletopRepository } from '../../repositories/tabletop-repository'
-import { Tabletop } from 'src/domain/tabletop/enterprise/entities/tabletop'
+import { Tabletop } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop'
 
 interface GetTabletopDetailsUseCaseRequest {
   tabletopId: string
