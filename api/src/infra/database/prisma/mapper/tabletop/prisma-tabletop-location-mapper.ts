@@ -3,7 +3,7 @@ import {
   TabletopLocation as PrismaTabletopLocation,
 } from '@prisma/client'
 import { UniqueEntityID } from 'src/core/entities/unique-entity-id'
-import { TabletopLocation } from 'src/domain/tabletop/enterprise/entities/tabletop-location'
+import { TabletopLocation } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop-location'
 
 export class PrismaTabletopLocationMapper {
   static toDomain(raw: PrismaTabletopLocation): TabletopLocation {

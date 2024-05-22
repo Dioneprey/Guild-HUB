@@ -1,15 +1,25 @@
 import { Entity } from 'src/core/entities/entity'
 import { UniqueEntityID } from 'src/core/entities/unique-entity-id'
 import { Optional } from 'src/core/types/optional'
-import { Player } from './player'
+import { Player } from '../player'
 
 export interface TabletopPlayerProps {
+  tabletopId: UniqueEntityID
   playerId: UniqueEntityID
-  player: Player
+  gameMaster?: boolean | null
+  player?: Player | null
   createdAt: Date
 }
 
 export class TabletopPlayer extends Entity<TabletopPlayerProps> {
+  get tabletopId() {
+    return this.props.tabletopId
+  }
+
+  set tabletopId(tabletopId: UniqueEntityID) {
+    this.props.tabletopId = tabletopId
+  }
+
   get playerId() {
     return this.props.playerId
   }
@@ -18,11 +28,19 @@ export class TabletopPlayer extends Entity<TabletopPlayerProps> {
     this.props.playerId = playerId
   }
 
+  get gameMaster() {
+    return this.props.gameMaster
+  }
+
+  set gameMaster(gameMaster: boolean | undefined | null) {
+    this.props.gameMaster = gameMaster
+  }
+
   get player() {
     return this.props.player
   }
 
-  set player(player: Player) {
+  set player(player: Player | undefined | null) {
     this.props.player = player
   }
 

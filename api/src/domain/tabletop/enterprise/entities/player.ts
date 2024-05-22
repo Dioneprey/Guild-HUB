@@ -22,7 +22,7 @@ export interface PlayerProps {
   gender?: GenderOptions | null
   email: string
   password: string
-  avatarUrl?: string | null
+  avatarFileId?: number | null
   cityId?: string | null
   countryId?: string | null
   birthdate?: Date | null
@@ -89,12 +89,12 @@ export class Player extends Entity<PlayerProps> {
     this.touch()
   }
 
-  get avatarUrl() {
-    return this.props.avatarUrl
+  get avatarFileId() {
+    return this.props.avatarFileId
   }
 
-  set avatarUrl(avatarUrl: string | undefined | null) {
-    this.props.avatarUrl = avatarUrl
+  set avatarFileId(avatarFileId: number | undefined | null) {
+    this.props.avatarFileId = avatarFileId
     this.touch()
   }
 

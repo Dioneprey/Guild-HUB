@@ -16,12 +16,13 @@ import { UserPayload } from 'src/infra/auth/jwt.strategy'
 
 const updatePlayerBodySchema = z.object({
   playerData: z.object({
+    email: z.string().optional(),
     name: z.string().optional(),
     password: z.string().optional(),
     nickname: z.string().optional().nullable(),
     bio: z.string().optional().nullable(),
     gender: z.nativeEnum(GenderOptions).optional().nullable(),
-    avatarUrl: z.string().optional().nullable(),
+    avatarFileId: z.number().optional().nullable(),
     cityId: z.string().optional(),
     countryId: z.string().optional(),
   }),

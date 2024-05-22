@@ -33,6 +33,13 @@ enum TabletopType {
   B
 }
 
+// A = Vídeo e voz | B = somente voz | C = texto
+enum TabletopCommunicationType {
+  A
+  B
+  C
+}
+
 // B = Iniciante | I = Intermediario | A = Avançado
 enum TabletopExpertise {
   B
@@ -48,6 +55,13 @@ enum TabletopCadence {
   M
 }
 
+// I = imagem | V = video | O = other
+enum FileType {
+  I
+  V
+  O
+}
+
 model User {
   id                       String         @id @default(uuid()) @db.VarChar(50)
   name                     String?        @db.VarChar(100)
@@ -56,7 +70,7 @@ model User {
   gender                   GenderOptions?
   email                    String         @db.VarChar(100)
   password                 String         @db.VarChar(100)
-  avatarUrl                String?        @map("avatar_url") @db.VarChar(1000)
+  avatarFileId             Int?           @map("avatar_file_id")
   cityId                   String?        @map("city_id") @db.VarChar(20)
   countryId                String?        @map("country_id") @db.VarChar(20)
   birthdate                DateTime?
@@ -82,7 +96,11 @@ model User {
   tabletopUsers                      TabletopUsers[]
   tabletopEntryRequests              TabletopEntryRequests[]
   tabletopSchedulePlayerAvailability TabletopSchedulePlayerAvailability[]
-  Tabletop                           Tabletop[]
+  tabletop                           Tabletop[]
+
+  avatarFile Files? @relation(fields: [avatarFileId], references: [id])
+
+  userLanguage UserLanguage[]
 
   @@index([id, email])
   @@map("users")
@@ -104,7 +122,7 @@ model UserFriends {
 }
 
 model UserFriendsRequests {
-  id          String    @id @default(uuid()) @db.VarChar(50)
+  id          Int       @id @default(autoincrement())
   requesterId String    @map("requester_id") @db.VarChar(50)
   receiverId  String    @map("receiver_id") @db.VarChar(50)
   createdAt   DateTime  @default(now()) @map("created_at")
@@ -115,6 +133,17 @@ model UserFriendsRequests {
 
   @@index([requesterId, receiverId])
   @@map("users_friends_requests")
+}
+
+model UserLanguage {
+  id         Int    @id @default(autoincrement())
+  userId     String @map("user_id") @db.VarChar(50)
+  languageId Int    @map("language_id")
+
+  user     User     @relation(fields: [userId], references: [id])
+  language Language @relation(fields: [languageId], references: [id])
+
+  @@map("users_language")
 }
 
 model Chat {
@@ -128,6 +157,7 @@ model Chat {
 }
 
 model ChatUsers {
+  id        Int      @id @default(autoincrement())
   chatId    String   @map("chat_id") @db.VarChar(50)
   userId    String   @map("user_id") @db.VarChar(50)
   createdAt DateTime @default(now()) @map("created_at")
@@ -135,23 +165,25 @@ model ChatUsers {
   user User  @relation(fields: [userId], references: [id])
   chat Chat? @relation(fields: [chatId], references: [id])
 
-  @@id([chatId, userId])
-  @@index([userId])
+  @@index([userId, chatId])
   @@map("users_chats")
 }
 
 model ChatMessage {
-  id        Int      @id @default(autoincrement())
-  chatId    String   @db.VarChar(50)
-  senderId  String   @map("sender_id") @db.VarChar(50)
-  content   String?
-  imageUrl  String?
-  createdAt DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  chatId      String   @db.VarChar(50)
+  senderId    String   @map("sender_id") @db.VarChar(50)
+  content     String?
+  imageFileId Int?     @map("image_file_id")
+  imageUrl    String?
+  createdAt   DateTime @default(now())
 
   chat       Chat @relation(fields: [chatId], references: [id])
   senderUser User @relation(fields: [senderId], references: [id])
 
   messageViews ChatMessageViews[]
+
+  messageFile Files? @relation(fields: [imageFileId], references: [id])
 
   @@index([senderId, content, chatId])
   @@map("chat_messages")
@@ -170,22 +202,25 @@ model ChatMessageViews {
 }
 
 model Tabletop {
-  id               String             @id @default(uuid()) @db.VarChar(50)
-  ownerId          String             @map("owner_id") @db.VarChar(50)
-  name             String?            @db.VarChar(100)
-  description      String?            @db.VarChar(500)
-  playersLimit     Int?               @map("players_limit") @db.SmallInt()
-  tabletopSystemId String?            @map("tabletop_system_id") @db.VarChar(50)
-  expertiseLevel   TabletopExpertise? @map("expertise_level")
-  cadence          TabletopCadence?
-  avatarId         String?            @map("avatar_id") @db.VarChar(1000)
-  coverId          String?            @map("cover_id") @db.VarChar(1000)
-  minAge           Int?               @map("min_age") @db.SmallInt()
-  hasDungeonMaster Boolean?           @map("has_dungeon_master")
-  type             TabletopType?
-  online           Boolean?
-  createdAt        DateTime           @default(now()) @map("created_at")
-  updatedAt        DateTime?          @updatedAt @map("updated_at")
+  id                String                     @id @default(uuid()) @db.VarChar(50)
+  ownerId           String                     @map("owner_id") @db.VarChar(50)
+  name              String?                    @db.VarChar(100)
+  description       String?                    @db.VarChar(500)
+  playersLimit      Int?                       @map("players_limit") @db.SmallInt()
+  tabletopSystemId  Int?                       @map("tabletop_system_id")
+  expertiseLevel    TabletopExpertise?         @map("expertise_level")
+  cadence           TabletopCadence?
+  avatarFileId      Int?                       @map("avatar_file_id")
+  coverFileId       Int?                       @map("cover_file_id")
+  minAge            Int?                       @map("min_age") @db.SmallInt()
+  hasDungeonMaster  Boolean?                   @map("has_dungeon_master")
+  type              TabletopType?
+  communication     TabletopCommunicationType?
+  onlinePlataformId Int?                       @map("online_plataform_id")
+  timezoneId        Int?                       @map("timezone_id")
+  online            Boolean?
+  createdAt         DateTime                   @default(now()) @map("created_at")
+  updatedAt         DateTime?                  @updatedAt @map("updated_at")
 
   owner User @relation(fields: [ownerId], references: [id])
 
@@ -197,11 +232,20 @@ model Tabletop {
   tabletopLocation TabletopLocation[]
   tabletopSchedule TabletopSchedule[]
 
+  avatarFile Files? @relation("avatarFile", fields: [avatarFileId], references: [id])
+  coverFile  Files? @relation("coverFile", fields: [coverFileId], references: [id])
+
+  tabletopLanguage TabletopLanguage[]
+
+  onlinePlataform OnlineGamePlataform? @relation(fields: [onlinePlataformId], references: [id])
+  timezone        Timezone?            @relation(fields: [timezoneId], references: [id])
+
   @@index([ownerId, playersLimit, tabletopSystemId, type, minAge])
   @@map("tabletop")
 }
 
 model TabletopUsers {
+  id         Int      @id @default(autoincrement())
   tabletopId String   @map("tabletop_id") @db.VarChar(50)
   userId     String   @map("user_id") @db.VarChar(50)
   gameMaster Boolean? @map("game_master")
@@ -210,11 +254,11 @@ model TabletopUsers {
   tabletop Tabletop @relation(fields: [tabletopId], references: [id])
   user     User     @relation(fields: [userId], references: [id])
 
-  @@id([tabletopId, userId])
   @@map("tabletop_users")
 }
 
 model TabletopEntryRequests {
+  id         Int      @id @default(autoincrement())
   tabletopId String   @map("tabletop_id") @db.VarChar(50)
   userId     String   @map("user_id") @db.VarChar(50)
   createdAt  DateTime @default(now()) @map("created_at")
@@ -222,7 +266,6 @@ model TabletopEntryRequests {
   tabletop Tabletop @relation(fields: [tabletopId], references: [id])
   user     User     @relation(fields: [userId], references: [id])
 
-  @@id([tabletopId, userId])
   @@map("tabletop_entry_requests")
 }
 
@@ -278,11 +321,49 @@ model TabletopLocation {
 }
 
 model TabletopSystem {
-  id       String     @id @default(uuid()) @db.VarChar(50)
+  id       Int        @id @default(autoincrement())
   name     String     @db.VarChar(100)
   Tabletop Tabletop[]
 
   @@map("tabletop_system")
+}
+
+model TabletopLanguage {
+  id         Int    @id @default(autoincrement())
+  tabletopId String @map("tabletop_id") @db.VarChar(50)
+  languageId Int    @map("language_id")
+
+  tabletop Tabletop @relation(fields: [tabletopId], references: [id])
+  language Language @relation(fields: [languageId], references: [id])
+
+  @@map("tabletop_language")
+}
+
+model Language {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(100)
+
+  tabletopLanguage TabletopLanguage[]
+  userLanguage     UserLanguage[]
+
+  @@map("language")
+}
+
+model Files {
+  id        Int       @id @default(autoincrement())
+  name      String?   @db.VarChar(100)
+  key       String?   @db.VarChar(100)
+  path      String?   @db.VarChar(100)
+  type      FileType?
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user        User[]
+  chatMessage ChatMessage[]
+
+  avatarFile Tabletop[] @relation("avatarFile")
+  coverFile  Tabletop[] @relation("coverFile")
+
+  @@map("files")
 }
 
 model City {
@@ -321,4 +402,24 @@ model Country {
   tabletopLocation TabletopLocation[]
 
   @@map("countries")
+}
+
+model OnlineGamePlataform {
+  id   Int     @id @default(autoincrement())
+  name String? @db.VarChar(100)
+
+  tabletop Tabletop[]
+
+  @@map("online_game_plataform")
+}
+
+model Timezone {
+  id       Int     @id @default(autoincrement())
+  timezone String? @db.VarChar(50)
+  utc      String? @db.VarChar(20)
+  name     String? @db.VarChar(100)
+
+  tabletop Tabletop[]
+
+  @@map("timezone")
 }

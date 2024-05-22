@@ -10,6 +10,7 @@ const tokenPayload = z.object({
   sub: z.string().uuid(),
   name: z.string(),
   role: z.nativeEnum(RoleOptions),
+  isAccountValidated: z.boolean(),
   iat: z.number(),
   exp: z.number(),
 })

@@ -18,6 +18,17 @@ import { RegisterTabletopController } from './controllers/tabletop/register-tabl
 import { RegisterTabletopLocationController } from './controllers/tabletop/register-tabletop-location.controller'
 import { RegisterTabletopUseCase } from 'src/domain/tabletop/application/use-cases/tabletop/register-tabletop'
 import { RegisterTabletopLocationUseCase } from 'src/domain/tabletop/application/use-cases/tabletop/register-tabletop-location'
+import { FetchNearbyTabletopUseCase } from 'src/domain/tabletop/application/use-cases/tabletop/fetch-nearby-tabletop'
+import { FetchNearbyTabletopController } from './controllers/tabletop/fetch-nearby-tabletop.controller'
+import { GetTabletopDetailsController } from './controllers/tabletop/get-tabletop-tabletop.controller'
+import { GetTabletopDetailsUseCase } from 'src/domain/tabletop/application/use-cases/tabletop/get-tabletop-details'
+import { FetchPlayerTabletopUseCase } from 'src/domain/tabletop/application/use-cases/tabletop/fetch-player-tabletop'
+import { FetchPlayerTabletopController } from './controllers/tabletop/fetch-player-tabletop.controller'
+import { UploadFileController } from './controllers/upload/upload-file.controller'
+import { UploadFilesAsyncController } from './controllers/upload/upload-async-files.controller'
+import { UploadFileUseCase } from 'src/domain/tabletop/application/use-cases/upload/upload-file'
+import { UploadFilesAsyncUseCase } from 'src/domain/tabletop/application/use-cases/upload/upload-files-async'
+import { StorageModule } from '../storage/storage.module'
 
 @Module({
   imports: [
@@ -26,6 +37,7 @@ import { RegisterTabletopLocationUseCase } from 'src/domain/tabletop/application
     CryptographyModule,
     AuthModule,
     MailModule,
+    StorageModule,
   ],
   controllers: [
     // Accounts
@@ -42,6 +54,13 @@ import { RegisterTabletopLocationUseCase } from 'src/domain/tabletop/application
     // Tabletop
     RegisterTabletopController,
     RegisterTabletopLocationController,
+    FetchNearbyTabletopController,
+    GetTabletopDetailsController,
+    FetchPlayerTabletopController,
+
+    // Upload\
+    UploadFileController,
+    UploadFilesAsyncController,
   ],
   providers: [
     // Accounts
@@ -58,6 +77,14 @@ import { RegisterTabletopLocationUseCase } from 'src/domain/tabletop/application
     // Tabletop
     RegisterTabletopUseCase,
     RegisterTabletopLocationUseCase,
+    FetchNearbyTabletopUseCase,
+    GetTabletopDetailsUseCase,
+    FetchPlayerTabletopUseCase,
+
+    // Upload\
+    UploadFileUseCase,
+    UploadFilesAsyncUseCase,
   ],
+  exports: [UploadFilesAsyncUseCase],
 })
 export class HttpModule {}

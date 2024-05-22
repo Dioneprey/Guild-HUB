@@ -7,6 +7,7 @@ import {
 } from '@nestjs/platform-fastify'
 import { Env } from './env/env'
 import { EnvService } from './env/env.service'
+import fastifyMultipart from '@fastify/multipart'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -17,6 +18,8 @@ async function bootstrap() {
   app.enableCors({
     origin: ['*'],
   })
+
+  await app.register(fastifyMultipart)
 
   const envService = app.get<ConfigService<Env, true>>(EnvService)
   const port = envService.get('PORT')

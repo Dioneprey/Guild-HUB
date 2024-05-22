@@ -8,7 +8,11 @@ import {
 } from '@nestjs/common'
 import { ZodValidationPipe } from '../../pipes/zod-validation.pipe'
 import { RegisterTabletopUseCase } from 'src/domain/tabletop/application/use-cases/tabletop/register-tabletop'
-import { TabletopType } from 'src/domain/tabletop/enterprise/entities/tabletop'
+import {
+  TabletopCadence,
+  TabletopExpertise,
+  TabletopType,
+} from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop'
 import { CurrentUser } from 'src/infra/auth/current-user.decorator'
 import { UserPayload } from 'src/infra/auth/jwt.strategy'
 
@@ -16,10 +20,22 @@ const registerTabletopBodySchema = z.object({
   name: z.string(),
   description: z.string().optional(),
   playersLimit: z.number(),
-  systemName: z.string().optional(),
-  avatarUrl: z.string().optional(),
+  tabletopSystemId: z.number().optional(),
+  language: z.array(z.number()).optional(),
   minAge: z.number().optional(),
   type: z.nativeEnum(TabletopType),
+  expertiseLevel: z.nativeEnum(TabletopExpertise),
+  cadence: z.nativeEnum(TabletopCadence),
+  avatarFileId: z.number().optional(),
+  coverFileId: z.number().optional(),
+  online: z.coerce
+    .string()
+    .optional()
+    .transform((value) => value === 'true'),
+  hasDungeonMaster: z.coerce
+    .string()
+    .optional()
+    .transform((value) => value === 'true'),
 })
 
 type RegisterTabletopBodySchema = z.infer<typeof registerTabletopBodySchema>
@@ -41,22 +57,34 @@ export class RegisterTabletopController {
       name,
       description,
       playersLimit,
-      systemName,
-      avatarUrl,
+      tabletopSystemId,
+      language,
       minAge,
       type,
+      expertiseLevel,
+      cadence,
+      avatarFileId,
+      coverFileId,
+      online,
+      hasDungeonMaster,
     } = registerTabletopBodySchema.parse(body)
 
     const result = await this.registerTabletop.execute({
-      masterId: userId,
+      playerId: userId,
       tabletopData: {
         name,
         description,
         playersLimit,
-        systemName,
-        avatarUrl,
+        tabletopSystemId,
+        language,
         minAge,
         type,
+        expertiseLevel,
+        cadence,
+        avatarFileId,
+        coverFileId,
+        online,
+        hasDungeonMaster,
       },
     })
 
