@@ -28,6 +28,7 @@ interface RegisterTabletopUseCaseRequest {
     coverFileId?: number
     online?: boolean
     hasDungeonMaster?: boolean
+    onlinePlataformId?: number
   }
 }
 

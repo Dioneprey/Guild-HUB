@@ -33,6 +33,13 @@ enum TabletopType {
   B
 }
 
+// A = Vídeo e voz | B = somente voz | C = texto
+enum TabletopCommunicationType {
+  A
+  B
+  C
+}
+
 // B = Iniciante | I = Intermediario | A = Avançado
 enum TabletopExpertise {
   B
@@ -195,22 +202,25 @@ model ChatMessageViews {
 }
 
 model Tabletop {
-  id               String             @id @default(uuid()) @db.VarChar(50)
-  ownerId          String             @map("owner_id") @db.VarChar(50)
-  name             String?            @db.VarChar(100)
-  description      String?            @db.VarChar(500)
-  playersLimit     Int?               @map("players_limit") @db.SmallInt()
-  tabletopSystemId Int?               @map("tabletop_system_id")
-  expertiseLevel   TabletopExpertise? @map("expertise_level")
-  cadence          TabletopCadence?
-  avatarFileId     Int?               @map("avatar_file_id")
-  coverFileId      Int?               @map("cover_file_id")
-  minAge           Int?               @map("min_age") @db.SmallInt()
-  hasDungeonMaster Boolean?           @map("has_dungeon_master")
-  type             TabletopType?
-  online           Boolean?
-  createdAt        DateTime           @default(now()) @map("created_at")
-  updatedAt        DateTime?          @updatedAt @map("updated_at")
+  id                String                     @id @default(uuid()) @db.VarChar(50)
+  ownerId           String                     @map("owner_id") @db.VarChar(50)
+  name              String?                    @db.VarChar(100)
+  description       String?                    @db.VarChar(500)
+  playersLimit      Int?                       @map("players_limit") @db.SmallInt()
+  tabletopSystemId  Int?                       @map("tabletop_system_id")
+  expertiseLevel    TabletopExpertise?         @map("expertise_level")
+  cadence           TabletopCadence?
+  avatarFileId      Int?                       @map("avatar_file_id")
+  coverFileId       Int?                       @map("cover_file_id")
+  minAge            Int?                       @map("min_age") @db.SmallInt()
+  hasDungeonMaster  Boolean?                   @map("has_dungeon_master")
+  type              TabletopType?
+  communication     TabletopCommunicationType?
+  onlinePlataformId Int?                       @map("online_plataform_id")
+  timezoneId        Int?                       @map("timezone_id")
+  online            Boolean?
+  createdAt         DateTime                   @default(now()) @map("created_at")
+  updatedAt         DateTime?                  @updatedAt @map("updated_at")
 
   owner User @relation(fields: [ownerId], references: [id])
 
@@ -226,6 +236,9 @@ model Tabletop {
   coverFile  Files? @relation("coverFile", fields: [coverFileId], references: [id])
 
   tabletopLanguage TabletopLanguage[]
+
+  onlinePlataform OnlineGamePlataform? @relation(fields: [onlinePlataformId], references: [id])
+  timezone        Timezone?            @relation(fields: [timezoneId], references: [id])
 
   @@index([ownerId, playersLimit, tabletopSystemId, type, minAge])
   @@map("tabletop")
@@ -389,4 +402,24 @@ model Country {
   tabletopLocation TabletopLocation[]
 
   @@map("countries")
+}
+
+model OnlineGamePlataform {
+  id   Int     @id @default(autoincrement())
+  name String? @db.VarChar(100)
+
+  tabletop Tabletop[]
+
+  @@map("online_game_plataform")
+}
+
+model Timezone {
+  id       Int     @id @default(autoincrement())
+  timezone String? @db.VarChar(50)
+  utc      String? @db.VarChar(20)
+  name     String? @db.VarChar(100)
+
+  tabletop Tabletop[]
+
+  @@map("timezone")
 }
