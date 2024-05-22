@@ -15,13 +15,14 @@ export class PrismaTabletopPlayerMapper {
   ): TabletopPlayer {
     return TabletopPlayer.create(
       {
+        tabletopId: new UniqueEntityID(raw.tabletopId),
         playerId: new UniqueEntityID(raw.userId),
         player: raw.player
           ? PrismaPlayerMapper.toDomain(raw.player)
           : undefined,
         createdAt: raw.createdAt,
       },
-      new UniqueEntityID(raw.tabletopId),
+      new UniqueEntityID(raw.id.toString()),
     )
   }
 
@@ -29,7 +30,7 @@ export class PrismaTabletopPlayerMapper {
     tabletopPlayer: TabletopPlayer,
   ): Prisma.TabletopUsersUncheckedCreateInput {
     return {
-      tabletopId: tabletopPlayer.id.toString(),
+      tabletopId: tabletopPlayer.tabletopId.toString(),
       userId: tabletopPlayer.playerId.toString(),
       createdAt: tabletopPlayer.createdAt,
     }

@@ -1,4 +1,5 @@
 import { Tabletop } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop'
+import { TabletopPlayerPresenter } from './tabletop-player-presenter'
 
 export class TabletopPresenter {
   static toHTTP(tabletop: Tabletop | null) {
@@ -21,6 +22,9 @@ export class TabletopPresenter {
       online: tabletop.online ?? null,
       minAge: tabletop.minAge ?? null,
       hasDungeonMaster: tabletop.hasDungeonMaster ?? null,
+      tabletopPlayers: tabletop.tabletopPlayers
+        ? tabletop.tabletopPlayers.map(TabletopPlayerPresenter.toHTTP)
+        : null,
       createdAt: tabletop.createdAt ?? null,
       updatedAt: tabletop.updatedAt ?? null,
     }

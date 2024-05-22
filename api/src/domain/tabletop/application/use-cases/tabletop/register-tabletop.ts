@@ -10,9 +10,10 @@ import { TabletopRepository } from '../../repositories/tabletop-repository'
 import { PlayerRepository } from '../../repositories/player-repository'
 import { ResourceNotFoundError } from '../@errors/resource-not-found.error'
 import { UniqueEntityID } from 'src/core/entities/unique-entity-id'
+import { TabletopPlayer } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop-player'
 
 interface RegisterTabletopUseCaseRequest {
-  masterId: string
+  playerId: string
   tabletopData: {
     name: string
     description?: string
@@ -40,16 +41,16 @@ export class RegisterTabletopUseCase {
   ) {}
 
   async execute({
-    masterId,
+    playerId,
     tabletopData,
   }: RegisterTabletopUseCaseRequest): Promise<RegisterTabletopUseCaseResponse> {
     const masterExists = await this.playerRepository.findByUniqueField({
       key: 'id',
-      value: masterId,
+      value: playerId,
     })
 
     if (!masterExists) {
-      return left(new ResourceNotFoundError(masterId))
+      return left(new ResourceNotFoundError(playerId))
     }
 
     const {
@@ -69,7 +70,7 @@ export class RegisterTabletopUseCase {
     } = tabletopData
 
     const tabletop = Tabletop.create({
-      ownerId: new UniqueEntityID(masterId),
+      ownerId: new UniqueEntityID(playerId),
       name,
       description,
       playersLimit,
@@ -91,6 +92,15 @@ export class RegisterTabletopUseCase {
         language,
       })
     }
+
+    // Se mesa tiver dungeo master no cadastro, usuário é cadastrado como gm
+    const tabletopPlayer = TabletopPlayer.create({
+      playerId: new UniqueEntityID(playerId),
+      tabletopId: tabletop.id,
+      gameMaster: tabletop.hasDungeonMaster,
+    })
+
+    await this.tabletopRepository.createTabletopPlayers([tabletopPlayer])
 
     return right(undefined)
   }

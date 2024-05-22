@@ -12,7 +12,8 @@ import {
   TabletopType,
 } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop'
 import { PrismaTabletopSystemMapper } from './prisma-tabletop-system-mapper'
-import { PrismaFileMapper } from '../file-mapper'
+import { PrismaFileMapper } from '../prisma-file-mapper'
+import { PrismaTabletopPlayerMapper } from './prisma-tabletop-player-mapper'
 
 type TabletopWithInclude = Prisma.TabletopGetPayload<{
   include: {
@@ -39,15 +40,21 @@ export class PrismaTabletopMapper {
         tabletopSystem: raw.tabletopSystem
           ? PrismaTabletopSystemMapper.toDomain(raw.tabletopSystem)
           : null,
+
         expertiseLevel: raw.expertiseLevel
           ? TabletopExpertise[raw.expertiseLevel]
           : null,
         cadence: raw.cadence ? TabletopCadence[raw.cadence] : null,
+        avatarFileId: raw.avatarFileId,
         avatarFile: raw.avatarFile
           ? PrismaFileMapper.toDomain(raw.avatarFile)
           : null,
+        coverFileId: raw.coverFileId,
         coverFile: raw.coverFile
           ? PrismaFileMapper.toDomain(raw.coverFile)
+          : null,
+        tabletopPlayers: raw.tabletopUsers
+          ? raw.tabletopUsers.map(PrismaTabletopPlayerMapper.toDomain)
           : null,
         minAge: raw.minAge,
         online: raw.online,
@@ -67,15 +74,21 @@ export class PrismaTabletopMapper {
       name: tabletop.name,
       description: tabletop.description,
       playersLimit: tabletop.playersLimit,
-      tabletopSystemId: Number(tabletop.tabletopSystem?.id.toString()),
+      tabletopSystemId: tabletop.tabletopSystem
+        ? Number(tabletop.tabletopSystem?.id.toString())
+        : null,
       expertiseLevel: tabletop.expertiseLevel
         ? PrismaTabletopExpertise[tabletop.expertiseLevel]
         : null,
       cadence: tabletop.cadence
         ? PrismaTabletopCadence[tabletop.cadence]
         : null,
-      avatarFileId: Number(tabletop.avatarFile?.id.toString()),
-      coverFileId: Number(tabletop.coverFile?.id.toString()),
+      avatarFileId: tabletop.avatarFileId
+        ? Number(tabletop.avatarFile?.id.toString())
+        : null,
+      coverFileId: tabletop.coverFileId
+        ? Number(tabletop.coverFile?.id.toString())
+        : null,
       online: tabletop.online,
       minAge: tabletop.minAge,
       hasDungeonMaster: tabletop.hasDungeonMaster,

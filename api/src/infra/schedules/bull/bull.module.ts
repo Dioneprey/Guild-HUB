@@ -12,12 +12,18 @@ import {
 import { BullBoardModule } from '@bull-board/nestjs'
 import { FastifyAdapter } from '@bull-board/fastify'
 import { BullAdapter } from '@bull-board/api/bullAdapter'
+import {
+  FILES_UPLOAD_QUEUE,
+  FilesUploadProcessor,
+} from './processor/upload-files.processor'
+import { EventsModule } from 'src/infra/events/events.module'
 
 @Module({
   imports: [
     forwardRef(() => HttpModule),
     DatabaseModule,
     MailModule,
+    EventsModule,
     BullModule.forRootAsync({
       imports: [EnvModule],
       inject: [EnvService],
@@ -28,9 +34,15 @@ import { BullAdapter } from '@bull-board/api/bullAdapter'
         },
       }),
     }),
+    // Queues
     BullModule.registerQueue({
       name: INVALIDATE_CODES_QUEUE,
     }),
+    BullModule.registerQueue({
+      name: FILES_UPLOAD_QUEUE,
+    }),
+
+    // Bull board
     BullBoardModule.forRoot({
       route: '/queues',
       adapter: FastifyAdapter,
@@ -39,8 +51,12 @@ import { BullAdapter } from '@bull-board/api/bullAdapter'
       name: INVALIDATE_CODES_QUEUE,
       adapter: BullAdapter,
     }),
+    BullBoardModule.forFeature({
+      name: FILES_UPLOAD_QUEUE,
+      adapter: BullAdapter,
+    }),
   ],
-  providers: [InvalidateCodesProcessor],
+  providers: [InvalidateCodesProcessor, FilesUploadProcessor],
   exports: [BullModule],
 })
 export class BullConfigModule {}

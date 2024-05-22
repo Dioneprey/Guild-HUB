@@ -14,6 +14,10 @@ export const envSchema = z.object({
   MAIL_USER_EMAIL: z.string(),
   MAIL_PASSWORD: z.string(),
   MAIL_IGNORE_TLS: z.string().transform((value) => value === 'true'),
+  AWS_BUCKET_NAME: z.string(),
+  AWS_BUCKET_ENDPOINT: z.string(),
+  AWS_ACCESS_KEY_ID: z.string(),
+  AWS_SECRET_ACCESS_KEY_ID: z.string(),
   FRONT_END_URL: z.string().optional().default('http://localhost:3000'),
   PORT: z.coerce.number().optional().default(3333),
 })

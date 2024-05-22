@@ -14,9 +14,9 @@ export enum TabletopType {
 }
 
 export enum TabletopExpertise {
-  beginner = 'P',
-  intermediate = 'O',
-  advanced = 'H',
+  beginner = 'B',
+  intermediate = 'I',
+  advanced = 'A',
 }
 
 export enum TabletopCadence {

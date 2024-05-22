@@ -1,19 +1,25 @@
 import { Either, left, right } from 'src/core/either'
-import { PlayerProps } from '../../../enterprise/entities/player'
+import { GenderOptions } from '../../../enterprise/entities/player'
 import { Injectable } from '@nestjs/common'
 import { PlayerRepository } from '../../repositories/player-repository'
 import { HashGenerator } from '../../cryptography/hash-generator'
-import { Exclude } from 'src/core/types/exclude'
 import { ResourceNotFoundError } from '../@errors/resource-not-found.error'
 import { PlayerAlreadyExistsError } from '../@errors/player-already-exists.error'
-import { Optional } from 'src/core/types/optional'
 
 interface UpdatePlayerUseCaseRequest {
   id: string
-  playerData: Optional<
-    Exclude<PlayerProps, 'createdAt' | 'updatedAt' | 'birthdate' | 'role'>,
-    'email' | 'password'
-  >
+  playerData: {
+    name?: string | null
+    nickname?: string | null
+    bio?: string | null
+    gender?: GenderOptions | null
+    email?: string
+    password?: string
+    avatarFileId?: number | null
+    cityId?: string | null
+    countryId?: string | null
+    birthdate?: Date | null
+  }
   registrationCompleted?: boolean
 }
 

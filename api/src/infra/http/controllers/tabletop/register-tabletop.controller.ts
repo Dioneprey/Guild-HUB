@@ -70,7 +70,7 @@ export class RegisterTabletopController {
     } = registerTabletopBodySchema.parse(body)
 
     const result = await this.registerTabletop.execute({
-      masterId: userId,
+      playerId: userId,
       tabletopData: {
         name,
         description,

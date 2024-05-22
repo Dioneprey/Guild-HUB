@@ -44,12 +44,11 @@ export class CredentialsAuthenticateUseCase {
       return left(new WrongCredentialsError())
     }
 
-    await this.playerRepository.save(player)
-
     const accessToken = await this.encrypter.encrypt({
       sub: player.id.toString(),
       role: player.role,
       name: player.name,
+      isAccountValidated: player.registrationValidatedAt !== null,
     })
 
     return right({
