@@ -28,8 +28,16 @@ export class PrismaTabletopRepository implements TabletopRepository {
             : false,
         }),
         tabletopSystem: true,
+        tabletopLocation: true,
+        tabletopLanguage: {
+          select: {
+            language: true,
+          },
+        },
         avatarFile: true,
         coverFile: true,
+        onlinePlataform: true,
+        timezone: true,
       },
     })
 
@@ -59,8 +67,16 @@ export class PrismaTabletopRepository implements TabletopRepository {
             : false,
         }),
         tabletopSystem: true,
+        tabletopLocation: true,
         avatarFile: true,
         coverFile: true,
+        tabletopLanguage: {
+          select: {
+            language: true,
+          },
+        },
+        onlinePlataform: true,
+        timezone: true,
       },
     })
 
@@ -82,6 +98,12 @@ export class PrismaTabletopRepository implements TabletopRepository {
     tabletopId: string
     language: number[]
   }) {
+    await this.prisma.tabletopLanguage.deleteMany({
+      where: {
+        tabletopId,
+      },
+    })
+
     await this.prisma.tabletopLanguage.createMany({
       data: language.map((item) => {
         return {

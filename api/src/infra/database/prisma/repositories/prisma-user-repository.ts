@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
-import { PrismaPlayerMapper } from '../mapper/prisma-player-mapper'
+import { PrismaPlayerMapper } from '../mapper/player/prisma-player-mapper'
 import {
   PlayerRepository,
   PlayerRepositoryFindByUniqueFieldProps,
@@ -18,6 +18,14 @@ export class PrismaPlayerRepository implements PlayerRepository {
       where: {
         [key]: value,
       },
+      include: {
+        avatarFile: true,
+        userLanguage: {
+          select: {
+            language: true,
+          },
+        },
+      },
     })
 
     if (!player) {
@@ -30,23 +38,42 @@ export class PrismaPlayerRepository implements PlayerRepository {
   async create(player: Player) {
     const data = PrismaPlayerMapper.toPrisma(player)
 
-    const newPlayer = await this.prisma.user.create({
+    await this.prisma.user.create({
       data,
     })
+  }
 
-    return PrismaPlayerMapper.toDomain(newPlayer)
+  async createPlayerLanguage({
+    playerId,
+    language,
+  }: {
+    playerId: string
+    language: number[]
+  }) {
+    await this.prisma.userLanguage.deleteMany({
+      where: {
+        userId: playerId,
+      },
+    })
+
+    await this.prisma.userLanguage.createMany({
+      data: language.map((item) => {
+        return {
+          userId: playerId,
+          languageId: item,
+        }
+      }),
+    })
   }
 
   async save(player: Player) {
     const data = PrismaPlayerMapper.toPrisma(player)
 
-    const updatedPlayer = await this.prisma.user.update({
+    await this.prisma.user.update({
       where: {
         id: data.id,
       },
       data,
     })
-
-    return PrismaPlayerMapper.toDomain(updatedPlayer)
   }
 }

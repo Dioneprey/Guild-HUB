@@ -9,7 +9,7 @@ export enum FileType {
 }
 export interface FileProps {
   name?: string | null
-  key?: string | null
+  key: string
   path?: string | null
   type?: FileType | null
   createdAt: Date
@@ -28,7 +28,7 @@ export class File extends Entity<FileProps> {
     return this.props.key
   }
 
-  set key(key: string | undefined | null) {
+  set key(key: string) {
     this.props.key = key
   }
 

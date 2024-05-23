@@ -16,7 +16,7 @@ type UploadFilesAsyncUseCaseResponse = Either<
   ImageCouldNotBeSentError,
   {
     url: string
-    id: string
+    key: string
   }
 >
 
@@ -50,7 +50,7 @@ export class UploadFilesAsyncUseCase {
 
       return right({
         url,
-        id: file.id.toString(),
+        key: file.key,
       })
     } catch (error) {
       console.log(error)

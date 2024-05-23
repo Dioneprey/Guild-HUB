@@ -1,16 +1,15 @@
-import {
-  Prisma,
-  TabletopUsers as PrismaTabletopPlayers,
-  User as PrismaPlayer,
-} from '@prisma/client'
+import { Prisma, TabletopUsers as PrismaTabletopPlayers } from '@prisma/client'
 import { UniqueEntityID } from 'src/core/entities/unique-entity-id'
 import { TabletopPlayer } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop-player'
-import { PrismaPlayerMapper } from '../prisma-player-mapper'
+import {
+  PlayerWithInclude,
+  PrismaPlayerMapper,
+} from '../player/prisma-player-mapper'
 
 export class PrismaTabletopPlayerMapper {
   static toDomain(
     raw: PrismaTabletopPlayers & {
-      player?: PrismaPlayer
+      player?: PlayerWithInclude
     },
   ): TabletopPlayer {
     return TabletopPlayer.create(
@@ -21,6 +20,7 @@ export class PrismaTabletopPlayerMapper {
           ? PrismaPlayerMapper.toDomain(raw.player)
           : undefined,
         createdAt: raw.createdAt,
+        gameMaster: raw.gameMaster,
       },
       new UniqueEntityID(raw.id.toString()),
     )
@@ -30,6 +30,7 @@ export class PrismaTabletopPlayerMapper {
     tabletopPlayer: TabletopPlayer,
   ): Prisma.TabletopUsersUncheckedCreateInput {
     return {
+      id: Number(tabletopPlayer.id.toString()),
       tabletopId: tabletopPlayer.tabletopId.toString(),
       userId: tabletopPlayer.playerId.toString(),
       createdAt: tabletopPlayer.createdAt,

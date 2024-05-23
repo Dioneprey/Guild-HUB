@@ -42,11 +42,11 @@ export class UploadFileController {
       throw new BadRequestException(error.message)
     }
 
-    const { url, id } = result.value
+    const { url, key } = result.value
 
     return {
       url,
-      id,
+      key,
     }
   }
 }

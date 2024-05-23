@@ -11,12 +11,12 @@ export class UploadGateway {
   handleEvent({
     userId,
     url,
-    id,
+    key,
   }: {
     userId: string
     url: string
-    id: string
+    key: string
   }): void {
-    this.server.to(userId).emit('upload-finished', { url, id })
+    this.server.to(userId).emit('upload-finished', { url, key })
   }
 }

@@ -29,6 +29,10 @@ import { UploadFilesAsyncController } from './controllers/upload/upload-async-fi
 import { UploadFileUseCase } from 'src/domain/tabletop/application/use-cases/upload/upload-file'
 import { UploadFilesAsyncUseCase } from 'src/domain/tabletop/application/use-cases/upload/upload-files-async'
 import { StorageModule } from '../storage/storage.module'
+import { EditTabletopUseCase } from 'src/domain/tabletop/application/use-cases/tabletop/edit-tabletop'
+import { EditTabletopController } from './controllers/tabletop/edit-tabletop.controller'
+import { GetPlayerDetailsUseCase } from 'src/domain/tabletop/application/use-cases/player/get-player-details'
+import { GetPlayerDetailsController } from './controllers/player/get-player-details.controller'
 
 @Module({
   imports: [
@@ -50,6 +54,7 @@ import { StorageModule } from '../storage/storage.module'
 
     // Player
     UpdatePlayerController,
+    GetPlayerDetailsController,
 
     // Tabletop
     RegisterTabletopController,
@@ -57,6 +62,7 @@ import { StorageModule } from '../storage/storage.module'
     FetchNearbyTabletopController,
     GetTabletopDetailsController,
     FetchPlayerTabletopController,
+    EditTabletopController,
 
     // Upload\
     UploadFileController,
@@ -73,6 +79,7 @@ import { StorageModule } from '../storage/storage.module'
 
     // Player
     UpdatePlayerUseCase,
+    GetPlayerDetailsUseCase,
 
     // Tabletop
     RegisterTabletopUseCase,
@@ -80,6 +87,7 @@ import { StorageModule } from '../storage/storage.module'
     FetchNearbyTabletopUseCase,
     GetTabletopDetailsUseCase,
     FetchPlayerTabletopUseCase,
+    EditTabletopUseCase,
 
     // Upload\
     UploadFileUseCase,

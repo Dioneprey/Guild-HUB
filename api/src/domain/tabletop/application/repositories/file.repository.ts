@@ -1,7 +1,7 @@
 import { File } from '../../enterprise/entities/file'
 
 export interface FileRepositoryFindByUniqueFieldProps {
-  key: 'id' | 'url'
+  key: 'id' | 'url' | 'key'
   value: string
 }
 

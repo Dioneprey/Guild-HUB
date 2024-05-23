@@ -16,7 +16,7 @@ type UploadFileUseCaseResponse = Either<
   ImageCouldNotBeSentError,
   {
     url: string
-    id: string
+    key: string
   }
 >
 
@@ -50,7 +50,7 @@ export class UploadFileUseCase {
 
       return right({
         url,
-        id: file.id.toString(),
+        key: file.key,
       })
     } catch (error) {
       console.log(error)
