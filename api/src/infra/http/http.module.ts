@@ -29,6 +29,8 @@ import { UploadFilesAsyncController } from './controllers/upload/upload-async-fi
 import { UploadFileUseCase } from 'src/domain/tabletop/application/use-cases/upload/upload-file'
 import { UploadFilesAsyncUseCase } from 'src/domain/tabletop/application/use-cases/upload/upload-files-async'
 import { StorageModule } from '../storage/storage.module'
+import { EditTabletopUseCase } from 'src/domain/tabletop/application/use-cases/tabletop/edit-tabletop'
+import { EditTabletopController } from './controllers/tabletop/edit-tabletop.controller'
 
 @Module({
   imports: [
@@ -57,6 +59,7 @@ import { StorageModule } from '../storage/storage.module'
     FetchNearbyTabletopController,
     GetTabletopDetailsController,
     FetchPlayerTabletopController,
+    EditTabletopController,
 
     // Upload\
     UploadFileController,
@@ -80,6 +83,7 @@ import { StorageModule } from '../storage/storage.module'
     FetchNearbyTabletopUseCase,
     GetTabletopDetailsUseCase,
     FetchPlayerTabletopUseCase,
+    EditTabletopUseCase,
 
     // Upload\
     UploadFileUseCase,

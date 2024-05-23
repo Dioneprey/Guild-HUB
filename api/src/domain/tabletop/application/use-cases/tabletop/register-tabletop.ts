@@ -48,12 +48,12 @@ export class RegisterTabletopUseCase {
     playerId,
     tabletopData,
   }: RegisterTabletopUseCaseRequest): Promise<RegisterTabletopUseCaseResponse> {
-    const masterExists = await this.playerRepository.findByUniqueField({
+    const playerExists = await this.playerRepository.findByUniqueField({
       key: 'id',
       value: playerId,
     })
 
-    if (!masterExists) {
+    if (!playerExists) {
       return left(new ResourceNotFoundError(playerId))
     }
 

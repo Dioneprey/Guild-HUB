@@ -90,6 +90,12 @@ export class PrismaTabletopRepository implements TabletopRepository {
     tabletopId: string
     language: number[]
   }) {
+    await this.prisma.tabletopLanguage.deleteMany({
+      where: {
+        tabletopId,
+      },
+    })
+
     await this.prisma.tabletopLanguage.createMany({
       data: language.map((item) => {
         return {
