@@ -28,12 +28,12 @@ export class FilesUploadProcessor {
       return error
     }
 
-    const { id, url } = result.value
+    const { key, url } = result.value
 
     return {
       userId,
       url,
-      id,
+      key,
     }
   }
 
@@ -41,13 +41,13 @@ export class FilesUploadProcessor {
   onCompleted(
     job: Job,
     {
-      id,
+      key,
       url,
       userId,
     }: {
       userId: string
       url: string
-      id: string
+      key: string
     },
   ) {
     console.log(`Job completed with result ${job.name} ${url}`)
@@ -55,7 +55,7 @@ export class FilesUploadProcessor {
     this.uploadGateway.handleEvent({
       userId,
       url,
-      id,
+      key,
     })
   }
 }

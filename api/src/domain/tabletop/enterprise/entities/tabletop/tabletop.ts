@@ -5,9 +5,9 @@ import { Optional } from 'src/core/types/optional'
 import { TabletopPlayer } from './tabletop-player'
 import { File } from '../file'
 import { TabletopSystem } from './tabletop-system'
-import { TabletopLanguage } from './tabletop-language'
 import { OnlinePlataform } from '../online-plataform'
 import { Timezone } from '../timezone'
+import { Language } from '../language'
 
 export enum TabletopType {
   rpg = 'R',
@@ -40,7 +40,7 @@ export interface TabletopProps {
   playersLimit?: number | null
   tabletopSystemId?: number | null
   tabletopSystem?: TabletopSystem | null
-  tabletopLanguage?: TabletopLanguage[] | null
+  tabletopLanguage?: Language[] | null
   expertiseLevel?: TabletopExpertise | null
   cadence?: TabletopCadence | null
   avatarFileId?: string | null
@@ -112,9 +112,7 @@ export class Tabletop extends Entity<TabletopProps> {
     return this.props.tabletopLanguage
   }
 
-  set tabletopLanguage(
-    tabletopLanguage: TabletopLanguage[] | null | undefined,
-  ) {
+  set tabletopLanguage(tabletopLanguage: Language[] | null | undefined) {
     this.props.tabletopLanguage = tabletopLanguage
     this.touch()
   }

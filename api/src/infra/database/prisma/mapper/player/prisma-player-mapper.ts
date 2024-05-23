@@ -1,6 +1,5 @@
 import {
   Prisma,
-  User as PrismaPlayer,
   GenderOptions as PrismaGenderOptions,
   RoleOptions as PrismaRoleOptions,
 } from '@prisma/client'
@@ -10,17 +9,51 @@ import {
   Player,
   RoleOptions,
 } from 'src/domain/tabletop/enterprise/entities/player'
+import { PrismaFileMapper } from '../prisma-file-mapper'
+import { PrismaLanguageMapper } from '../prisma-language-mapper'
+
+export type PlayerWithInclude = Prisma.UserGetPayload<{
+  include: {
+    userLanguage: {
+      select: {
+        language: true
+      }
+    }
+    avatarFile?: true
+  }
+}>
 
 export class PrismaPlayerMapper {
-  static toDomain(raw: PrismaPlayer): Player {
+  static toDomain(raw: PlayerWithInclude): Player {
     const role = raw?.role ? RoleOptions[raw.role] : RoleOptions.user
     const gender = raw.gender ? GenderOptions[raw.gender] : null
 
     return Player.create(
       {
-        ...raw,
+        name: raw.name,
+        nickname: raw.nickname,
+        bio: raw.bio,
         gender,
+        email: raw.email,
+        password: raw.password,
+        avatarFileId: raw.avatarFileId ? raw.avatarFileId : null,
+        cityId: raw.cityId,
+        countryId: raw.countryId,
+        birthdate: raw.birthdate,
+        registrationValidateCode: raw.registrationValidateCode,
+        registrationCompletedAt: raw.registrationCompletedAt,
+        registrationValidatedAt: raw.registrationValidatedAt,
         role,
+        createdAt: raw.createdAt,
+        updatedAt: raw.updatedAt,
+        avatarFile: raw.avatarFile
+          ? PrismaFileMapper.toDomain(raw.avatarFile)
+          : null,
+        playerLanguage: raw.userLanguage
+          ? raw.userLanguage.map((item) =>
+              PrismaLanguageMapper.toDomain(item.language),
+            )
+          : null,
       },
       new UniqueEntityID(raw.id),
     )
@@ -40,7 +73,7 @@ export class PrismaPlayerMapper {
       gender,
       email: player.email,
       password: player.password,
-      avatarFileId: player.avatarFileId ? Number(player.avatarFileId) : null,
+      avatarFileId: player.avatarFileId ? player.avatarFileId : null,
       cityId: player.cityId,
       countryId: player.countryId,
       birthdate: player.birthdate,

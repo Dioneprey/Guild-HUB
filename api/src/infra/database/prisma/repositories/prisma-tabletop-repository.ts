@@ -29,7 +29,11 @@ export class PrismaTabletopRepository implements TabletopRepository {
         }),
         tabletopSystem: true,
         tabletopLocation: true,
-        tabletopLanguage: true,
+        tabletopLanguage: {
+          select: {
+            language: true,
+          },
+        },
         avatarFile: true,
         coverFile: true,
         onlinePlataform: true,
@@ -66,7 +70,11 @@ export class PrismaTabletopRepository implements TabletopRepository {
         tabletopLocation: true,
         avatarFile: true,
         coverFile: true,
-        tabletopLanguage: true,
+        tabletopLanguage: {
+          select: {
+            language: true,
+          },
+        },
         onlinePlataform: true,
         timezone: true,
       },

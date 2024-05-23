@@ -70,7 +70,7 @@ model User {
   gender                   GenderOptions?
   email                    String         @db.VarChar(100)
   password                 String         @db.VarChar(100)
-  avatarFileId             Int?           @map("avatar_file_id")
+  avatarFileId             String?        @map("avatar_file_id")
   cityId                   String?        @map("city_id") @db.VarChar(20)
   countryId                String?        @map("country_id") @db.VarChar(20)
   birthdate                DateTime?
@@ -98,7 +98,7 @@ model User {
   tabletopSchedulePlayerAvailability TabletopSchedulePlayerAvailability[]
   tabletop                           Tabletop[]
 
-  avatarFile Files? @relation(fields: [avatarFileId], references: [id])
+  avatarFile Files? @relation(fields: [avatarFileId], references: [key])
 
   userLanguage UserLanguage[]
 
@@ -353,7 +353,7 @@ model Language {
 model Files {
   id        Int       @id @default(autoincrement())
   name      String?   @db.VarChar(100)
-  key       String?   @unique @db.VarChar(100)
+  key       String    @unique @db.VarChar(100)
   path      String?   @db.VarChar(100)
   type      FileType?
   createdAt DateTime  @default(now()) @map("created_at")

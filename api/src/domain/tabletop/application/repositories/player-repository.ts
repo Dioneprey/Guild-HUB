@@ -11,6 +11,14 @@ export abstract class PlayerRepository {
     value,
   }: PlayerRepositoryFindByUniqueFieldProps): Promise<Player | null>
 
-  abstract create(player: Player): Promise<Player>
-  abstract save(player: Player): Promise<Player>
+  abstract create(player: Player): Promise<void>
+  abstract createPlayerLanguage({
+    playerId,
+    language,
+  }: {
+    playerId: string
+    language: number[]
+  }): Promise<void>
+
+  abstract save(player: Player): Promise<void>
 }

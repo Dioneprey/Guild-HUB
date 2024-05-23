@@ -1,6 +1,8 @@
 import { Entity } from 'src/core/entities/entity'
 import { UniqueEntityID } from 'src/core/entities/unique-entity-id'
 import { Optional } from 'src/core/types/optional'
+import { File } from './file'
+import { Language } from './language'
 
 // M = “Masculino” | F = “Feminino” | O = “outros"
 export enum GenderOptions {
@@ -22,13 +24,15 @@ export interface PlayerProps {
   gender?: GenderOptions | null
   email: string
   password: string
-  avatarFileId?: number | null
+  avatarFileId?: string | null
+  avatarFile?: File | null
   cityId?: string | null
   countryId?: string | null
   birthdate?: Date | null
   registrationValidateCode?: string | null
   registrationCompletedAt?: Date | null
   registrationValidatedAt?: Date | null
+  playerLanguage?: Language[] | null
   role: RoleOptions
   createdAt: Date
   updatedAt?: Date | null
@@ -93,8 +97,17 @@ export class Player extends Entity<PlayerProps> {
     return this.props.avatarFileId
   }
 
-  set avatarFileId(avatarFileId: number | undefined | null) {
+  set avatarFileId(avatarFileId: string | undefined | null) {
     this.props.avatarFileId = avatarFileId
+    this.touch()
+  }
+
+  get avatarFile() {
+    return this.props.avatarFile
+  }
+
+  set avatarFile(avatarFile: File | null | undefined) {
+    this.props.avatarFile = avatarFile
     this.touch()
   }
 
@@ -155,6 +168,15 @@ export class Player extends Entity<PlayerProps> {
     registrationValidatedAt: Date | undefined | null,
   ) {
     this.props.registrationValidatedAt = registrationValidatedAt
+    this.touch()
+  }
+
+  get playerLanguage() {
+    return this.props.playerLanguage
+  }
+
+  set playerLanguage(playerLanguage: Language[] | undefined | null) {
+    this.props.playerLanguage = playerLanguage
     this.touch()
   }
 

@@ -17,8 +17,8 @@ import { PrismaFileMapper } from '../prisma-file-mapper'
 import { PrismaTabletopPlayerMapper } from './prisma-tabletop-player-mapper'
 import { PrismaOnlinePlataformMapper } from '../prisma-online-plataform-mapper'
 import { PrismaTimezoneMapper } from '../prisma-timezone-mapper'
-import { PrismaTabletopLanguageMapper } from './prisma-tabletop-language-mapper'
 import { PrismaTabletopLocationMapper } from './prisma-tabletop-location-mapper'
+import { PrismaLanguageMapper } from '../prisma-language-mapper'
 
 type TabletopWithInclude = Prisma.TabletopGetPayload<{
   include: {
@@ -28,7 +28,11 @@ type TabletopWithInclude = Prisma.TabletopGetPayload<{
       }
     }
     tabletopSystem: true
-    tabletopLanguage: true
+    tabletopLanguage: {
+      select: {
+        language: true
+      }
+    }
     tabletopLocation: true
     avatarFile: true
     coverFile: true
@@ -104,7 +108,9 @@ export class PrismaTabletopMapper {
           ? PrismaTimezoneMapper.toDomain(raw.timezone)
           : null,
         tabletopLanguage: raw.tabletopLanguage
-          ? raw.tabletopLanguage.map(PrismaTabletopLanguageMapper.toDomain)
+          ? raw.tabletopLanguage.map((item) =>
+              PrismaLanguageMapper.toDomain(item.language),
+            )
           : null,
         online: raw.online,
         hasDungeonMaster: raw.hasDungeonMaster,

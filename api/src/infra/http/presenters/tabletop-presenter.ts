@@ -5,6 +5,7 @@ import { TabletopLocationPresenter } from './tabletop-location-presenter'
 import { TimezonePresenter } from './timezone-presenter'
 import { TabletopSystemPresenter } from './tabletop-system-presenter'
 import { OnlinePlataformPresenter } from './online-plataform-presenter'
+import { LanguagePresenter } from './language-presenter'
 
 export class TabletopPresenter {
   static toHTTP(tabletop: Tabletop | null) {
@@ -47,6 +48,9 @@ export class TabletopPresenter {
         : null,
       tabletopLocations: tabletop.tabletopLocations
         ? tabletop.tabletopLocations.map(TabletopLocationPresenter.toHTTP)
+        : null,
+      tabletopLanguage: tabletop.tabletopLanguage
+        ? tabletop.tabletopLanguage.map(LanguagePresenter.toHTTP)
         : null,
     }
   }
