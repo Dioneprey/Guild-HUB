@@ -10,6 +10,7 @@ import { ZodValidationPipe } from '../../pipes/zod-validation.pipe'
 import { RegisterTabletopUseCase } from 'src/domain/tabletop/application/use-cases/tabletop/register-tabletop'
 import {
   TabletopCadence,
+  TabletopCommunicationType,
   TabletopExpertise,
   TabletopType,
 } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop'
@@ -19,15 +20,18 @@ import { UserPayload } from 'src/infra/auth/jwt.strategy'
 const registerTabletopBodySchema = z.object({
   name: z.string(),
   description: z.string().optional(),
+  type: z.nativeEnum(TabletopType),
   playersLimit: z.number(),
   tabletopSystemId: z.number().optional(),
-  language: z.array(z.number()).optional(),
   minAge: z.number().optional(),
-  type: z.nativeEnum(TabletopType),
   expertiseLevel: z.nativeEnum(TabletopExpertise),
   cadence: z.nativeEnum(TabletopCadence),
-  avatarFileId: z.number().optional(),
-  coverFileId: z.number().optional(),
+  tabletopLanguageId: z.array(z.number()).optional(),
+  communication: z.nativeEnum(TabletopCommunicationType).optional(),
+  onlinePlataformId: z.number().optional(),
+  timezoneId: z.number().optional(),
+  avatarFileId: z.string().optional(),
+  coverFileId: z.string().optional(),
   online: z.coerce
     .string()
     .optional()
@@ -58,15 +62,18 @@ export class RegisterTabletopController {
       description,
       playersLimit,
       tabletopSystemId,
-      language,
+      avatarFileId,
+      tabletopLanguageId,
       minAge,
       type,
       expertiseLevel,
       cadence,
-      avatarFileId,
       coverFileId,
       online,
       hasDungeonMaster,
+      communication,
+      onlinePlataformId,
+      timezoneId,
     } = registerTabletopBodySchema.parse(body)
 
     const result = await this.registerTabletop.execute({
@@ -76,15 +83,18 @@ export class RegisterTabletopController {
         description,
         playersLimit,
         tabletopSystemId,
-        language,
+        avatarFileId,
+        tabletopLanguageId,
         minAge,
         type,
         expertiseLevel,
         cadence,
-        avatarFileId,
         coverFileId,
         online,
         hasDungeonMaster,
+        communication,
+        onlinePlataformId,
+        timezoneId,
       },
     })
 

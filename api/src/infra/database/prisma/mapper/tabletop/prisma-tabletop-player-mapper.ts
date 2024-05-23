@@ -21,6 +21,7 @@ export class PrismaTabletopPlayerMapper {
           ? PrismaPlayerMapper.toDomain(raw.player)
           : undefined,
         createdAt: raw.createdAt,
+        gameMaster: raw.gameMaster,
       },
       new UniqueEntityID(raw.id.toString()),
     )
@@ -30,6 +31,7 @@ export class PrismaTabletopPlayerMapper {
     tabletopPlayer: TabletopPlayer,
   ): Prisma.TabletopUsersUncheckedCreateInput {
     return {
+      id: Number(tabletopPlayer.id.toString()),
       tabletopId: tabletopPlayer.tabletopId.toString(),
       userId: tabletopPlayer.playerId.toString(),
       createdAt: tabletopPlayer.createdAt,

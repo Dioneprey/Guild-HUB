@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common'
 import {
   Tabletop,
   TabletopCadence,
+  TabletopCommunicationType,
   TabletopExpertise,
   TabletopType,
 } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop'
@@ -18,17 +19,19 @@ interface RegisterTabletopUseCaseRequest {
     name: string
     description?: string
     playersLimit: number
-    language?: number[]
-    avatarFileId?: number
+    tabletopLanguageId?: number[]
+    avatarFileId?: string
     minAge?: number
     type: TabletopType
     tabletopSystemId?: number
     expertiseLevel?: TabletopExpertise
     cadence?: TabletopCadence
-    coverFileId?: number
+    coverFileId?: string
     online?: boolean
     hasDungeonMaster?: boolean
     onlinePlataformId?: number
+    timezoneId?: number
+    communication?: TabletopCommunicationType
   }
 }
 
@@ -60,7 +63,7 @@ export class RegisterTabletopUseCase {
       playersLimit,
       tabletopSystemId,
       avatarFileId,
-      language,
+      tabletopLanguageId,
       minAge,
       type,
       expertiseLevel,
@@ -68,6 +71,9 @@ export class RegisterTabletopUseCase {
       coverFileId,
       online,
       hasDungeonMaster,
+      communication,
+      onlinePlataformId,
+      timezoneId,
     } = tabletopData
 
     const tabletop = Tabletop.create({
@@ -82,15 +88,19 @@ export class RegisterTabletopUseCase {
       cadence,
       avatarFileId,
       coverFileId,
+      communication,
       online,
       hasDungeonMaster,
+      onlinePlataformId,
+      timezoneId,
     })
 
     await this.tabletopRepository.create(tabletop)
-    if (language) {
+
+    if (tabletopLanguageId) {
       await this.tabletopRepository.createTabletopLanguage({
         tabletopId: tabletop.id.toString(),
-        language,
+        language: tabletopLanguageId,
       })
     }
 

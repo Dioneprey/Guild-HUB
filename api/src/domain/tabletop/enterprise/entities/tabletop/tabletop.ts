@@ -6,6 +6,8 @@ import { TabletopPlayer } from './tabletop-player'
 import { File } from '../file'
 import { TabletopSystem } from './tabletop-system'
 import { TabletopLanguage } from './tabletop-language'
+import { OnlinePlataform } from '../online-plataform'
+import { Timezone } from '../timezone'
 
 export enum TabletopType {
   rpg = 'R',
@@ -26,24 +28,34 @@ export enum TabletopCadence {
   monthly = 'M',
 }
 
+export enum TabletopCommunicationType {
+  videoVoice = 'A',
+  voice = 'B',
+  text = 'C',
+}
 export interface TabletopProps {
   ownerId: UniqueEntityID
   name?: string | null
   description?: string | null
   playersLimit?: number | null
   tabletopSystemId?: number | null
-  tabletopLanguage?: TabletopLanguage[] | null
   tabletopSystem?: TabletopSystem | null
+  tabletopLanguage?: TabletopLanguage[] | null
   expertiseLevel?: TabletopExpertise | null
   cadence?: TabletopCadence | null
-  avatarFileId?: number | null
+  avatarFileId?: string | null
   avatarFile?: File | null
-  coverFileId?: number | null
+  coverFileId?: string | null
   coverFile?: File | null
   minAge?: number | null
   hasDungeonMaster?: boolean | null
   type?: TabletopType | null
   online?: boolean | null
+  communication?: TabletopCommunicationType | null
+  onlinePlataformId?: number | null
+  onlinePlataform?: OnlinePlataform | null
+  timezoneId?: number | null
+  timezone?: Timezone | null
   tabletopPlayers?: TabletopPlayer[] | null
   tabletopLocations?: TabletopLocation[] | null
   createdAt: Date
@@ -138,7 +150,7 @@ export class Tabletop extends Entity<TabletopProps> {
     return this.props.avatarFileId
   }
 
-  set avatarFileId(avatarFileId: number | null | undefined) {
+  set avatarFileId(avatarFileId: string | null | undefined) {
     this.props.avatarFileId = avatarFileId
     this.touch()
   }
@@ -156,7 +168,7 @@ export class Tabletop extends Entity<TabletopProps> {
     return this.props.coverFileId
   }
 
-  set coverFileId(coverFileId: number | null | undefined) {
+  set coverFileId(coverFileId: string | null | undefined) {
     this.props.coverFileId = coverFileId
     this.touch()
   }
@@ -203,6 +215,53 @@ export class Tabletop extends Entity<TabletopProps> {
 
   set online(online: boolean | null | undefined) {
     this.props.online = online
+    this.touch()
+  }
+
+  get communication() {
+    return this.props.communication
+  }
+
+  set communication(
+    communication: TabletopCommunicationType | null | undefined,
+  ) {
+    this.props.communication = communication
+    this.touch()
+  }
+
+  get onlinePlataformId() {
+    return this.props.onlinePlataformId
+  }
+
+  set onlinePlataformId(onlinePlataformId: number | null | undefined) {
+    this.props.onlinePlataformId = onlinePlataformId
+    this.touch()
+  }
+
+  get timezoneId() {
+    return this.props.timezoneId
+  }
+
+  set timezoneId(timezoneId: number | null | undefined) {
+    this.props.timezoneId = timezoneId
+    this.touch()
+  }
+
+  get onlinePlataform() {
+    return this.props.onlinePlataform
+  }
+
+  set onlinePlataform(onlinePlataform: OnlinePlataform | null | undefined) {
+    this.props.onlinePlataform = onlinePlataform
+    this.touch()
+  }
+
+  get timezone() {
+    return this.props.timezone
+  }
+
+  set timezone(timezone: Timezone | null | undefined) {
+    this.props.timezone = timezone
     this.touch()
   }
 

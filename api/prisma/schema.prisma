@@ -210,8 +210,8 @@ model Tabletop {
   tabletopSystemId  Int?                       @map("tabletop_system_id")
   expertiseLevel    TabletopExpertise?         @map("expertise_level")
   cadence           TabletopCadence?
-  avatarFileId      Int?                       @map("avatar_file_id")
-  coverFileId       Int?                       @map("cover_file_id")
+  avatarFileId      String?                    @map("avatar_file_id")
+  coverFileId       String?                    @map("cover_file_id")
   minAge            Int?                       @map("min_age") @db.SmallInt()
   hasDungeonMaster  Boolean?                   @map("has_dungeon_master")
   type              TabletopType?
@@ -232,8 +232,8 @@ model Tabletop {
   tabletopLocation TabletopLocation[]
   tabletopSchedule TabletopSchedule[]
 
-  avatarFile Files? @relation("avatarFile", fields: [avatarFileId], references: [id])
-  coverFile  Files? @relation("coverFile", fields: [coverFileId], references: [id])
+  avatarFile Files? @relation("avatarFile", fields: [avatarFileId], references: [key])
+  coverFile  Files? @relation("coverFile", fields: [coverFileId], references: [key])
 
   tabletopLanguage TabletopLanguage[]
 
@@ -321,8 +321,9 @@ model TabletopLocation {
 }
 
 model TabletopSystem {
-  id       Int        @id @default(autoincrement())
-  name     String     @db.VarChar(100)
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(100)
+
   Tabletop Tabletop[]
 
   @@map("tabletop_system")
@@ -352,7 +353,7 @@ model Language {
 model Files {
   id        Int       @id @default(autoincrement())
   name      String?   @db.VarChar(100)
-  key       String?   @db.VarChar(100)
+  key       String?   @unique @db.VarChar(100)
   path      String?   @db.VarChar(100)
   type      FileType?
   createdAt DateTime  @default(now()) @map("created_at")

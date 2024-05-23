@@ -8,11 +8,13 @@ export class TabletopPlayerPresenter {
     }
 
     return {
-      tabletopId: tabletopPlayer.id.toString(),
+      id: tabletopPlayer.id.toString(),
+      tabletopId: tabletopPlayer.tabletopId.toString(),
       playerId: tabletopPlayer.playerId.toString(),
       player: tabletopPlayer?.player
         ? PlayerPresenter.toHTTP(tabletopPlayer.player)
         : null,
+      gameMaster: tabletopPlayer.gameMaster ?? null,
       createdAt: tabletopPlayer.createdAt ?? null,
     }
   }
