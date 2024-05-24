@@ -103,6 +103,15 @@ export class PrismaTabletopRepository implements TabletopRepository {
               },
             },
           }),
+          ...(filters?.tabletopCadence && {
+            cadence: filters.tabletopCadence,
+          }),
+          ...(filters?.tabletopExpertise && {
+            expertiseLevel: filters.tabletopExpertise,
+          }),
+          ...(filters?.timezoneId && {
+            timezoneId: filters.timezoneId,
+          }),
         },
         include: {
           tabletopUsers: {
@@ -196,7 +205,11 @@ export class PrismaTabletopRepository implements TabletopRepository {
   }: TabletopRepositoryFindAllByPlayerIdProps) {
     const tabletop = await this.prisma.tabletop.findMany({
       where: {
-        ownerId: playerId,
+        tabletopUsers: {
+          some: {
+            userId: playerId,
+          },
+        },
       },
       include: {
         ...(include?.tabletopPlayers && {

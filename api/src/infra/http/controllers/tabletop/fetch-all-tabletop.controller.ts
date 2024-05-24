@@ -4,7 +4,11 @@ import { ZodValidationPipe } from '../../pipes/zod-validation.pipe'
 import { Public } from 'src/infra/auth/public'
 import { FetchAllTabletopsUseCase } from 'src/domain/tabletop/application/use-cases/tabletop/fetch-all-tabletop'
 import { TabletopPresenter } from '../../presenters/tabletop-presenter'
-import { TabletopType } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop'
+import {
+  TabletopCadence,
+  TabletopExpertise,
+  TabletopType,
+} from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop'
 
 const fetchAllTabletopsQuerySchema = z.object({
   pageIndex: z.coerce.number().default(0),
@@ -22,6 +26,9 @@ const fetchAllTabletopsQuerySchema = z.object({
   onlyVerifiedTabletop: z.boolean().optional(),
   tabletopType: z.nativeEnum(TabletopType).optional(),
   tabletopSystemId: z.coerce.number().optional(),
+  timezoneId: z.coerce.number().optional(),
+  tabletopCadence: z.nativeEnum(TabletopCadence).optional(),
+  tabletopExpertise: z.nativeEnum(TabletopExpertise).optional(),
   tabletopLanguageId: z.string().optional(),
 })
 
@@ -51,6 +58,9 @@ export class FetchAllTabletopsController {
       tabletopType,
       tabletopSystemId,
       tabletopLanguageId,
+      timezoneId,
+      tabletopCadence,
+      tabletopExpertise,
     } = fetchAllTabletopsQuerySchema.parse(query)
 
     const result = await this.fetchAllTabletops.execute({
@@ -67,6 +77,9 @@ export class FetchAllTabletopsController {
         onlyVerifiedTabletop,
         tabletopType,
         tabletopSystemId,
+        tabletopCadence,
+        tabletopExpertise,
+        timezoneId,
         tabletopLanguageId: tabletopLanguageId
           ? JSON.parse(tabletopLanguageId).map((id: string) => parseInt(id))
           : undefined,

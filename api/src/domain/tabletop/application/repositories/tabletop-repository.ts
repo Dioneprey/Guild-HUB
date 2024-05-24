@@ -1,6 +1,8 @@
 import { PaginationProps, PaginationResponse } from 'src/core/types/pagination'
 import {
   Tabletop,
+  TabletopCadence,
+  TabletopExpertise,
   TabletopType,
 } from '../../enterprise/entities/tabletop/tabletop'
 import { TabletopPlayer } from '../../enterprise/entities/tabletop/tabletop-player'
@@ -23,7 +25,10 @@ interface TabletopRepositoryFindAllFilters {
   minAge?: number
   onlyVerifiedTabletop?: boolean
   tabletopType?: TabletopType
+  tabletopCadence?: TabletopCadence
+  tabletopExpertise?: TabletopExpertise
   tabletopSystemId?: number
+  timezoneId?: number
   tabletopLanguageId?: number[]
 }
 export interface TabletopRepositoryFindAllProps
