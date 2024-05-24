@@ -16,14 +16,17 @@ import { UserPayload } from 'src/infra/auth/jwt.strategy'
 
 const updatePlayerBodySchema = z.object({
   playerData: z.object({
+    email: z.string().optional(),
     name: z.string().optional(),
     password: z.string().optional(),
     nickname: z.string().optional().nullable(),
     bio: z.string().optional().nullable(),
     gender: z.nativeEnum(GenderOptions).optional().nullable(),
-    avatarUrl: z.string().optional().nullable(),
-    cityId: z.string().optional(),
+    avatarFileId: z.string().optional().nullable(),
     countryId: z.string().optional(),
+    cityId: z.string().optional(),
+    birthdate: z.coerce.date().optional(),
+    playerLanguageId: z.array(z.number()).optional(),
   }),
   registrationCompleted: z.boolean().optional(),
 })
@@ -31,7 +34,7 @@ const updatePlayerBodySchema = z.object({
 type updatePlayerBodySchema = z.infer<typeof updatePlayerBodySchema>
 const bodyValidationPipe = new ZodValidationPipe(updatePlayerBodySchema)
 
-@Controller('/player')
+@Controller('/players')
 export class UpdatePlayerController {
   constructor(private readonly updatePlayer: UpdatePlayerUseCase) {}
 
@@ -41,12 +44,12 @@ export class UpdatePlayerController {
     @CurrentUser() user: UserPayload,
     @Body(bodyValidationPipe) body: updatePlayerBodySchema,
   ) {
-    const id = user.sub
+    const playerId = user.sub
     const { playerData, registrationCompleted } =
       updatePlayerBodySchema.parse(body)
 
     const result = await this.updatePlayer.execute({
-      id,
+      playerId,
       playerData,
       registrationCompleted,
     })

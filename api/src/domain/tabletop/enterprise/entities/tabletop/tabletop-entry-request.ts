@@ -1,7 +1,7 @@
 import { Entity } from 'src/core/entities/entity'
 import { UniqueEntityID } from 'src/core/entities/unique-entity-id'
 import { Optional } from 'src/core/types/optional'
-import { Player } from './player'
+import { Player } from '../player'
 
 export interface TabletopEntryRequestProps {
   playerId: UniqueEntityID

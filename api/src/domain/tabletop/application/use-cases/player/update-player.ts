@@ -1,19 +1,26 @@
 import { Either, left, right } from 'src/core/either'
-import { PlayerProps } from '../../../enterprise/entities/player'
+import { GenderOptions } from '../../../enterprise/entities/player'
 import { Injectable } from '@nestjs/common'
 import { PlayerRepository } from '../../repositories/player-repository'
 import { HashGenerator } from '../../cryptography/hash-generator'
-import { Exclude } from 'src/core/types/exclude'
 import { ResourceNotFoundError } from '../@errors/resource-not-found.error'
 import { PlayerAlreadyExistsError } from '../@errors/player-already-exists.error'
-import { Optional } from 'src/core/types/optional'
 
 interface UpdatePlayerUseCaseRequest {
-  id: string
-  playerData: Optional<
-    Exclude<PlayerProps, 'createdAt' | 'updatedAt' | 'birthdate' | 'role'>,
-    'email' | 'password'
-  >
+  playerId: string
+  playerData: {
+    name?: string | null
+    nickname?: string | null
+    bio?: string | null
+    gender?: GenderOptions | null
+    email?: string
+    password?: string
+    avatarFileId?: string | null
+    cityId?: string | null
+    countryId?: string | null
+    birthdate?: Date | null
+    playerLanguageId?: number[] | null
+  }
   registrationCompleted?: boolean
 }
 
@@ -27,17 +34,17 @@ export class UpdatePlayerUseCase {
   ) {}
 
   async execute({
-    id,
+    playerId,
     playerData,
     registrationCompleted,
   }: UpdatePlayerUseCaseRequest): Promise<UpdatePlayerUseCaseResponse> {
     const playerExists = await this.playerRepository.findByUniqueField({
       key: 'id',
-      value: id,
+      value: playerId,
     })
 
     if (!playerExists) {
-      return left(new ResourceNotFoundError(id))
+      return left(new ResourceNotFoundError(playerId))
     }
 
     if (playerData.email) {
@@ -61,10 +68,16 @@ export class UpdatePlayerUseCase {
 
     const properties = Object.keys(playerData)
 
+    let playerLanguageId: number[] | null = null
+
     // Percorre todos os itens de playerData, objeto passado pela requisição, caso tenha um valor, atribui ao usuário existente, caso não, continuar valor atual
     properties.forEach((element) => {
       if (element === 'password') {
         playerData[element] = hashedPassword ?? playerExists[element]
+      }
+
+      if (element === 'playerLanguageId') {
+        playerLanguageId = playerData[element] as number[]
       }
 
       playerExists[element] =
@@ -78,6 +91,13 @@ export class UpdatePlayerUseCase {
     }
 
     await this.playerRepository.save(playerExists)
+
+    if (playerLanguageId) {
+      await this.playerRepository.createPlayerLanguage({
+        playerId,
+        language: playerLanguageId,
+      })
+    }
 
     return right(undefined)
   }
