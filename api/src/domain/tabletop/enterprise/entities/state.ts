@@ -4,6 +4,7 @@ import { UniqueEntityID } from 'src/core/entities/unique-entity-id'
 export interface StateProps {
   name: string
   uf: string
+  countryId: string
 }
 
 export class State extends Entity<StateProps> {
@@ -21,6 +22,14 @@ export class State extends Entity<StateProps> {
 
   set uf(uf: string) {
     this.props.uf = uf
+  }
+
+  get countryId() {
+    return this.props.countryId
+  }
+
+  set countryId(countryId: string) {
+    this.props.countryId = countryId
   }
 
   static create(props: StateProps, id?: UniqueEntityID) {

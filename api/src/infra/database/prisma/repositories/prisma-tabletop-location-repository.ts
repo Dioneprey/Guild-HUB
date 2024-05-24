@@ -72,6 +72,7 @@ export class PrismaTabletopLocationRepository
       postalCode: item.postal_code,
       cityId: item.city_id,
       countryId: item.country_id,
+      stateId: item.state_id,
       streetName: item.street_name,
       streetNumber: item.street_number,
       neighborhood: item.neighborhood,

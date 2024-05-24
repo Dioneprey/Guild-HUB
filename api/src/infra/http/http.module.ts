@@ -33,6 +33,8 @@ import { EditTabletopUseCase } from 'src/domain/tabletop/application/use-cases/t
 import { EditTabletopController } from './controllers/tabletop/edit-tabletop.controller'
 import { GetPlayerDetailsUseCase } from 'src/domain/tabletop/application/use-cases/player/get-player-details'
 import { GetPlayerDetailsController } from './controllers/player/get-player-details.controller'
+import { FetchAllTabletopsController } from './controllers/tabletop/fetch-all-tabletop.controller'
+import { FetchAllTabletopsUseCase } from 'src/domain/tabletop/application/use-cases/tabletop/fetch-all-tabletop'
 
 @Module({
   imports: [
@@ -63,6 +65,7 @@ import { GetPlayerDetailsController } from './controllers/player/get-player-deta
     GetTabletopDetailsController,
     FetchPlayerTabletopController,
     EditTabletopController,
+    FetchAllTabletopsController,
 
     // Upload\
     UploadFileController,
@@ -88,6 +91,7 @@ import { GetPlayerDetailsController } from './controllers/player/get-player-deta
     GetTabletopDetailsUseCase,
     FetchPlayerTabletopUseCase,
     EditTabletopUseCase,
+    FetchAllTabletopsUseCase,
 
     // Upload\
     UploadFileUseCase,
