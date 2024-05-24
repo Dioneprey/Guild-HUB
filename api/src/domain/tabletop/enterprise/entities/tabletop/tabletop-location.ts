@@ -5,6 +5,7 @@ export interface TabletopLocationProps {
   tabletopId: UniqueEntityID
   postalCode?: string | null
   cityId?: string | null
+  stateId?: string | null
   countryId?: string | null
   streetName?: string | null
   streetNumber?: string | null
@@ -36,6 +37,14 @@ export class TabletopLocation extends Entity<TabletopLocationProps> {
 
   set cityId(cityId: string | null | undefined) {
     this.props.cityId = cityId
+  }
+
+  get stateId() {
+    return this.props.stateId
+  }
+
+  set stateId(stateId: string | null | undefined) {
+    this.props.stateId = stateId
   }
 
   get countryId() {

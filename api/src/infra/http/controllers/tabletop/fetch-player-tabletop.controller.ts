@@ -4,7 +4,7 @@ import { CurrentUser } from 'src/infra/auth/current-user.decorator'
 import { UserPayload } from 'src/infra/auth/jwt.strategy'
 import { TabletopPresenter } from '../../presenters/tabletop-presenter'
 
-@Controller('/tabletops')
+@Controller('/tabletops/player')
 export class FetchPlayerTabletopController {
   constructor(
     private readonly fetchPlayerTabletop: FetchPlayerTabletopUseCase,

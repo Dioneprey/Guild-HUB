@@ -306,6 +306,7 @@ model TabletopLocation {
   tabletopId   String  @map("tabletop_id") @db.VarChar(50)
   postalCode   String? @map("postal_code") @db.VarChar(20)
   cityId       String? @map("city_id") @db.VarChar(20)
+  stateId      String? @map("state_id") @db.VarChar(20)
   countryId    String? @map("country_id") @db.VarChar(20)
   streetName   String? @map("street_name") @db.VarChar(20)
   streetNumber String? @map("street_number") @db.VarChar(10)
@@ -314,6 +315,7 @@ model TabletopLocation {
   longitude    Float?
 
   city     City?    @relation(fields: [cityId], references: [id])
+  state    State?   @relation(fields: [stateId], references: [id])
   country  Country? @relation(fields: [countryId], references: [id])
   tabletop Tabletop @relation(fields: [tabletopId], references: [id])
 
@@ -384,23 +386,28 @@ model City {
 }
 
 model State {
-  id   String @id @db.VarChar(20)
-  uf   String @unique @db.VarChar(2)
-  name String @db.VarChar(100)
+  id        String @id @db.VarChar(20)
+  uf        String @unique @db.VarChar(2)
+  name      String @db.VarChar(100)
+  countryId String @db.VarChar(20)
 
-  city City[]
+  country          Country            @relation(fields: [countryId], references: [id])
+  city             City[]
+  tabletopLocation TabletopLocation[]
 
   @@index([uf])
   @@map("states")
 }
 
 model Country {
-  id   String @id @db.VarChar(20)
-  name String @db.VarChar(100)
+  id       String @id @db.VarChar(20)
+  name     String @db.VarChar(100)
+  fullName String @map("full_name") @db.VarChar(100)
 
   user             User[]
   city             City[]
   tabletopLocation TabletopLocation[]
+  State            State[]
 
   @@map("countries")
 }

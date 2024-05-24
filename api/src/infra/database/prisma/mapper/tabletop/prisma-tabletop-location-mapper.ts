@@ -24,6 +24,7 @@ export class PrismaTabletopLocationMapper {
       tabletopId: tabletopLocation.tabletopId.toString(),
       postalCode: tabletopLocation.postalCode,
       cityId: tabletopLocation.cityId,
+      stateId: tabletopLocation.stateId,
       countryId: tabletopLocation.countryId,
       streetName: tabletopLocation.streetName,
       streetNumber: tabletopLocation.streetNumber,
