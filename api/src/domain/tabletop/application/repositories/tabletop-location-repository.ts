@@ -6,6 +6,7 @@ export interface RawTabletopLocation {
   postal_code: string
   city_id: string | null
   country_id: string | null
+  state_id: string | null
   street_name: string
   street_number: string
   neighborhood: string
