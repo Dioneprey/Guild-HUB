@@ -35,7 +35,8 @@ export enum TabletopCommunicationType {
 }
 export interface TabletopProps {
   ownerId: UniqueEntityID
-  name?: string | null
+  name: string
+  slug: string
   description?: string | null
   playersLimit?: number | null
   tabletopSystemId?: number | null
@@ -76,8 +77,17 @@ export class Tabletop extends Entity<TabletopProps> {
     return this.props.name
   }
 
-  set name(name: string | null | undefined) {
+  set name(name: string) {
     this.props.name = name
+    this.touch()
+  }
+
+  get slug() {
+    return this.props.slug
+  }
+
+  set slug(slug: string) {
+    this.props.slug = slug
     this.touch()
   }
 

@@ -1,4 +1,4 @@
-import { Player } from 'src/domain/tabletop/enterprise/entities/player'
+import { Player } from 'src/domain/tabletop/enterprise/entities/player/player'
 import { LanguagePresenter } from './language-presenter'
 import { FilePresenter } from './file-presenter'
 
@@ -21,7 +21,6 @@ export class PlayerPresenter {
       cityId: player.cityId ?? null,
       countryId: player.countryId ?? null,
       birthdate: player.birthdate ?? null,
-      registrationValidateCode: player.registrationValidateCode ?? null,
       registrationCompletedAt: player.registrationCompletedAt ?? null,
       registrationValidatedAt: player.registrationValidatedAt ?? null,
       role: player.role ?? null,

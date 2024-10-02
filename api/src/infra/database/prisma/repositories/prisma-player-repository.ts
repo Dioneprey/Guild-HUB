@@ -5,7 +5,7 @@ import {
   PlayerRepository,
   PlayerRepositoryFindByUniqueFieldProps,
 } from 'src/domain/tabletop/application/repositories/player-repository'
-import { Player } from 'src/domain/tabletop/enterprise/entities/player'
+import { Player } from 'src/domain/tabletop/enterprise/entities/player/player'
 
 @Injectable()
 export class PrismaPlayerRepository implements PlayerRepository {
@@ -14,13 +14,13 @@ export class PrismaPlayerRepository implements PlayerRepository {
     key,
     value,
   }: PlayerRepositoryFindByUniqueFieldProps) {
-    const player = await this.prisma.user.findFirst({
+    const player = await this.prisma.player.findFirst({
       where: {
         [key]: value,
       },
       include: {
         avatarFile: true,
-        userLanguage: {
+        playerLanguage: {
           select: {
             language: true,
           },
@@ -38,7 +38,7 @@ export class PrismaPlayerRepository implements PlayerRepository {
   async create(player: Player) {
     const data = PrismaPlayerMapper.toPrisma(player)
 
-    await this.prisma.user.create({
+    await this.prisma.player.create({
       data,
     })
   }
@@ -50,16 +50,16 @@ export class PrismaPlayerRepository implements PlayerRepository {
     playerId: string
     language: number[]
   }) {
-    await this.prisma.userLanguage.deleteMany({
+    await this.prisma.playerLanguage.deleteMany({
       where: {
-        userId: playerId,
+        playerId,
       },
     })
 
-    await this.prisma.userLanguage.createMany({
+    await this.prisma.playerLanguage.createMany({
       data: language.map((item) => {
         return {
-          userId: playerId,
+          playerId,
           languageId: item,
         }
       }),
@@ -69,7 +69,7 @@ export class PrismaPlayerRepository implements PlayerRepository {
   async save(player: Player) {
     const data = PrismaPlayerMapper.toPrisma(player)
 
-    await this.prisma.user.update({
+    await this.prisma.player.update({
       where: {
         id: data.id,
       },

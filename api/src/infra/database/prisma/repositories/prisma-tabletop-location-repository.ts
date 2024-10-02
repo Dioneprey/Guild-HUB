@@ -40,7 +40,7 @@ export class PrismaTabletopLocationRepository
     }
 
     if (onlyOpenSlots) {
-      whereStatement += `AND players_limit > (SELECT COUNT(*) FROM tabletop_users WHERE tabletop_id = tabletop_location.id)` // apenas mesas  com vagas abertas
+      whereStatement += `AND players_limit > (SELECT COUNT(*) FROM tabletop_players WHERE tabletop_id = tabletop_location.id)` // apenas mesas  com vagas abertas
     }
 
     const rawTabletopLocations = await this.prisma.$queryRawUnsafe<
@@ -53,7 +53,7 @@ export class PrismaTabletopLocationRepository
               ROW_NUMBER() OVER (PARTITION BY "tabletop"."id" ORDER BY "tabletop"."created_at" DESC) as row_num
             FROM tabletop_location
             LEFT JOIN tabletop ON tabletop_location.tabletop_id = tabletop.id
-            LEFT JOIN tabletop_users ON tabletop_users.tabletop_id = tabletop.id
+            LEFT JOIN tabletop_players ON tabletop_players.tabletop_id = tabletop.id
             WHERE 
               ( 6371 * acos( cos( radians(${latitude}) ) * cos( radians( latitude ) ) * cos( radians( longitude ) 
               - radians(${longitude}) ) + sin( radians(${latitude}) ) * sin( radians( latitude ) ) ) ) <= ${distanceRangeInKm} -- range em KM passado pela aplicação

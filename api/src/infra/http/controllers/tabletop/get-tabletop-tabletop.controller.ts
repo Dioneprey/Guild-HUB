@@ -3,15 +3,15 @@ import { Public } from 'src/infra/auth/public'
 import { GetTabletopDetailsUseCase } from 'src/domain/tabletop/application/use-cases/tabletop/get-tabletop-details'
 import { TabletopPresenter } from '../../presenters/tabletop-presenter'
 
-@Controller('/tabletops/:tabletopId')
+@Controller('/tabletops/:slug')
 export class GetTabletopDetailsController {
   constructor(private readonly getTabletopDetails: GetTabletopDetailsUseCase) {}
 
   @Get()
   @Public()
-  async handle(@Param('tabletopId') tabletopId: string) {
+  async handle(@Param('slug') slug: string) {
     const result = await this.getTabletopDetails.execute({
-      tabletopId,
+      slug,
     })
 
     if (result.isLeft()) {

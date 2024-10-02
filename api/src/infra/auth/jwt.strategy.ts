@@ -4,7 +4,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt'
 import { z } from 'zod'
 import { EnvService } from '../env/env.service'
 import { PrismaService } from '../database/prisma/prisma.service'
-import { RoleOptions } from 'src/domain/tabletop/enterprise/entities/player'
+import { RoleOptions } from 'src/domain/tabletop/enterprise/entities/player/player'
 
 const tokenPayload = z.object({
   sub: z.string().uuid(),
@@ -33,7 +33,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: UserPayload) {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prisma.player.findUnique({
       where: {
         id: payload.sub,
       },

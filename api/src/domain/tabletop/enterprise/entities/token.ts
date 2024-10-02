@@ -1,15 +1,18 @@
 import { Entity } from 'src/core/entities/entity'
 import { UniqueEntityID } from 'src/core/entities/unique-entity-id'
 import { Optional } from 'src/core/types/optional'
-import { Player } from '../player/player'
 
-export interface TabletopEntryRequestProps {
+export enum TokenType {
+  VALIDATE_ACCOUNT = 'VALIDATE_ACCOUNT',
+}
+
+export interface TokenProps {
   playerId: UniqueEntityID
-  player: Player
+  type: TokenType
   createdAt: Date
 }
 
-export class TabletopEntryRequest extends Entity<TabletopEntryRequestProps> {
+export class Token extends Entity<TokenProps> {
   get playerId() {
     return this.props.playerId
   }
@@ -18,27 +21,24 @@ export class TabletopEntryRequest extends Entity<TabletopEntryRequestProps> {
     this.props.playerId = playerId
   }
 
-  get player() {
-    return this.props.player
+  get type() {
+    return this.props.type
   }
 
-  set player(player: Player) {
-    this.props.player = player
+  set type(type: TokenType) {
+    this.props.type = type
   }
 
   get createdAt() {
     return this.props.createdAt
   }
 
-  static create(
-    props: Optional<TabletopEntryRequestProps, 'createdAt'>,
-    id?: UniqueEntityID,
-  ) {
-    const tabletopEntryRequest = new TabletopEntryRequest(
+  static create(props: Optional<TokenProps, 'createdAt'>, id?: UniqueEntityID) {
+    const token = new Token(
       { ...props, createdAt: props.createdAt ?? new Date() },
       id,
     )
 
-    return tabletopEntryRequest
+    return token
   }
 }

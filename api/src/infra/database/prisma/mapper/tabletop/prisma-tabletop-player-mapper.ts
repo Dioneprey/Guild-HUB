@@ -1,4 +1,7 @@
-import { Prisma, TabletopUsers as PrismaTabletopPlayers } from '@prisma/client'
+import {
+  Prisma,
+  TabletopPlayers as PrismaTabletopPlayers,
+} from '@prisma/client'
 import { UniqueEntityID } from 'src/core/entities/unique-entity-id'
 import { TabletopPlayer } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop-player'
 import {
@@ -15,7 +18,7 @@ export class PrismaTabletopPlayerMapper {
     return TabletopPlayer.create(
       {
         tabletopId: new UniqueEntityID(raw.tabletopId),
-        playerId: new UniqueEntityID(raw.userId),
+        playerId: new UniqueEntityID(raw.playerId),
         player: raw.player
           ? PrismaPlayerMapper.toDomain(raw.player)
           : undefined,
@@ -28,11 +31,11 @@ export class PrismaTabletopPlayerMapper {
 
   static toPrisma(
     tabletopPlayer: TabletopPlayer,
-  ): Prisma.TabletopUsersUncheckedCreateInput {
+  ): Prisma.TabletopPlayersUncheckedCreateInput {
     return {
       id: Number(tabletopPlayer.id.toString()),
       tabletopId: tabletopPlayer.tabletopId.toString(),
-      userId: tabletopPlayer.playerId.toString(),
+      playerId: tabletopPlayer.playerId.toString(),
       createdAt: tabletopPlayer.createdAt,
     }
   }

@@ -8,7 +8,7 @@ import { Server } from 'socket.io'
 export class NotificationGateway {
   @WebSocketServer() server: Server
 
-  handleEvent({ userId }: { userId: string }): void {
-    this.server.to(userId).emit('new-notification')
+  handleEvent({ playerId }: { playerId: string }): void {
+    this.server.to(playerId).emit('new-notification')
   }
 }

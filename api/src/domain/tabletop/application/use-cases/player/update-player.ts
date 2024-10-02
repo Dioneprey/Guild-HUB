@@ -1,10 +1,10 @@
 import { Either, left, right } from 'src/core/either'
-import { GenderOptions } from '../../../enterprise/entities/player'
+import { GenderOptions } from '../../../enterprise/entities/player/player'
 import { Injectable } from '@nestjs/common'
 import { PlayerRepository } from '../../repositories/player-repository'
 import { HashGenerator } from '../../cryptography/hash-generator'
 import { ResourceNotFoundError } from '../@errors/resource-not-found.error'
-import { PlayerAlreadyExistsError } from '../@errors/player-already-exists.error'
+import { ResourceAlreadyExistsError } from '../@errors/resource-already-exists.error'
 
 interface UpdatePlayerUseCaseRequest {
   playerId: string
@@ -14,7 +14,7 @@ interface UpdatePlayerUseCaseRequest {
     bio?: string | null
     gender?: GenderOptions | null
     email?: string
-    password?: string
+    password?: string | null
     avatarFileId?: string | null
     cityId?: string | null
     countryId?: string | null
@@ -56,7 +56,7 @@ export class UpdatePlayerUseCase {
         })
 
       if (hasPlayerWithSameEmail) {
-        return left(new PlayerAlreadyExistsError(email))
+        return left(new ResourceAlreadyExistsError(email))
       }
     }
 

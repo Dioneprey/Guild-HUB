@@ -2,7 +2,7 @@ import { Either, left, right } from 'src/core/either'
 import { Injectable } from '@nestjs/common'
 import { ResourceNotFoundError } from '../@errors/resource-not-found.error'
 import { PlayerRepository } from '../../repositories/player-repository'
-import { Player } from 'src/domain/tabletop/enterprise/entities/player'
+import { Player } from 'src/domain/tabletop/enterprise/entities/player/player'
 
 interface GetPlayerDetailsUseCaseRequest {
   playerId: string

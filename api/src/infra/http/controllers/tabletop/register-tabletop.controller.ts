@@ -19,6 +19,7 @@ import { UserPayload } from 'src/infra/auth/jwt.strategy'
 
 const registerTabletopBodySchema = z.object({
   name: z.string(),
+  slug: z.string(),
   description: z.string().optional(),
   type: z.nativeEnum(TabletopType),
   playersLimit: z.number(),
@@ -57,45 +58,11 @@ export class RegisterTabletopController {
   ) {
     const userId = user.sub
 
-    const {
-      name,
-      description,
-      playersLimit,
-      tabletopSystemId,
-      avatarFileId,
-      tabletopLanguageId,
-      minAge,
-      type,
-      expertiseLevel,
-      cadence,
-      coverFileId,
-      online,
-      hasDungeonMaster,
-      communication,
-      onlinePlataformId,
-      timezoneId,
-    } = registerTabletopBodySchema.parse(body)
+    const tabletopData = registerTabletopBodySchema.parse(body)
 
     const result = await this.registerTabletop.execute({
       playerId: userId,
-      tabletopData: {
-        name,
-        description,
-        playersLimit,
-        tabletopSystemId,
-        avatarFileId,
-        tabletopLanguageId,
-        minAge,
-        type,
-        expertiseLevel,
-        cadence,
-        coverFileId,
-        online,
-        hasDungeonMaster,
-        communication,
-        onlinePlataformId,
-        timezoneId,
-      },
+      tabletopData,
     })
 
     if (result.isLeft()) {

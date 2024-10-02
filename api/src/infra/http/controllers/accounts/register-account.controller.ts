@@ -9,29 +9,38 @@ import {
 } from '@nestjs/common'
 import { Public } from 'src/infra/auth/public'
 import { ZodValidationPipe } from '../../pipes/zod-validation.pipe'
-import { RegisterAccountUseCase } from 'src/domain/tabletop/application/use-cases/accounts/register-account'
-import { PlayerAlreadyExistsError } from 'src/domain/tabletop/application/use-cases/@errors/player-already-exists.error'
+import { RegisterCredentialsAccountUseCase } from 'src/domain/tabletop/application/use-cases/accounts/register-credentials-account'
+import { ResourceAlreadyExistsError } from 'src/domain/tabletop/application/use-cases/@errors/resource-already-exists.error'
 
-const registerAccountBodySchema = z.object({
+const registerCredentialsAccountBodySchema = z.object({
   name: z.string(),
   email: z.string().email(),
   password: z.string().min(3),
 })
 
-type RegisterAccountBodySchema = z.infer<typeof registerAccountBodySchema>
-const bodyValidationPipe = new ZodValidationPipe(registerAccountBodySchema)
+type RegisterCredentialsAccountBodySchema = z.infer<
+  typeof registerCredentialsAccountBodySchema
+>
+const bodyValidationPipe = new ZodValidationPipe(
+  registerCredentialsAccountBodySchema,
+)
 
 @Public()
-@Controller('/accounts')
-export class RegisterAccountController {
-  constructor(private readonly registerAccount: RegisterAccountUseCase) {}
+@Controller('/accounts/credentials')
+export class RegisterCredentialsAccountController {
+  constructor(
+    private readonly registerCredentialsAccount: RegisterCredentialsAccountUseCase,
+  ) {}
 
   @Post()
   @HttpCode(201)
-  async handle(@Body(bodyValidationPipe) body: RegisterAccountBodySchema) {
-    const { name, email, password } = registerAccountBodySchema.parse(body)
+  async handle(
+    @Body(bodyValidationPipe) body: RegisterCredentialsAccountBodySchema,
+  ) {
+    const { name, email, password } =
+      registerCredentialsAccountBodySchema.parse(body)
 
-    const result = await this.registerAccount.execute({
+    const result = await this.registerCredentialsAccount.execute({
       name,
       email,
       password,
@@ -41,7 +50,7 @@ export class RegisterAccountController {
       const error = result.value
 
       switch (error.constructor) {
-        case PlayerAlreadyExistsError:
+        case ResourceAlreadyExistsError:
           throw new ConflictException(error.message)
         default:
           throw new BadRequestException(error.message)

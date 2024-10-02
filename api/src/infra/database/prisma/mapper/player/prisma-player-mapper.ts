@@ -8,13 +8,13 @@ import {
   GenderOptions,
   Player,
   RoleOptions,
-} from 'src/domain/tabletop/enterprise/entities/player'
+} from 'src/domain/tabletop/enterprise/entities/player/player'
 import { PrismaFileMapper } from '../prisma-file-mapper'
 import { PrismaLanguageMapper } from '../prisma-language-mapper'
 
-export type PlayerWithInclude = Prisma.UserGetPayload<{
+export type PlayerWithInclude = Prisma.PlayerGetPayload<{
   include: {
-    userLanguage: {
+    playerLanguage: {
       select: {
         language: true
       }
@@ -30,7 +30,7 @@ export class PrismaPlayerMapper {
 
     return Player.create(
       {
-        name: raw.name,
+        name: raw.name ?? '',
         nickname: raw.nickname,
         bio: raw.bio,
         gender,
@@ -40,7 +40,6 @@ export class PrismaPlayerMapper {
         cityId: raw.cityId,
         countryId: raw.countryId,
         birthdate: raw.birthdate,
-        registrationValidateCode: raw.registrationValidateCode,
         registrationCompletedAt: raw.registrationCompletedAt,
         registrationValidatedAt: raw.registrationValidatedAt,
         role,
@@ -49,8 +48,8 @@ export class PrismaPlayerMapper {
         avatarFile: raw.avatarFile
           ? PrismaFileMapper.toDomain(raw.avatarFile)
           : null,
-        playerLanguage: raw.userLanguage
-          ? raw.userLanguage.map((item) =>
+        playerLanguage: raw.playerLanguage
+          ? raw.playerLanguage.map((item) =>
               PrismaLanguageMapper.toDomain(item.language),
             )
           : null,
@@ -59,7 +58,7 @@ export class PrismaPlayerMapper {
     )
   }
 
-  static toPrisma(player: Player): Prisma.UserUncheckedCreateInput {
+  static toPrisma(player: Player): Prisma.PlayerUncheckedCreateInput {
     const role = player?.role
       ? PrismaRoleOptions[player.role]
       : PrismaRoleOptions.U
@@ -77,7 +76,6 @@ export class PrismaPlayerMapper {
       cityId: player.cityId,
       countryId: player.countryId,
       birthdate: player.birthdate,
-      registrationValidateCode: player.registrationValidateCode,
       registrationCompletedAt: player.registrationCompletedAt,
       registrationValidatedAt: player.registrationValidatedAt,
       role,

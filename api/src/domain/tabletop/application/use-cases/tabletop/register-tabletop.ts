@@ -12,11 +12,14 @@ import { PlayerRepository } from '../../repositories/player-repository'
 import { ResourceNotFoundError } from '../@errors/resource-not-found.error'
 import { UniqueEntityID } from 'src/core/entities/unique-entity-id'
 import { TabletopPlayer } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop-player'
+import { createSlug } from 'src/core/utils/create-slug'
+import { ResourceAlreadyExistsError } from '../@errors/resource-already-exists.error'
 
 interface RegisterTabletopUseCaseRequest {
   playerId: string
   tabletopData: {
     name: string
+    slug?: string
     description?: string
     playersLimit: number
     tabletopLanguageId?: number[]
@@ -48,13 +51,25 @@ export class RegisterTabletopUseCase {
     playerId,
     tabletopData,
   }: RegisterTabletopUseCaseRequest): Promise<RegisterTabletopUseCaseResponse> {
-    const playerExists = await this.playerRepository.findByUniqueField({
-      key: 'id',
-      value: playerId,
-    })
+    const tabletopSlug = tabletopData.slug ?? createSlug(tabletopData.name)
+
+    const [playerExists, tabletopWithSameSlugExists] = await Promise.all([
+      this.playerRepository.findByUniqueField({
+        key: 'id',
+        value: playerId,
+      }),
+      this.tabletopRepository.findByUniqueField({
+        key: 'slug',
+        value: tabletopSlug,
+      }),
+    ])
 
     if (!playerExists) {
       return left(new ResourceNotFoundError(playerId))
+    }
+
+    if (tabletopWithSameSlugExists) {
+      return left(new ResourceAlreadyExistsError(tabletopSlug))
     }
 
     const {
@@ -78,6 +93,7 @@ export class RegisterTabletopUseCase {
 
     const tabletop = Tabletop.create({
       ownerId: new UniqueEntityID(playerId),
+      slug: tabletopSlug,
       name,
       description,
       playersLimit,

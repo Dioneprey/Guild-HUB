@@ -2,14 +2,10 @@ import { Module, forwardRef } from '@nestjs/common'
 import { CryptographyModule } from 'src/infra/cryptography/cryptography.module'
 import { DatabaseModule } from 'src/infra/database/database.module'
 import { AuthModule } from '../auth/auth.module'
-import { RegisterAccountController } from './controllers/accounts/register-account.controller'
-import { RegisterAccountUseCase } from 'src/domain/tabletop/application/use-cases/accounts/register-account'
 import { UpdatePlayerController } from './controllers/player/update-player.controller'
 import { UpdatePlayerUseCase } from 'src/domain/tabletop/application/use-cases/player/update-player'
 import { CredentialsAuthenticateController } from './controllers/sessions/credentials-authenticate.controller'
 import { CredentialsAuthenticateUseCase } from 'src/domain/tabletop/application/use-cases/sessions/credentials-authenticate'
-import { SendAccountValidationCodeController } from './controllers/accounts/send-account-validation-code.controller'
-import { SendAccountValidationCodeUseCase } from 'src/domain/tabletop/application/use-cases/accounts/send-account-validation-code'
 import { ValidateAccountController } from './controllers/accounts/validate-account.controller'
 import { ValidateAccountUseCase } from 'src/domain/tabletop/application/use-cases/accounts/validate-account'
 import { MailModule } from '../mail/mail.module'
@@ -35,6 +31,10 @@ import { GetPlayerDetailsUseCase } from 'src/domain/tabletop/application/use-cas
 import { GetPlayerDetailsController } from './controllers/player/get-player-details.controller'
 import { FetchAllTabletopsController } from './controllers/tabletop/fetch-all-tabletop.controller'
 import { FetchAllTabletopsUseCase } from 'src/domain/tabletop/application/use-cases/tabletop/fetch-all-tabletop'
+import { RegisterCredentialsAccountController } from './controllers/accounts/register-account.controller'
+import { SendAccountValidationTokenController } from './controllers/accounts/send-account-validation-code.controller'
+import { RegisterCredentialsAccountUseCase } from 'src/domain/tabletop/application/use-cases/accounts/register-credentials-account'
+import { SendAccountValidationTokenUseCase } from 'src/domain/tabletop/application/use-cases/accounts/send-account-validation-token'
 
 @Module({
   imports: [
@@ -47,8 +47,8 @@ import { FetchAllTabletopsUseCase } from 'src/domain/tabletop/application/use-ca
   ],
   controllers: [
     // Accounts
-    RegisterAccountController,
-    SendAccountValidationCodeController,
+    RegisterCredentialsAccountController,
+    SendAccountValidationTokenController,
     ValidateAccountController,
 
     // Sessions
@@ -73,8 +73,8 @@ import { FetchAllTabletopsUseCase } from 'src/domain/tabletop/application/use-ca
   ],
   providers: [
     // Accounts
-    RegisterAccountUseCase,
-    SendAccountValidationCodeUseCase,
+    RegisterCredentialsAccountUseCase,
+    SendAccountValidationTokenUseCase,
     ValidateAccountUseCase,
 
     // Sessions

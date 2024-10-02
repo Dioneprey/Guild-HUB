@@ -2,43 +2,55 @@ import { Either, left, right } from 'src/core/either'
 import { Injectable } from '@nestjs/common'
 import { PlayerRepository } from '../../repositories/player-repository'
 import { ResourceNotFoundError } from '../@errors/resource-not-found.error'
-import { ResourceInvalidError } from '../@errors/resource-invalid.error'
+import { TokenRepository } from '../../repositories/token-repository'
+import { ForbiddenActionError } from '../@errors/forbidden-action.error'
 
 interface ValidateAccountUseCaseRequest {
-  userId: string
-  registrationValidateCode: string
+  playerId: string
+  registrationValidateToken: string
 }
 
-type ValidateAccountUseCaseResponse = Either<ResourceNotFoundError, undefined>
+type ValidateAccountUseCaseResponse = Either<
+  ResourceNotFoundError | ForbiddenActionError,
+  undefined
+>
 
 @Injectable()
 export class ValidateAccountUseCase {
-  constructor(private playerRepository: PlayerRepository) {}
+  constructor(
+    private playerRepository: PlayerRepository,
+    private tokenRepository: TokenRepository,
+  ) {}
 
   async execute({
-    userId,
-    registrationValidateCode,
+    playerId,
+    registrationValidateToken,
   }: ValidateAccountUseCaseRequest): Promise<ValidateAccountUseCaseResponse> {
-    const playerExists = await this.playerRepository.findByUniqueField({
-      key: 'id',
-      value: userId,
-    })
+    const [playerExists, tokenExists] = await Promise.all([
+      this.playerRepository.findByUniqueField({
+        key: 'id',
+        value: playerId,
+      }),
+      this.tokenRepository.findById(registrationValidateToken),
+    ])
 
     if (!playerExists) {
-      return left(new ResourceNotFoundError(userId))
+      return left(new ResourceNotFoundError(playerId))
+    }
+    if (!tokenExists) {
+      return left(new ResourceNotFoundError(registrationValidateToken))
     }
 
-    const isRegistrationValidateCodeValid =
-      playerExists.registrationValidateCode === registrationValidateCode
-
-    if (!isRegistrationValidateCodeValid) {
-      return left(new ResourceInvalidError(registrationValidateCode))
+    if (tokenExists.playerId.toString() !== playerExists.id.toString()) {
+      return left(new ForbiddenActionError())
     }
 
-    playerExists.registrationValidateCode = null
     playerExists.registrationValidatedAt = new Date()
 
-    await this.playerRepository.save(playerExists)
+    await Promise.all([
+      this.playerRepository.save(playerExists),
+      this.tokenRepository.delete(tokenExists),
+    ])
 
     return right(undefined)
   }

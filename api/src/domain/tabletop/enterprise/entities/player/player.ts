@@ -1,8 +1,8 @@
 import { Entity } from 'src/core/entities/entity'
 import { UniqueEntityID } from 'src/core/entities/unique-entity-id'
 import { Optional } from 'src/core/types/optional'
-import { File } from './file'
-import { Language } from './language'
+import { File } from '../file'
+import { Language } from '../language'
 
 // M = “Masculino” | F = “Feminino” | O = “outros"
 export enum GenderOptions {
@@ -18,18 +18,17 @@ export enum RoleOptions {
 }
 
 export interface PlayerProps {
-  name?: string | null
+  name: string
   nickname?: string | null
   bio?: string | null
   gender?: GenderOptions | null
   email: string
-  password: string
+  password?: string | null
   avatarFileId?: string | null
   avatarFile?: File | null
   cityId?: string | null
   countryId?: string | null
   birthdate?: Date | null
-  registrationValidateCode?: string | null
   registrationCompletedAt?: Date | null
   registrationValidatedAt?: Date | null
   playerLanguage?: Language[] | null
@@ -43,7 +42,7 @@ export class Player extends Entity<PlayerProps> {
     return this.props.name
   }
 
-  set name(name: string | undefined | null) {
+  set name(name: string) {
     this.props.name = name
     this.touch()
   }
@@ -88,7 +87,7 @@ export class Player extends Entity<PlayerProps> {
     return this.props.password
   }
 
-  set password(password: string) {
+  set password(password: string | undefined | null) {
     this.props.password = password
     this.touch()
   }
@@ -135,17 +134,6 @@ export class Player extends Entity<PlayerProps> {
 
   set birthdate(birthdate: Date | undefined | null) {
     this.props.birthdate = birthdate
-    this.touch()
-  }
-
-  get registrationValidateCode() {
-    return this.props.registrationValidateCode
-  }
-
-  set registrationValidateCode(
-    registrationValidateCode: string | undefined | null,
-  ) {
-    this.props.registrationValidateCode = registrationValidateCode
     this.touch()
   }
 

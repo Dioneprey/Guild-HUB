@@ -8,11 +8,11 @@ import {
   Patch,
 } from '@nestjs/common'
 import { ZodValidationPipe } from '../../pipes/zod-validation.pipe'
-import { PlayerAlreadyExistsError } from 'src/domain/tabletop/application/use-cases/@errors/player-already-exists.error'
 import { UpdatePlayerUseCase } from 'src/domain/tabletop/application/use-cases/player/update-player'
-import { GenderOptions } from 'src/domain/tabletop/enterprise/entities/player'
+import { GenderOptions } from 'src/domain/tabletop/enterprise/entities/player/player'
 import { CurrentUser } from 'src/infra/auth/current-user.decorator'
 import { UserPayload } from 'src/infra/auth/jwt.strategy'
+import { ResourceAlreadyExistsError } from 'src/domain/tabletop/application/use-cases/@errors/resource-already-exists.error'
 
 const updatePlayerBodySchema = z.object({
   playerData: z.object({
@@ -58,7 +58,7 @@ export class UpdatePlayerController {
       const error = result.value
 
       switch (error.constructor) {
-        case PlayerAlreadyExistsError:
+        case ResourceAlreadyExistsError:
           throw new ConflictException(error.message)
         default:
           throw new BadRequestException(error.message)

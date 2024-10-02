@@ -5,37 +5,37 @@ import {
   HttpCode,
   Post,
 } from '@nestjs/common'
-import { SendAccountValidationCodeUseCase } from 'src/domain/tabletop/application/use-cases/accounts/send-account-validation-code'
 import { z } from 'zod'
 import { ZodValidationPipe } from '../../pipes/zod-validation.pipe'
 import { Public } from 'src/infra/auth/public'
+import { SendAccountValidationTokenUseCase } from 'src/domain/tabletop/application/use-cases/accounts/send-account-validation-token'
 
-const sendAccountValidationCodeBodySchema = z.object({
+const sendAccountValidationTokenBodySchema = z.object({
   email: z.string().email(),
 })
 
-type SendAccountValidationCodeBodySchema = z.infer<
-  typeof sendAccountValidationCodeBodySchema
+type SendAccountValidationTokenBodySchema = z.infer<
+  typeof sendAccountValidationTokenBodySchema
 >
 const bodyValidationPipe = new ZodValidationPipe(
-  sendAccountValidationCodeBodySchema,
+  sendAccountValidationTokenBodySchema,
 )
 
-@Controller('/accounts/send-validation-code')
-export class SendAccountValidationCodeController {
+@Controller('/accounts/send-validation-token')
+export class SendAccountValidationTokenController {
   constructor(
-    private readonly sendAccountValidationCode: SendAccountValidationCodeUseCase,
+    private readonly sendAccountValidationToken: SendAccountValidationTokenUseCase,
   ) {}
 
   @Post()
   @Public()
   @HttpCode(200)
   async handle(
-    @Body(bodyValidationPipe) body: SendAccountValidationCodeBodySchema,
+    @Body(bodyValidationPipe) body: SendAccountValidationTokenBodySchema,
   ) {
     const { email } = body
 
-    const result = await this.sendAccountValidationCode.execute({
+    const result = await this.sendAccountValidationToken.execute({
       email,
     })
 
