@@ -9,14 +9,14 @@ export class UploadGateway {
   @WebSocketServer() server: Server
 
   handleEvent({
-    userId,
+    playerId,
     url,
     key,
   }: {
-    userId: string
+    playerId: string
     url: string
     key: string
   }): void {
-    this.server.to(userId).emit('upload-finished', { url, key })
+    this.server.to(playerId).emit('upload-finished', { url, key })
   }
 }

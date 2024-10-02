@@ -45,8 +45,9 @@ export class RegisterTabletopLocationUseCase {
         key: 'id',
         value: masterId,
       }),
-      this.tabletopRepository.findById({
-        id: tabletopId,
+      this.tabletopRepository.findByUniqueField({
+        key: 'id',
+        value: tabletopId,
       }),
     ])
 

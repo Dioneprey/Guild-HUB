@@ -24,12 +24,13 @@ export class SocketGateway implements OnGatewayConnection {
 
   @SubscribeMessage('join')
   handleJoin(
-    @MessageBody() payload: { userId: string },
+    @MessageBody() payload: { playerId: string },
     @ConnectedSocket() client: Socket,
   ): void {
-    client.join(payload.userId)
-    console.log('New room created ', payload.userId)
+    client.join(payload.playerId)
 
-    this.server.to(payload.userId).emit('new-user', { user: payload.userId })
+    this.server
+      .to(payload.playerId)
+      .emit('new-player', { player: payload.playerId })
   }
 }

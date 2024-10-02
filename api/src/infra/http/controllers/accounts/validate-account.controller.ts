@@ -11,14 +11,14 @@ import { ZodValidationPipe } from '../../pipes/zod-validation.pipe'
 import { Public } from 'src/infra/auth/public'
 
 const validateAccountBodySchema = z.object({
-  userId: z.string(),
-  registrationValidateCode: z.string(),
+  playerId: z.string(),
+  registrationValidateToken: z.string(),
 })
 
 type ValidateAccountBodySchema = z.infer<typeof validateAccountBodySchema>
 const bodyValidationPipe = new ZodValidationPipe(validateAccountBodySchema)
 
-@Controller('/accounts/validate-code')
+@Controller('/accounts/validate-token')
 export class ValidateAccountController {
   constructor(private readonly validateAccount: ValidateAccountUseCase) {}
 
@@ -26,11 +26,11 @@ export class ValidateAccountController {
   @Public()
   @HttpCode(200)
   async handle(@Body(bodyValidationPipe) body: ValidateAccountBodySchema) {
-    const { userId, registrationValidateCode } = body
+    const { playerId, registrationValidateToken } = body
 
     const result = await this.validateAccount.execute({
-      userId,
-      registrationValidateCode,
+      playerId,
+      registrationValidateToken,
     })
 
     if (result.isLeft()) {

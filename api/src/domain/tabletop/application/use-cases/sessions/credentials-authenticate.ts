@@ -4,6 +4,9 @@ import { HashComparer } from '../../cryptography/hash-comparer'
 import { Encrypter } from '../../cryptography/encrypter'
 import { WrongCredentialsError } from '../@errors/wrong-credentials.error'
 import { PlayerRepository } from '../../repositories/player-repository'
+import { AccountRepository } from '../../repositories/account-repository'
+import { AccountProvider } from 'src/domain/tabletop/enterprise/entities/account'
+import { ResourceNotFoundError } from '../@errors/resource-not-found.error'
 
 interface CredentialsAuthenticateUseCaseRequest {
   email: string
@@ -18,6 +21,7 @@ type CredentialsAuthenticateUseCaseResponse = Either<
 export class CredentialsAuthenticateUseCase {
   constructor(
     private playerRepository: PlayerRepository,
+    private accountRepository: AccountRepository,
     private hashCompare: HashComparer,
     private encrypter: Encrypter,
   ) {}
@@ -35,9 +39,19 @@ export class CredentialsAuthenticateUseCase {
       return left(new WrongCredentialsError())
     }
 
+    const credentialsAccountExists =
+      this.accountRepository.findByPlayerIdAndProvider(
+        player.id.toString(),
+        AccountProvider.CREDENTIALS,
+      )
+
+    if (!credentialsAccountExists) {
+      return left(new ResourceNotFoundError('Credentials account'))
+    }
+
     const isPasswordValid = await this.hashCompare.compare(
       password,
-      player.password,
+      player.password!,
     )
 
     if (!isPasswordValid) {

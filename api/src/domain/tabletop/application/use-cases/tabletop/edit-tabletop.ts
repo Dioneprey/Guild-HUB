@@ -9,12 +9,14 @@ import {
 import { TabletopRepository } from '../../repositories/tabletop-repository'
 import { PlayerRepository } from '../../repositories/player-repository'
 import { ResourceNotFoundError } from '../@errors/resource-not-found.error'
+import { ResourceAlreadyExistsError } from '../@errors/resource-already-exists.error'
 
 interface EditTabletopUseCaseRequest {
   playerId: string
   tabletopId: string
   tabletopData: {
     name?: string | null
+    slug?: string | null
     description?: string | null
     playersLimit?: number
     tabletopLanguageId?: number[] | null
@@ -33,7 +35,10 @@ interface EditTabletopUseCaseRequest {
   }
 }
 
-type EditTabletopUseCaseResponse = Either<ResourceNotFoundError, undefined>
+type EditTabletopUseCaseResponse = Either<
+  ResourceNotFoundError | ResourceAlreadyExistsError,
+  undefined
+>
 
 @Injectable()
 export class EditTabletopUseCase {
@@ -52,13 +57,29 @@ export class EditTabletopUseCase {
         key: 'id',
         value: playerId,
       }),
-      this.tabletopRepository.findById({
-        id: tabletopId,
+      this.tabletopRepository.findByUniqueField({
+        key: 'id',
+        value: tabletopId,
       }),
     ])
 
     if (!playerExists) return left(new ResourceNotFoundError(playerId))
     if (!tabletopExists) return left(new ResourceNotFoundError(tabletopId))
+
+    if (tabletopData.slug) {
+      const tabletopWithSameSlugExists =
+        await this.tabletopRepository.findByUniqueField({
+          key: 'slug',
+          value: tabletopData.slug,
+        })
+
+      if (
+        tabletopWithSameSlugExists?.id.toString() !==
+        tabletopExists.id.toString()
+      ) {
+        return left(new ResourceAlreadyExistsError(tabletopData.slug))
+      }
+    }
 
     const properties = Object.keys(tabletopData)
 

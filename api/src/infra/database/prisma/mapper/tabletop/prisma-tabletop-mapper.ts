@@ -22,9 +22,9 @@ import { PrismaLanguageMapper } from '../prisma-language-mapper'
 
 type TabletopWithInclude = Prisma.TabletopGetPayload<{
   include: {
-    tabletopUsers?: {
+    tabletopPlayers?: {
       include: {
-        user: true
+        player: true
       }
     }
     tabletopSystem: true
@@ -77,7 +77,8 @@ export class PrismaTabletopMapper {
       {
         ownerId: new UniqueEntityID(raw.ownerId),
         type,
-        name: raw.name,
+        name: raw.name ?? '',
+        slug: raw.slug,
         description: raw.description,
         playersLimit: raw.playersLimit,
         tabletopSystem: raw.tabletopSystem
@@ -94,8 +95,8 @@ export class PrismaTabletopMapper {
         coverFile: raw.coverFile
           ? PrismaFileMapper.toDomain(raw.coverFile)
           : null,
-        tabletopPlayers: raw.tabletopUsers
-          ? raw.tabletopUsers.map(PrismaTabletopPlayerMapper.toDomain)
+        tabletopPlayers: raw.tabletopPlayers
+          ? raw.tabletopPlayers.map(PrismaTabletopPlayerMapper.toDomain)
           : null,
         minAge: raw.minAge,
         communication,
@@ -130,6 +131,7 @@ export class PrismaTabletopMapper {
       ownerId: tabletop.ownerId.toString(),
       type: tabletop.type ? PrismaTabletopType[tabletop.type] : null,
       name: tabletop.name,
+      slug: tabletop.slug,
       description: tabletop.description,
       playersLimit: tabletop.playersLimit,
       tabletopSystemId: tabletop.tabletopSystemId,

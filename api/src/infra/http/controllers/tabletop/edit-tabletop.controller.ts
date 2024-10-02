@@ -15,6 +15,7 @@ const editTabletopBodySchema = z.object({
   tabletopId: z.string(),
   tabletopData: z.object({
     name: z.string().optional().nullable(),
+    slug: z.string().optional().nullable(),
     description: z.string().optional().nullable(),
     type: z.nativeEnum(TabletopType).optional().nullable(),
     playersLimit: z.number().optional(),

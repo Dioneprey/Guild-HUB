@@ -7,8 +7,9 @@ import {
 } from '../../enterprise/entities/tabletop/tabletop'
 import { TabletopPlayer } from '../../enterprise/entities/tabletop/tabletop-player'
 
-export interface TabletopRepositoryFindByIdProps {
-  id: string
+export interface TabletopRepositoryFindByUniqueFieldProps {
+  key: 'id' | 'slug'
+  value: string
   include?: {
     tabletopPlayers?: boolean
   }
@@ -45,10 +46,11 @@ export interface TabletopRepositoryFindAllByPlayerIdProps {
   }
 }
 export abstract class TabletopRepository {
-  abstract findById({
-    id,
+  abstract findByUniqueField({
+    key,
+    value,
     include,
-  }: TabletopRepositoryFindByIdProps): Promise<Tabletop | null>
+  }: TabletopRepositoryFindByUniqueFieldProps): Promise<Tabletop | null>
 
   abstract findAll({
     pageIndex,

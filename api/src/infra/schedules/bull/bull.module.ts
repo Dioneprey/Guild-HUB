@@ -6,9 +6,9 @@ import { MailModule } from 'src/infra/mail/mail.module'
 import { HttpModule } from 'src/infra/http/http.module'
 import { DatabaseModule } from 'src/infra/database/database.module'
 import {
-  InvalidateCodesProcessor,
-  INVALIDATE_CODES_QUEUE,
-} from './processor/invalidate-codes.processor'
+  InvalidateTokenProcessor,
+  INVALIDATE_TOKEN_QUEUE,
+} from './processor/invalidate-token.processor'
 import { BullBoardModule } from '@bull-board/nestjs'
 import { FastifyAdapter } from '@bull-board/fastify'
 import { BullAdapter } from '@bull-board/api/bullAdapter'
@@ -36,7 +36,7 @@ import { EventsModule } from 'src/infra/events/events.module'
     }),
     // Queues
     BullModule.registerQueue({
-      name: INVALIDATE_CODES_QUEUE,
+      name: INVALIDATE_TOKEN_QUEUE,
     }),
     BullModule.registerQueue({
       name: FILES_UPLOAD_QUEUE,
@@ -48,7 +48,7 @@ import { EventsModule } from 'src/infra/events/events.module'
       adapter: FastifyAdapter,
     }),
     BullBoardModule.forFeature({
-      name: INVALIDATE_CODES_QUEUE,
+      name: INVALIDATE_TOKEN_QUEUE,
       adapter: BullAdapter,
     }),
     BullBoardModule.forFeature({
@@ -56,7 +56,7 @@ import { EventsModule } from 'src/infra/events/events.module'
       adapter: BullAdapter,
     }),
   ],
-  providers: [InvalidateCodesProcessor, FilesUploadProcessor],
+  providers: [InvalidateTokenProcessor, FilesUploadProcessor],
   exports: [BullModule],
 })
 export class BullConfigModule {}

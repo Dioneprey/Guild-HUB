@@ -3,7 +3,7 @@ import { Job } from 'bull'
 import { UploadFilesAsyncUseCase } from 'src/domain/tabletop/application/use-cases/upload/upload-files-async'
 import { UploadGateway } from 'src/infra/events/websocket/gateways/upload.gateway'
 
-export const FILES_UPLOAD_QUEUE = 'invalidate-codes-processor'
+export const FILES_UPLOAD_QUEUE = 'files-upload-processor'
 
 @Processor(FILES_UPLOAD_QUEUE)
 export class FilesUploadProcessor {
@@ -13,7 +13,9 @@ export class FilesUploadProcessor {
   ) {}
 
   @Process('upload-files')
-  async handleFileUpload({ data: { userId, fileName, fileType, fileBuffer } }) {
+  async handleFileUpload({
+    data: { playerId, fileName, fileType, fileBuffer },
+  }) {
     console.log('Fila iniciada - upload-file')
 
     const result = await this.uploadFilesAsyncUseCase.execute({
@@ -31,7 +33,7 @@ export class FilesUploadProcessor {
     const { key, url } = result.value
 
     return {
-      userId,
+      playerId,
       url,
       key,
     }
@@ -43,9 +45,9 @@ export class FilesUploadProcessor {
     {
       key,
       url,
-      userId,
+      playerId,
     }: {
-      userId: string
+      playerId: string
       url: string
       key: string
     },
@@ -53,7 +55,7 @@ export class FilesUploadProcessor {
     console.log(`Job completed with result ${job.name} ${url}`)
 
     this.uploadGateway.handleEvent({
-      userId,
+      playerId,
       url,
       key,
     })

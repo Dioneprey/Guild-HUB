@@ -48,7 +48,7 @@ export class UploadFilesAsyncController {
         fileName,
         fileType: mimetype,
         fileBuffer: buffer.toString('base64'),
-        userId,
+        playerId: userId,
       })
     })
     return { message: 'Files are being uploaded.' }

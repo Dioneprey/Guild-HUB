@@ -17,6 +17,7 @@ export class TabletopPresenter {
       id: tabletop.id.toString() ?? null,
       ownerId: tabletop.ownerId.toString() ?? null,
       type: tabletop.type ?? null,
+      slug: tabletop.slug ?? null,
       name: tabletop.name ?? null,
       description: tabletop.description ?? null,
       playersLimit: tabletop.playersLimit ?? null,

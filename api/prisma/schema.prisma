@@ -20,7 +20,7 @@ enum GenderOptions {
   O
 }
 
-// A = admin | U = user
+// A = admin | U = player
 enum RoleOptions {
   A
   U
@@ -62,111 +62,145 @@ enum FileType {
   O
 }
 
-model User {
-  id                       String         @id @default(uuid()) @db.VarChar(50)
-  name                     String?        @db.VarChar(100)
-  nickname                 String?        @db.VarChar(50)
-  bio                      String?        @db.VarChar(1000)
-  gender                   GenderOptions?
-  email                    String         @db.VarChar(100)
-  password                 String         @db.VarChar(100)
-  avatarFileId             String?        @map("avatar_file_id")
-  cityId                   String?        @map("city_id") @db.VarChar(20)
-  countryId                String?        @map("country_id") @db.VarChar(20)
-  birthdate                DateTime?
-  registrationValidateCode String?        @map("registration_validate_code")
-  registrationValidatedAt  DateTime?      @map("registration_validated_at")
-  registrationCompletedAt  DateTime?      @map("registration_completed_at")
-  role                     RoleOptions?
-  createdAt                DateTime       @default(now()) @map("created_at")
-  updatedAt                DateTime?      @updatedAt @map("updated_at")
+enum AccountProvider {
+  GOOGLE
+  CREDENTIALS
+}
+
+enum TokenType {
+  VALIDATE_ACCOUNT
+}
+
+model Player {
+  id                      String         @id @default(uuid()) @db.VarChar(50)
+  name                    String?        @db.VarChar(100)
+  nickname                String?        @db.VarChar(50)
+  bio                     String?        @db.VarChar(1000)
+  gender                  GenderOptions?
+  email                   String         @db.VarChar(100)
+  password                String?        @db.VarChar(100)
+  avatarFileId            String?        @map("avatar_file_id")
+  cityId                  String?        @map("city_id") @db.VarChar(20)
+  countryId               String?        @map("country_id") @db.VarChar(20)
+  birthdate               DateTime?
+  registrationValidatedAt DateTime?      @map("registration_validated_at")
+  registrationCompletedAt DateTime?      @map("registration_completed_at")
+  role                    RoleOptions?
+  createdAt               DateTime       @default(now()) @map("created_at")
+  updatedAt               DateTime?      @updatedAt @map("updated_at")
 
   city    City?    @relation(fields: [cityId], references: [id])
   country Country? @relation(fields: [countryId], references: [id])
 
-  friendshipRequester UserFriends[]         @relation("FriendshipRequester")
-  friendshipReceiver  UserFriends[]         @relation("FriendshipReceiver")
-  requestsSent        UserFriendsRequests[] @relation("RequestsSent")
-  requestsReceived    UserFriendsRequests[] @relation("RequestsReceived")
+  friendshipRequester PlayerFriends[]         @relation("FriendshipRequester")
+  friendshipReceiver  PlayerFriends[]         @relation("FriendshipReceiver")
+  requestsSent        PlayerFriendsRequests[] @relation("RequestsSent")
+  requestsReceived    PlayerFriendsRequests[] @relation("RequestsReceived")
 
-  userChat     ChatUsers[]
+  playerChat   ChatPlayers[]
   message      ChatMessage[]
   messageViews ChatMessageViews[]
 
-  tabletopUsers                      TabletopUsers[]
+  tabletopPlayers                    TabletopPlayers[]
   tabletopEntryRequests              TabletopEntryRequests[]
   tabletopSchedulePlayerAvailability TabletopSchedulePlayerAvailability[]
   tabletop                           Tabletop[]
 
   avatarFile Files? @relation(fields: [avatarFileId], references: [key])
 
-  userLanguage UserLanguage[]
+  playerLanguage PlayerLanguage[]
+
+  account Account[]
+  Token   Token[]
 
   @@index([id, email])
-  @@map("users")
+  @@map("players")
 }
 
-model UserFriends {
-  id                  String    @id @default(uuid()) @db.VarChar(50)
+model Account {
+  id                String          @id @default(uuid())
+  provider          AccountProvider
+  providerAccountId String?         @unique @map("provider_account_id")
+
+  player   Player @relation(fields: [playerId], references: [id])
+  playerId String @map("player_id")
+
+  @@unique([provider, playerId])
+  @@map("accounts")
+}
+
+model Token {
+  id        String    @id @default(uuid())
+  type      TokenType
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  player   Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  playerId String @map("player_id")
+
+  @@map("tokens")
+}
+
+model PlayerFriends {
+  id                  Int       @id @default(autoincrement())
   requesterId         String    @map("requester_id") @db.VarChar(50)
   receiverId          String    @map("receiver_id") @db.VarChar(50)
   friendshipStartDate DateTime? @map("friendship_start_date")
   createdAt           DateTime  @default(now()) @map("created_at")
   updatedAt           DateTime? @updatedAt @map("updated_at")
 
-  requester User @relation("FriendshipRequester", fields: [requesterId], references: [id])
-  receiver  User @relation("FriendshipReceiver", fields: [receiverId], references: [id])
+  requester Player @relation("FriendshipRequester", fields: [requesterId], references: [id])
+  receiver  Player @relation("FriendshipReceiver", fields: [receiverId], references: [id])
 
   @@index([requesterId, receiverId])
-  @@map("users_friends")
+  @@map("players_friends")
 }
 
-model UserFriendsRequests {
+model PlayerFriendsRequests {
   id          Int       @id @default(autoincrement())
   requesterId String    @map("requester_id") @db.VarChar(50)
   receiverId  String    @map("receiver_id") @db.VarChar(50)
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime? @updatedAt @map("updated_at")
 
-  requester User @relation("RequestsSent", fields: [requesterId], references: [id])
-  receiver  User @relation("RequestsReceived", fields: [receiverId], references: [id])
+  requester Player @relation("RequestsSent", fields: [requesterId], references: [id])
+  receiver  Player @relation("RequestsReceived", fields: [receiverId], references: [id])
 
   @@index([requesterId, receiverId])
-  @@map("users_friends_requests")
+  @@map("players_friends_requests")
 }
 
-model UserLanguage {
+model PlayerLanguage {
   id         Int    @id @default(autoincrement())
-  userId     String @map("user_id") @db.VarChar(50)
+  playerId   String @map("player_id") @db.VarChar(50)
   languageId Int    @map("language_id")
 
-  user     User     @relation(fields: [userId], references: [id])
+  player   Player   @relation(fields: [playerId], references: [id])
   language Language @relation(fields: [languageId], references: [id])
 
-  @@map("users_language")
+  @@map("players_language")
 }
 
 model Chat {
   id        String   @id @default(uuid()) @db.VarChar(50)
   createdAt DateTime @default(now()) @map("created_at")
 
-  chatUsers ChatUsers[]
-  message   ChatMessage[]
+  chatPlayers ChatPlayers[]
+  message     ChatMessage[]
 
   @@map("chats")
 }
 
-model ChatUsers {
+model ChatPlayers {
   id        Int      @id @default(autoincrement())
   chatId    String   @map("chat_id") @db.VarChar(50)
-  userId    String   @map("user_id") @db.VarChar(50)
+  playerId  String   @map("player_id") @db.VarChar(50)
   createdAt DateTime @default(now()) @map("created_at")
 
-  user User  @relation(fields: [userId], references: [id])
-  chat Chat? @relation(fields: [chatId], references: [id])
+  player Player @relation(fields: [playerId], references: [id])
+  chat   Chat?  @relation(fields: [chatId], references: [id])
 
-  @@index([userId, chatId])
-  @@map("users_chats")
+  @@index([playerId, chatId])
+  @@map("players_chats")
 }
 
 model ChatMessage {
@@ -178,8 +212,8 @@ model ChatMessage {
   imageUrl    String?
   createdAt   DateTime @default(now())
 
-  chat       Chat @relation(fields: [chatId], references: [id])
-  senderUser User @relation(fields: [senderId], references: [id])
+  chat         Chat   @relation(fields: [chatId], references: [id])
+  senderPlayer Player @relation(fields: [senderId], references: [id])
 
   messageViews ChatMessageViews[]
 
@@ -196,7 +230,7 @@ model ChatMessageViews {
   createdAt DateTime @default(now())
 
   message ChatMessage @relation(fields: [messageId], references: [id])
-  viewer  User        @relation(fields: [viewerId], references: [id])
+  viewer  Player      @relation(fields: [viewerId], references: [id])
 
   @@map("chat_messages_views")
 }
@@ -205,6 +239,7 @@ model Tabletop {
   id                String                     @id @default(uuid()) @db.VarChar(50)
   ownerId           String                     @map("owner_id") @db.VarChar(50)
   name              String?                    @db.VarChar(100)
+  slug              String                     @unique @db.VarChar(100)
   description       String?                    @db.VarChar(500)
   playersLimit      Int?                       @map("players_limit") @db.SmallInt()
   tabletopSystemId  Int?                       @map("tabletop_system_id")
@@ -222,11 +257,11 @@ model Tabletop {
   createdAt         DateTime                   @default(now()) @map("created_at")
   updatedAt         DateTime?                  @updatedAt @map("updated_at")
 
-  owner User @relation(fields: [ownerId], references: [id])
+  owner Player @relation(fields: [ownerId], references: [id])
 
   tabletopSystem TabletopSystem? @relation(fields: [tabletopSystemId], references: [id])
 
-  tabletopUsers         TabletopUsers[]
+  tabletopPlayers       TabletopPlayers[]
   tabletopEntryRequests TabletopEntryRequests[]
 
   tabletopLocation TabletopLocation[]
@@ -244,27 +279,27 @@ model Tabletop {
   @@map("tabletop")
 }
 
-model TabletopUsers {
+model TabletopPlayers {
   id         Int      @id @default(autoincrement())
   tabletopId String   @map("tabletop_id") @db.VarChar(50)
-  userId     String   @map("user_id") @db.VarChar(50)
+  playerId   String   @map("player_id") @db.VarChar(50)
   gameMaster Boolean? @map("game_master")
   createdAt  DateTime @default(now()) @map("created_at")
 
   tabletop Tabletop @relation(fields: [tabletopId], references: [id])
-  user     User     @relation(fields: [userId], references: [id])
+  player   Player   @relation(fields: [playerId], references: [id])
 
-  @@map("tabletop_users")
+  @@map("tabletop_players")
 }
 
 model TabletopEntryRequests {
   id         Int      @id @default(autoincrement())
   tabletopId String   @map("tabletop_id") @db.VarChar(50)
-  userId     String   @map("user_id") @db.VarChar(50)
+  playerId   String   @map("player_id") @db.VarChar(50)
   createdAt  DateTime @default(now()) @map("created_at")
 
   tabletop Tabletop @relation(fields: [tabletopId], references: [id])
-  user     User     @relation(fields: [userId], references: [id])
+  player   Player   @relation(fields: [playerId], references: [id])
 
   @@map("tabletop_entry_requests")
 }
@@ -288,16 +323,16 @@ model TabletopSchedule {
 model TabletopSchedulePlayerAvailability {
   id           Int       @id @default(autoincrement())
   scheduleId   String    @map("schedule_id") @db.VarChar(50)
-  userId       String    @map("user_id")
+  playerId     String    @map("player_id")
   availability Boolean?
   observation  String?   @db.VarChar(500)
   createdAt    DateTime  @default(now()) @map("created_at")
   updatedAt    DateTime? @updatedAt @map("updated_at")
 
   tabletopSchedule TabletopSchedule @relation(fields: [scheduleId], references: [id])
-  user             User             @relation(fields: [userId], references: [id])
+  player           Player           @relation(fields: [playerId], references: [id])
 
-  @@index([scheduleId, userId])
+  @@index([scheduleId, playerId])
   @@map("tabletop_schedule_player_availability")
 }
 
@@ -347,7 +382,7 @@ model Language {
   name String @db.VarChar(100)
 
   tabletopLanguage TabletopLanguage[]
-  userLanguage     UserLanguage[]
+  playerLanguage   PlayerLanguage[]
 
   @@map("language")
 }
@@ -360,7 +395,7 @@ model Files {
   type      FileType?
   createdAt DateTime  @default(now()) @map("created_at")
 
-  user        User[]
+  player      Player[]
   chatMessage ChatMessage[]
 
   avatarFile Tabletop[] @relation("avatarFile")
@@ -378,7 +413,7 @@ model City {
   state   State   @relation(fields: [uf], references: [uf])
   country Country @relation(fields: [countryId], references: [id])
 
-  user             User[]
+  player           Player[]
   tabletopLocation TabletopLocation[]
 
   @@index([id, uf])
@@ -404,7 +439,7 @@ model Country {
   name     String @db.VarChar(100)
   fullName String @map("full_name") @db.VarChar(100)
 
-  user             User[]
+  player           Player[]
   city             City[]
   tabletopLocation TabletopLocation[]
   State            State[]

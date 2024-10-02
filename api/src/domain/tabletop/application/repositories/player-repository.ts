@@ -1,4 +1,4 @@
-import { Player } from '../../enterprise/entities/player'
+import { Player } from '../../enterprise/entities/player/player'
 
 export interface PlayerRepositoryFindByUniqueFieldProps {
   key: 'id' | 'email'

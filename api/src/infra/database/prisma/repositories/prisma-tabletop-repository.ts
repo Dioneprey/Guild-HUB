@@ -4,7 +4,7 @@ import {
   TabletopRepository,
   TabletopRepositoryFindAllByPlayerIdProps,
   TabletopRepositoryFindAllProps,
-  TabletopRepositoryFindByIdProps,
+  TabletopRepositoryFindByUniqueFieldProps,
 } from 'src/domain/tabletop/application/repositories/tabletop-repository'
 import { Tabletop } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop'
 import { PrismaTabletopMapper } from '../mapper/tabletop/prisma-tabletop-mapper'
@@ -13,17 +13,21 @@ import { TabletopPlayer } from 'src/domain/tabletop/enterprise/entities/tabletop
 @Injectable()
 export class PrismaTabletopRepository implements TabletopRepository {
   constructor(private prisma: PrismaService) {}
-  async findById({ id, include }: TabletopRepositoryFindByIdProps) {
+  async findByUniqueField({
+    key,
+    value,
+    include,
+  }: TabletopRepositoryFindByUniqueFieldProps) {
     const tabletop = await this.prisma.tabletop.findFirst({
       where: {
-        id,
+        [key]: value,
       },
       include: {
         ...(include?.tabletopPlayers && {
-          tabletopUsers: include?.tabletopPlayers
+          tabletopPlayers: include?.tabletopPlayers
             ? {
                 include: {
-                  user: true,
+                  player: true,
                 },
               }
             : false,
@@ -114,9 +118,9 @@ export class PrismaTabletopRepository implements TabletopRepository {
           }),
         },
         include: {
-          tabletopUsers: {
+          tabletopPlayers: {
             include: {
-              user: true,
+              player: true,
             },
           },
           tabletopSystem: true,
@@ -213,10 +217,10 @@ export class PrismaTabletopRepository implements TabletopRepository {
       },
       include: {
         ...(include?.tabletopPlayers && {
-          tabletopUsers: include?.tabletopPlayers
+          tabletopPlayers: include?.tabletopPlayers
             ? {
                 include: {
-                  user: true,
+                  player: true,
                 },
               }
             : false,
@@ -270,11 +274,11 @@ export class PrismaTabletopRepository implements TabletopRepository {
   }
 
   async createTabletopPlayers(tabletopPlayers: TabletopPlayer[]) {
-    await this.prisma.tabletopUsers.createMany({
+    await this.prisma.tabletopPlayers.createMany({
       data: tabletopPlayers.map((item) => {
         return {
           tabletopId: item.tabletopId.toString(),
-          userId: item.playerId.toString(),
+          playerId: item.playerId.toString(),
           gameMaster: item.gameMaster,
         }
       }),

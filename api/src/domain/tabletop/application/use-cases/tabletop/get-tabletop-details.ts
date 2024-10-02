@@ -5,7 +5,7 @@ import { TabletopRepository } from '../../repositories/tabletop-repository'
 import { Tabletop } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop'
 
 interface GetTabletopDetailsUseCaseRequest {
-  tabletopId: string
+  slug: string
 }
 
 type GetTabletopDetailsUseCaseResponse = Either<
@@ -20,17 +20,18 @@ export class GetTabletopDetailsUseCase {
   constructor(private tabletopRepository: TabletopRepository) {}
 
   async execute({
-    tabletopId,
+    slug,
   }: GetTabletopDetailsUseCaseRequest): Promise<GetTabletopDetailsUseCaseResponse> {
-    const tabletop = await this.tabletopRepository.findById({
-      id: tabletopId,
+    const tabletop = await this.tabletopRepository.findByUniqueField({
+      key: 'slug',
+      value: slug,
       include: {
         tabletopPlayers: true,
       },
     })
 
     if (!tabletop) {
-      return left(new ResourceNotFoundError(tabletopId))
+      return left(new ResourceNotFoundError(slug))
     }
 
     return right({
