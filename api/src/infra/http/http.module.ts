@@ -31,7 +31,7 @@ import { GetPlayerDetailsUseCase } from 'src/domain/tabletop/application/use-cas
 import { GetPlayerDetailsController } from './controllers/player/get-player-details.controller'
 import { FetchAllTabletopsController } from './controllers/tabletop/fetch-all-tabletop.controller'
 import { FetchAllTabletopsUseCase } from 'src/domain/tabletop/application/use-cases/tabletop/fetch-all-tabletop'
-import { RegisterCredentialsAccountController } from './controllers/accounts/register-account.controller'
+import { RegisterCredentialsAccountController } from './controllers/accounts/register-credentials-account.controller'
 import { SendAccountValidationTokenController } from './controllers/accounts/send-account-validation-code.controller'
 import { RegisterCredentialsAccountUseCase } from 'src/domain/tabletop/application/use-cases/accounts/register-credentials-account'
 import { SendAccountValidationTokenUseCase } from 'src/domain/tabletop/application/use-cases/accounts/send-account-validation-token'

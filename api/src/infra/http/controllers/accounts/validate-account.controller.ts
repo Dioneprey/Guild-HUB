@@ -11,7 +11,6 @@ import { ZodValidationPipe } from '../../pipes/zod-validation.pipe'
 import { Public } from 'src/infra/auth/public'
 
 const validateAccountBodySchema = z.object({
-  playerId: z.string(),
   registrationValidateToken: z.string(),
 })
 
@@ -26,10 +25,9 @@ export class ValidateAccountController {
   @Public()
   @HttpCode(200)
   async handle(@Body(bodyValidationPipe) body: ValidateAccountBodySchema) {
-    const { playerId, registrationValidateToken } = body
+    const { registrationValidateToken } = body
 
     const result = await this.validateAccount.execute({
-      playerId,
       registrationValidateToken,
     })
 

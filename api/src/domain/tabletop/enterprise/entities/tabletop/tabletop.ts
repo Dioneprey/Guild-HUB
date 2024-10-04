@@ -8,6 +8,7 @@ import { TabletopSystem } from './tabletop-system'
 import { OnlinePlataform } from '../online-plataform'
 import { Timezone } from '../timezone'
 import { Language } from '../language'
+import { createSlug } from 'src/core/utils/create-slug'
 
 export enum TabletopType {
   rpg = 'R',
@@ -306,13 +307,14 @@ export class Tabletop extends Entity<TabletopProps> {
   }
 
   static create(
-    props: Optional<TabletopProps, 'createdAt'>,
+    props: Optional<TabletopProps, 'createdAt' | 'slug'>,
     id?: UniqueEntityID,
   ) {
     const tabletop = new Tabletop(
       {
         ...props,
         createdAt: props.createdAt ?? new Date(),
+        slug: props.slug ?? createSlug(props.name),
       },
       id,
     )

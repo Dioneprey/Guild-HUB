@@ -209,9 +209,9 @@ export class PrismaTabletopRepository implements TabletopRepository {
   }: TabletopRepositoryFindAllByPlayerIdProps) {
     const tabletop = await this.prisma.tabletop.findMany({
       where: {
-        tabletopUsers: {
+        tabletopPlayers: {
           some: {
-            userId: playerId,
+            playerId,
           },
         },
       },

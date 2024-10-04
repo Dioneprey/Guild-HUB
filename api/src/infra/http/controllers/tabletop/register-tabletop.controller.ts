@@ -19,7 +19,7 @@ import { UserPayload } from 'src/infra/auth/jwt.strategy'
 
 const registerTabletopBodySchema = z.object({
   name: z.string(),
-  slug: z.string(),
+  slug: z.string().optional(),
   description: z.string().optional(),
   type: z.nativeEnum(TabletopType),
   playersLimit: z.number(),
