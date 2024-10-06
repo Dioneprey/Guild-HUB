@@ -8,7 +8,7 @@ export class LanguagePresenter {
 
     return {
       id: language.id.toString(),
-      name: language.name,
+      name: language.name ?? null,
     }
   }
 }

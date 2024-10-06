@@ -38,7 +38,10 @@ interface RegisterTabletopUseCaseRequest {
   }
 }
 
-type RegisterTabletopUseCaseResponse = Either<ResourceNotFoundError, undefined>
+type RegisterTabletopUseCaseResponse = Either<
+  ResourceNotFoundError | ResourceAlreadyExistsError,
+  undefined
+>
 
 @Injectable()
 export class RegisterTabletopUseCase {
@@ -74,6 +77,7 @@ export class RegisterTabletopUseCase {
 
     const {
       name,
+      slug,
       description,
       playersLimit,
       tabletopSystemId,
@@ -93,7 +97,7 @@ export class RegisterTabletopUseCase {
 
     const tabletop = Tabletop.create({
       ownerId: new UniqueEntityID(playerId),
-      slug: tabletopSlug,
+      slug,
       name,
       description,
       playersLimit,
@@ -119,7 +123,7 @@ export class RegisterTabletopUseCase {
         language: tabletopLanguageId,
       })
     }
-
+    // TODO fazer um rollback caso de erro
     // Se mesa tiver dungeo master no cadastro, usuário é cadastrado como gm
     const tabletopPlayer = TabletopPlayer.create({
       playerId: new UniqueEntityID(playerId),

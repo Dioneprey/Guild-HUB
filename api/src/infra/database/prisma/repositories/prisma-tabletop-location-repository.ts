@@ -27,6 +27,20 @@ export class PrismaTabletopLocationRepository
     return PrismaTabletopLocationMapper.toDomain(tabletopLocation)
   }
 
+  async findByTabletopId(tabletopId: string) {
+    const tabletopLocation = await this.prisma.tabletopLocation.findFirst({
+      where: {
+        tabletopId,
+      },
+    })
+
+    if (!tabletopLocation) {
+      return null
+    }
+
+    return PrismaTabletopLocationMapper.toDomain(tabletopLocation)
+  }
+
   async findManyNearby({
     latitude,
     longitude,
@@ -50,9 +64,11 @@ export class PrismaTabletopLocationRepository
           WITH numbered_rows AS (
             SELECT 
               tabletop_location.*,
+              avatar.path as avatar_url,
               ROW_NUMBER() OVER (PARTITION BY "tabletop"."id" ORDER BY "tabletop"."created_at" DESC) as row_num
             FROM tabletop_location
             LEFT JOIN tabletop ON tabletop_location.tabletop_id = tabletop.id
+            LEFT JOIN files as avatar ON tabletop.avatar_file_id = avatar.key
             LEFT JOIN tabletop_players ON tabletop_players.tabletop_id = tabletop.id
             WHERE 
               ( 6371 * acos( cos( radians(${latitude}) ) * cos( radians( latitude ) ) * cos( radians( longitude ) 
@@ -69,6 +85,8 @@ export class PrismaTabletopLocationRepository
     const tabletopLocations = rawTabletopLocations.map((item) => ({
       id: item.id,
       tabletopId: item.tabletop_id,
+      avatarUrl: item.avatar_url,
+      title: item.title,
       postalCode: item.postal_code,
       cityId: item.city_id,
       countryId: item.country_id,

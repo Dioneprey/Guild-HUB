@@ -8,7 +8,7 @@ export class TabletopSystemPresenter {
 
     return {
       id: tabletopsystem.id.toString(),
-      name: tabletopsystem.name,
+      name: tabletopsystem.name ?? null,
     }
   }
 }

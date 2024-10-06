@@ -6,7 +6,6 @@ import { TokenRepository } from '../../repositories/token-repository'
 import { ForbiddenActionError } from '../@errors/forbidden-action.error'
 
 interface ValidateAccountUseCaseRequest {
-  playerId: string
   registrationValidateToken: string
 }
 
@@ -23,22 +22,23 @@ export class ValidateAccountUseCase {
   ) {}
 
   async execute({
-    playerId,
     registrationValidateToken,
   }: ValidateAccountUseCaseRequest): Promise<ValidateAccountUseCaseResponse> {
-    const [playerExists, tokenExists] = await Promise.all([
-      this.playerRepository.findByUniqueField({
-        key: 'id',
-        value: playerId,
-      }),
-      this.tokenRepository.findById(registrationValidateToken),
-    ])
+    const tokenExists = await this.tokenRepository.findById(
+      registrationValidateToken,
+    )
 
-    if (!playerExists) {
-      return left(new ResourceNotFoundError(playerId))
-    }
     if (!tokenExists) {
       return left(new ResourceNotFoundError(registrationValidateToken))
+    }
+
+    const playerExists = await this.playerRepository.findByUniqueField({
+      key: 'id',
+      value: tokenExists.playerId.toString(),
+    })
+
+    if (!playerExists) {
+      return left(new ResourceNotFoundError(tokenExists.playerId.toString()))
     }
 
     if (tokenExists.playerId.toString() !== playerExists.id.toString()) {

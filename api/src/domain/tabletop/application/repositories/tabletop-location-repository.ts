@@ -3,6 +3,8 @@ import { TabletopLocation } from '../../enterprise/entities/tabletop/tabletop-lo
 export interface RawTabletopLocation {
   id: string
   tabletop_id: string
+  title: string | null
+  avatar_url: string | null
   postal_code: string
   city_id: string | null
   country_id: string | null
@@ -26,6 +28,10 @@ export interface TabletopLocationRepositoryFindManyNearbyParams {
 
 export abstract class TabletopLocationRepository {
   abstract findById(id: string): Promise<TabletopLocation | null>
+  abstract findByTabletopId(
+    tabletopId: string,
+  ): Promise<TabletopLocation | null>
+
   abstract findManyNearby({
     latitude,
     longitude,

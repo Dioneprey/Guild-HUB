@@ -2,6 +2,7 @@ import { z } from 'zod'
 import {
   BadRequestException,
   Body,
+  ConflictException,
   Controller,
   HttpCode,
   Post,
@@ -16,10 +17,11 @@ import {
 } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop'
 import { CurrentUser } from 'src/infra/auth/current-user.decorator'
 import { UserPayload } from 'src/infra/auth/jwt.strategy'
+import { ResourceAlreadyExistsError } from 'src/domain/tabletop/application/use-cases/@errors/resource-already-exists.error'
 
 const registerTabletopBodySchema = z.object({
   name: z.string(),
-  slug: z.string(),
+  slug: z.string().optional(),
   description: z.string().optional(),
   type: z.nativeEnum(TabletopType),
   playersLimit: z.number(),
@@ -68,7 +70,12 @@ export class RegisterTabletopController {
     if (result.isLeft()) {
       const error = result.value
 
-      throw new BadRequestException(error.message)
+      switch (error.constructor) {
+        case ResourceAlreadyExistsError:
+          throw new ConflictException(error.message)
+        default:
+          throw new BadRequestException(error.message)
+      }
     }
   }
 }

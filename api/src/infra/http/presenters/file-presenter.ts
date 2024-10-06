@@ -8,9 +8,9 @@ export class FilePresenter {
 
     return {
       id: file.id.toString(),
-      name: file.name,
-      key: file.key,
-      path: file.path,
+      name: file.name ?? null,
+      key: file.key ?? null,
+      path: file.path ?? null,
     }
   }
 }

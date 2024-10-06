@@ -6,10 +6,15 @@ import { UniqueEntityID } from 'src/core/entities/unique-entity-id'
 import { TabletopLocation } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop-location'
 
 export class PrismaTabletopLocationMapper {
-  static toDomain(raw: PrismaTabletopLocation): TabletopLocation {
+  static toDomain(
+    raw: PrismaTabletopLocation & {
+      avatarUrl?: string | null
+    },
+  ): TabletopLocation {
     return TabletopLocation.create(
       {
         ...raw,
+        avatarUrl: raw.avatarUrl,
         tabletopId: new UniqueEntityID(raw.tabletopId),
       },
       new UniqueEntityID(raw.id),
@@ -22,6 +27,7 @@ export class PrismaTabletopLocationMapper {
     return {
       id: tabletopLocation.id.toString(),
       tabletopId: tabletopLocation.tabletopId.toString(),
+      title: tabletopLocation.title,
       postalCode: tabletopLocation.postalCode,
       cityId: tabletopLocation.cityId,
       stateId: tabletopLocation.stateId,
