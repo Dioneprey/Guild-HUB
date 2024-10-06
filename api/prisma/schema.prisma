@@ -340,12 +340,13 @@ model TabletopLocation {
   id           String  @id @default(uuid()) @db.VarChar(50)
   tabletopId   String  @map("tabletop_id") @db.VarChar(50)
   postalCode   String? @map("postal_code") @db.VarChar(20)
+  title        String?
   cityId       String? @map("city_id") @db.VarChar(20)
   stateId      String? @map("state_id") @db.VarChar(20)
   countryId    String? @map("country_id") @db.VarChar(20)
-  streetName   String? @map("street_name") @db.VarChar(20)
-  streetNumber String? @map("street_number") @db.VarChar(10)
-  neighborhood String? @db.VarChar(200)
+  streetName   String? @map("street_name")
+  streetNumber String? @map("street_number")
+  neighborhood String?
   latitude     Float?
   longitude    Float?
 

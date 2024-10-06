@@ -8,7 +8,7 @@ export class OnlinePlataformPresenter {
 
     return {
       id: onlineplataform.id.toString(),
-      name: onlineplataform.name,
+      name: onlineplataform.name ?? null,
     }
   }
 }

@@ -3,6 +3,8 @@ import { UniqueEntityID } from 'src/core/entities/unique-entity-id'
 
 export interface TabletopLocationProps {
   tabletopId: UniqueEntityID
+  title?: string | null
+  avatarUrl?: string | null
   postalCode?: string | null
   cityId?: string | null
   stateId?: string | null
@@ -21,6 +23,22 @@ export class TabletopLocation extends Entity<TabletopLocationProps> {
 
   set tabletopId(tabletopId: UniqueEntityID) {
     this.props.tabletopId = tabletopId
+  }
+
+  get title() {
+    return this.props.title
+  }
+
+  set title(title: string | null | undefined) {
+    this.props.title = title
+  }
+
+  get avatarUrl() {
+    return this.props.avatarUrl
+  }
+
+  set avatarUrl(avatarUrl: string | null | undefined) {
+    this.props.avatarUrl = avatarUrl
   }
 
   get postalCode() {

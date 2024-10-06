@@ -9,14 +9,16 @@ export class TabletopLocationPresenter {
     return {
       id: tabletopLocation.id.toString(),
       tabletopId: tabletopLocation.tabletopId.toString(),
-      postalCode: tabletopLocation.postalCode,
-      cityId: tabletopLocation.cityId,
-      countryId: tabletopLocation.countryId,
-      streetName: tabletopLocation.streetName,
-      streetNumber: tabletopLocation.streetNumber,
-      neighborhood: tabletopLocation.neighborhood,
-      latitude: tabletopLocation.latitude,
-      longitude: tabletopLocation.longitude,
+      title: tabletopLocation.title ?? null,
+      avatarUrl: tabletopLocation.avatarUrl ?? null,
+      postalCode: tabletopLocation.postalCode ?? null,
+      cityId: tabletopLocation.cityId ?? null,
+      countryId: tabletopLocation.countryId ?? null,
+      streetName: tabletopLocation.streetName ?? null,
+      streetNumber: tabletopLocation.streetNumber ?? null,
+      neighborhood: tabletopLocation.neighborhood ?? null,
+      latitude: tabletopLocation.latitude ?? null,
+      longitude: tabletopLocation.longitude ?? null,
     }
   }
 }

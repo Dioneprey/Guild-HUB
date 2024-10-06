@@ -38,7 +38,10 @@ interface RegisterTabletopUseCaseRequest {
   }
 }
 
-type RegisterTabletopUseCaseResponse = Either<ResourceNotFoundError, undefined>
+type RegisterTabletopUseCaseResponse = Either<
+  ResourceNotFoundError | ResourceAlreadyExistsError,
+  undefined
+>
 
 @Injectable()
 export class RegisterTabletopUseCase {

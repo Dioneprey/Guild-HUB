@@ -8,9 +8,9 @@ export class TimezonePresenter {
 
     return {
       id: timezone.id.toString(),
-      timezone: timezone.timezone,
-      utc: timezone.utc,
-      name: timezone.name,
+      timezone: timezone.timezone ?? null,
+      utc: timezone.utc ?? null,
+      name: timezone.name ?? null,
     }
   }
 }

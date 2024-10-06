@@ -16,7 +16,7 @@ import { RegisterTabletopUseCase } from 'src/domain/tabletop/application/use-cas
 import { RegisterTabletopLocationUseCase } from 'src/domain/tabletop/application/use-cases/tabletop/register-tabletop-location'
 import { FetchNearbyTabletopUseCase } from 'src/domain/tabletop/application/use-cases/tabletop/fetch-nearby-tabletop'
 import { FetchNearbyTabletopController } from './controllers/tabletop/fetch-nearby-tabletop.controller'
-import { GetTabletopDetailsController } from './controllers/tabletop/get-tabletop-tabletop.controller'
+import { GetTabletopDetailsController } from './controllers/tabletop/get-tabletop-details.controller'
 import { GetTabletopDetailsUseCase } from 'src/domain/tabletop/application/use-cases/tabletop/get-tabletop-details'
 import { FetchPlayerTabletopUseCase } from 'src/domain/tabletop/application/use-cases/tabletop/fetch-player-tabletop'
 import { FetchPlayerTabletopController } from './controllers/tabletop/fetch-player-tabletop.controller'
@@ -35,6 +35,8 @@ import { RegisterCredentialsAccountController } from './controllers/accounts/reg
 import { SendAccountValidationTokenController } from './controllers/accounts/send-account-validation-code.controller'
 import { RegisterCredentialsAccountUseCase } from 'src/domain/tabletop/application/use-cases/accounts/register-credentials-account'
 import { SendAccountValidationTokenUseCase } from 'src/domain/tabletop/application/use-cases/accounts/send-account-validation-token'
+import { EditTabletopLocationController } from './controllers/tabletop/edit-tabletop-location.controller'
+import { EditTabletopLocationUseCase } from 'src/domain/tabletop/application/use-cases/tabletop/edit-tabletop-location'
 
 @Module({
   imports: [
@@ -66,6 +68,7 @@ import { SendAccountValidationTokenUseCase } from 'src/domain/tabletop/applicati
     FetchPlayerTabletopController,
     EditTabletopController,
     FetchAllTabletopsController,
+    EditTabletopLocationController,
 
     // Upload\
     UploadFileController,
@@ -92,6 +95,7 @@ import { SendAccountValidationTokenUseCase } from 'src/domain/tabletop/applicati
     FetchPlayerTabletopUseCase,
     EditTabletopUseCase,
     FetchAllTabletopsUseCase,
+    EditTabletopLocationUseCase,
 
     // Upload\
     UploadFileUseCase,
