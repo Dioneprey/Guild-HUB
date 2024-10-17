@@ -4,7 +4,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt'
 import { z } from 'zod'
 import { EnvService } from '../env/env.service'
 import { PrismaService } from '../database/prisma/prisma.service'
-import { RoleOptions } from 'src/domain/tabletop/enterprise/entities/player/player'
+import { RoleOptions } from 'src/domain/core/enterprise/player/player'
 
 const tokenPayload = z.object({
   sub: z.string().uuid(),

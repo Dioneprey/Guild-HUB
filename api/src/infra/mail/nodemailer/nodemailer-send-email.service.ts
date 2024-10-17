@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common'
 import {
   SendEmail,
   SendEmailParams,
-} from 'src/domain/tabletop/application/mail/send-email'
+} from 'src/domain/core/application/mail/send-email'
 
 @Injectable()
 export class NodeMailerSendEmailService implements SendEmail {

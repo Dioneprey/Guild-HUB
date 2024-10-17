@@ -1,4 +1,4 @@
-import { TabletopPlayer } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop-player'
+import { TabletopPlayer } from 'src/domain/tabletop-finder/enterprise/entities/tabletop/tabletop-player'
 import { PlayerPresenter } from './player-presenter'
 
 export class TabletopPlayerPresenter {

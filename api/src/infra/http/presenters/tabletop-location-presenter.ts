@@ -1,4 +1,4 @@
-import { TabletopLocation } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop-location'
+import { TabletopLocation } from 'src/domain/tabletop-finder/enterprise/entities/tabletop/tabletop-location'
 
 export class TabletopLocationPresenter {
   static toHTTP(tabletopLocation: TabletopLocation | null) {

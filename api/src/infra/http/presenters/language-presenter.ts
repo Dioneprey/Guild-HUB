@@ -1,4 +1,4 @@
-import { Language } from 'src/domain/tabletop/enterprise/entities/language'
+import { Language } from 'src/domain/core/enterprise/language'
 
 export class LanguagePresenter {
   static toHTTP(language: Language | null) {

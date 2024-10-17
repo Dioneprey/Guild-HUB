@@ -1,14 +1,14 @@
 import { Either, left, right } from 'src/core/either'
-import { Player } from '../../../../tabletop/enterprise/entities/player/player'
+import { Player } from '../../../enterprise/player/player'
 import { Injectable } from '@nestjs/common'
-import { ResourceAlreadyExistsError } from '../../../../tabletop/application/use-cases/@errors/resource-already-exists.error'
-import { PlayerRepository } from '../../../../tabletop/application/repositories/player-repository'
+import { ResourceAlreadyExistsError } from '../../@errors/resource-already-exists.error'
+import { PlayerRepository } from '../../repositories/player-repository'
 import { HashGenerator } from '../../cryptography/hash-generator'
 import {
   Account,
   AccountProvider,
-} from 'src/domain/tabletop/enterprise/entities/account'
-import { AccountRepository } from '../../../../tabletop/application/repositories/account-repository'
+} from 'src/domain/core/enterprise/account'
+import { AccountRepository } from '../../repositories/account-repository'
 
 interface RegisterCredentialsAccountUseCaseRequest {
   name: string

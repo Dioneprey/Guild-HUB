@@ -1,10 +1,10 @@
 import { Either, left, right } from 'src/core/either'
-import { GenderOptions } from '../../../../tabletop/enterprise/entities/player/player'
+import { GenderOptions } from '../../../enterprise/player/player'
 import { Injectable } from '@nestjs/common'
-import { PlayerRepository } from '../../../../tabletop/application/repositories/player-repository'
+import { PlayerRepository } from '../../repositories/player-repository'
 import { HashGenerator } from '../../cryptography/hash-generator'
-import { ResourceNotFoundError } from '../../../../tabletop/application/use-cases/@errors/resource-not-found.error'
-import { ResourceAlreadyExistsError } from '../../../../tabletop/application/use-cases/@errors/resource-already-exists.error'
+import { ResourceNotFoundError } from '../../@errors/resource-not-found.error'
+import { ResourceAlreadyExistsError } from '../../@errors/resource-already-exists.error'
 
 interface UpdatePlayerUseCaseRequest {
   playerId: string

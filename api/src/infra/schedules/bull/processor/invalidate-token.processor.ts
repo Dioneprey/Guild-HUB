@@ -1,7 +1,7 @@
 import { Processor, Process, OnQueueCompleted } from '@nestjs/bull'
 import { Logger } from '@nestjs/common'
 import { Job } from 'bull'
-import { TokenRepository } from 'src/domain/tabletop/application/repositories/token-repository'
+import { TokenRepository } from 'src/domain/core/application/repositories/token-repository'
 
 export const INVALIDATE_TOKEN_QUEUE = 'invalidate-token-processor'
 @Processor(INVALIDATE_TOKEN_QUEUE)

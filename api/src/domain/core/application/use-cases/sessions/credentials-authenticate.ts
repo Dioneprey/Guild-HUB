@@ -2,11 +2,11 @@ import { Either, left, right } from 'src/core/either'
 import { Injectable } from '@nestjs/common'
 import { HashComparer } from '../../cryptography/hash-comparer'
 import { Encrypter } from '../../cryptography/encrypter'
-import { WrongCredentialsError } from '../../../../tabletop/application/use-cases/@errors/wrong-credentials.error'
-import { PlayerRepository } from '../../../../tabletop/application/repositories/player-repository'
-import { AccountRepository } from '../../../../tabletop/application/repositories/account-repository'
-import { AccountProvider } from 'src/domain/tabletop/enterprise/entities/account'
-import { ResourceNotFoundError } from '../../../../tabletop/application/use-cases/@errors/resource-not-found.error'
+import { WrongCredentialsError } from '../../@errors/wrong-credentials.error'
+import { PlayerRepository } from '../../repositories/player-repository'
+import { AccountRepository } from '../../repositories/account-repository'
+import { AccountProvider } from 'src/domain/core/enterprise/account'
+import { ResourceNotFoundError } from '../../@errors/resource-not-found.error'
 
 interface CredentialsAuthenticateUseCaseRequest {
   email: string

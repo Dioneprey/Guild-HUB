@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common'
 import { S3Storage } from './s3-storage'
 import { EnvModule } from 'src/infra/env/env.module'
-import { Uploader } from 'src/domain/tabletop/application/storage/uploader'
+import { Uploader } from 'src/domain/core/application/storage/uploader'
 
 @Module({
   imports: [EnvModule],

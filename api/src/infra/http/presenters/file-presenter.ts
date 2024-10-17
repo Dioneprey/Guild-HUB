@@ -1,4 +1,4 @@
-import { File } from 'src/domain/tabletop/enterprise/entities/file'
+import { File } from 'src/domain/core/enterprise/file'
 
 export class FilePresenter {
   static toHTTP(file: File | null) {

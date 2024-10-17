@@ -8,7 +8,7 @@ import {
 import { Env } from './env/env'
 import { EnvService } from './env/env.service'
 import fastifyMultipart from '@fastify/multipart'
-import { InternalServerErrorFilter } from './http/controllers/internal-server-error.filter'
+import { InternalServerErrorFilter } from './http/filter/internal-server-error.filter'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(

@@ -5,7 +5,7 @@ import { EnvService } from '../env/env.service'
 import {
   UploadParams,
   Uploader,
-} from 'src/domain/tabletop/application/storage/uploader'
+} from 'src/domain/core/application/storage/uploader'
 import { existsSync, mkdirSync, writeFileSync } from 'fs'
 import { extname, join } from 'path'
 

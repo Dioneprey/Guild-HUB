@@ -1,4 +1,4 @@
-import { Tabletop } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop'
+import { Tabletop } from 'src/domain/tabletop-finder/enterprise/entities/tabletop/tabletop'
 import { FilePresenter } from './file-presenter'
 import { TabletopPlayerPresenter } from './tabletop-player-presenter'
 import { TabletopLocationPresenter } from './tabletop-location-presenter'

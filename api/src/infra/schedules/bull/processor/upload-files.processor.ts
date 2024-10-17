@@ -1,6 +1,6 @@
 import { OnQueueCompleted, Process, Processor } from '@nestjs/bull'
 import { Job } from 'bull'
-import { UploadFilesAsyncUseCase } from 'src/domain/tabletop/application/use-cases/upload/upload-files-async'
+import { UploadFilesAsyncUseCase } from 'src/domain/core/application/upload/upload-files-async'
 import { UploadGateway } from 'src/infra/events/websocket/gateways/upload.gateway'
 
 export const FILES_UPLOAD_QUEUE = 'files-upload-processor'

@@ -1,6 +1,6 @@
-import { Player } from 'src/domain/tabletop/enterprise/entities/player/player'
 import { LanguagePresenter } from './language-presenter'
 import { FilePresenter } from './file-presenter'
+import { Player } from 'src/domain/core/enterprise/player/player'
 
 export class PlayerPresenter {
   static toHTTP(player: Player | null) {

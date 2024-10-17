@@ -1,4 +1,4 @@
-import { Timezone } from 'src/domain/tabletop/enterprise/entities/timezone'
+import { Timezone } from 'src/domain/core/enterprise/timezone'
 
 export class TimezonePresenter {
   static toHTTP(timezone: Timezone | null) {

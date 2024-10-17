@@ -1,7 +1,7 @@
 import { MailerModule } from '@nestjs-modules/mailer'
 import { Module } from '@nestjs/common'
 import { EnvService } from '../env/env.service'
-import { SendEmail } from 'src/domain/tabletop/application/mail/send-email'
+import { SendEmail } from 'src/domain/core/application/mail/send-email'
 import { NodeMailerSendEmailService } from './nodemailer/nodemailer-send-email.service'
 import { EnvModule } from '../env/env.module'
 

@@ -1,4 +1,4 @@
-import { TabletopSystem } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop-system'
+import { TabletopSystem } from 'src/domain/tabletop-finder/enterprise/entities/tabletop/tabletop-system'
 
 export class TabletopSystemPresenter {
   static toHTTP(tabletopsystem: TabletopSystem | null) {

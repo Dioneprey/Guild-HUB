@@ -1,4 +1,4 @@
-import { OnlinePlataform } from 'src/domain/tabletop/enterprise/entities/online-plataform'
+import { OnlinePlataform } from 'src/domain/tabletop-finder/enterprise/entities/online-plataform'
 
 export class OnlinePlataformPresenter {
   static toHTTP(onlineplataform: OnlinePlataform | null) {
