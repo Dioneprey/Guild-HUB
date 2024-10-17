@@ -4,17 +4,15 @@ import { Optional } from 'src/core/types/optional'
 import { File } from '../file'
 import { Language } from '../language'
 
-// M = “Masculino” | F = “Feminino” | O = “outros"
 export enum GenderOptions {
-  MAN = 'M',
-  WOMAN = 'F',
-  OTHER = 'O',
+  MALE = 'MALE',
+  WOMAN = 'WOMAN',
+  OTHER = 'OTHER',
 }
 
-// A = admin | U = user
 export enum RoleOptions {
-  admin = 'A',
-  user = 'U',
+  ADMIN = 'ADMIN',
+  USER = 'USER',
 }
 
 export interface PlayerProps {
@@ -197,7 +195,7 @@ export class Player extends Entity<PlayerProps> {
       {
         ...props,
         createdAt: props.createdAt ?? new Date(),
-        role: props.role ?? RoleOptions.user,
+        role: props.role ?? RoleOptions.USER,
       },
       id,
     )

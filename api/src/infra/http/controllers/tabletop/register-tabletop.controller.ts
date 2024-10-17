@@ -13,7 +13,6 @@ import {
   TabletopCadence,
   TabletopCommunicationType,
   TabletopExpertise,
-  TabletopType,
 } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop'
 import { CurrentUser } from 'src/infra/auth/current-user.decorator'
 import { UserPayload } from 'src/infra/auth/jwt.strategy'
@@ -23,14 +22,14 @@ const registerTabletopBodySchema = z.object({
   name: z.string(),
   slug: z.string().optional(),
   description: z.string().optional(),
-  type: z.nativeEnum(TabletopType),
+  tabletopTypeId: z.number(),
   playersLimit: z.number(),
   tabletopSystemId: z.number().optional(),
-  minAge: z.number().optional(),
+  minAge: z.number(),
   expertiseLevel: z.nativeEnum(TabletopExpertise),
   cadence: z.nativeEnum(TabletopCadence),
-  tabletopLanguageId: z.array(z.number()).optional(),
-  communication: z.nativeEnum(TabletopCommunicationType).optional(),
+  tabletopLanguageId: z.array(z.number()),
+  communication: z.nativeEnum(TabletopCommunicationType),
   onlinePlataformId: z.number().optional(),
   timezoneId: z.number().optional(),
   avatarFileId: z.string().optional(),
@@ -39,10 +38,7 @@ const registerTabletopBodySchema = z.object({
     .string()
     .optional()
     .transform((value) => value === 'true'),
-  hasDungeonMaster: z.coerce
-    .string()
-    .optional()
-    .transform((value) => value === 'true'),
+  hasDungeonMaster: z.coerce.string().transform((value) => value === 'true'),
 })
 
 type RegisterTabletopBodySchema = z.infer<typeof registerTabletopBodySchema>

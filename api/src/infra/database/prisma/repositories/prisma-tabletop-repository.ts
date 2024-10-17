@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
 import {
   TabletopRepository,
+  TabletopRepositoryCreateProps,
   TabletopRepositoryFindAllByPlayerIdProps,
   TabletopRepositoryFindAllProps,
   TabletopRepositoryFindByUniqueFieldProps,
@@ -32,6 +33,7 @@ export class PrismaTabletopRepository implements TabletopRepository {
               }
             : false,
         }),
+        tabletopType: true,
         tabletopSystem: true,
         tabletopLocation: true,
         tabletopLanguage: {
@@ -92,11 +94,15 @@ export class PrismaTabletopRepository implements TabletopRepository {
               gte: filters.minAge,
             },
           }),
-          ...(filters?.tabletopType && {
-            type: filters.tabletopType,
+          ...(filters?.tabletopTypeId && {
+            tabletopTypeId: {
+              in: filters.tabletopTypeId,
+            },
           }),
           ...(filters?.tabletopSystemId && {
-            tabletopSystemId: filters.tabletopSystemId,
+            tabletopSystemId: {
+              in: filters.tabletopSystemId,
+            },
           }),
           ...(filters?.tabletopLanguageId && {
             tabletopLanguage: {
@@ -123,6 +129,7 @@ export class PrismaTabletopRepository implements TabletopRepository {
               player: true,
             },
           },
+          tabletopType: true,
           tabletopSystem: true,
           tabletopLocation: true,
           tabletopLanguage: {
@@ -175,11 +182,15 @@ export class PrismaTabletopRepository implements TabletopRepository {
               gte: filters.minAge,
             },
           }),
-          ...(filters?.tabletopType && {
-            type: filters.tabletopType,
+          ...(filters?.tabletopTypeId && {
+            tabletopTypeId: {
+              in: filters.tabletopTypeId,
+            },
           }),
           ...(filters?.tabletopSystemId && {
-            tabletopSystemId: filters.tabletopSystemId,
+            tabletopSystemId: {
+              in: filters.tabletopSystemId,
+            },
           }),
           ...(filters?.tabletopLanguageId && {
             tabletopLanguage: {
@@ -225,6 +236,7 @@ export class PrismaTabletopRepository implements TabletopRepository {
               }
             : false,
         }),
+        tabletopType: true,
         tabletopSystem: true,
         tabletopLocation: true,
         avatarFile: true,
@@ -242,46 +254,77 @@ export class PrismaTabletopRepository implements TabletopRepository {
     return tabletop.map(PrismaTabletopMapper.toDomain)
   }
 
-  async create(tabletop: Tabletop) {
+  async create({
+    tabletop,
+    language,
+    tabletopPlayer,
+  }: TabletopRepositoryCreateProps) {
     const data = PrismaTabletopMapper.toPrisma(tabletop)
 
-    await this.prisma.tabletop.create({
-      data,
+    await this.prisma.$transaction(async (prisma) => {
+      const createdTabletop = await prisma.tabletop.create({
+        data,
+      })
+
+      await prisma.tabletopLanguage.createMany({
+        data: language.map((item) => ({
+          tabletopId: createdTabletop.id,
+          languageId: item,
+        })),
+      })
+
+      await prisma.tabletopPlayers.create({
+        data: {
+          tabletopId: createdTabletop.id,
+          playerId: tabletopPlayer.playerId.toString(),
+          gameMaster: tabletopPlayer.gameMaster,
+        },
+      })
     })
   }
 
-  async createTabletopLanguage({
+  async updateTabletopLanguage({
     tabletopId,
     language,
   }: {
     tabletopId: string
     language: number[]
   }) {
-    await this.prisma.tabletopLanguage.deleteMany({
-      where: {
-        tabletopId,
-      },
-    })
-
-    await this.prisma.tabletopLanguage.createMany({
-      data: language.map((item) => {
-        return {
+    await this.prisma.$transaction(async (prisma) => {
+      await prisma.tabletopLanguage.deleteMany({
+        where: {
           tabletopId,
-          languageId: item,
-        }
-      }),
+        },
+      })
+
+      await prisma.tabletopLanguage.createMany({
+        data: language.map((item) => {
+          return {
+            tabletopId,
+            languageId: item,
+          }
+        }),
+      })
     })
   }
 
-  async createTabletopPlayers(tabletopPlayers: TabletopPlayer[]) {
-    await this.prisma.tabletopPlayers.createMany({
-      data: tabletopPlayers.map((item) => {
-        return {
-          tabletopId: item.tabletopId.toString(),
-          playerId: item.playerId.toString(),
-          gameMaster: item.gameMaster,
-        }
-      }),
+  async updateTabletopPlayers(tabletopPlayers: TabletopPlayer[]) {
+    await this.prisma.$transaction(async (prisma) => {
+      await prisma.tabletopPlayers.deleteMany({
+        where: {
+          tabletopId: tabletopPlayers[0].tabletopId.toString(),
+        },
+      })
+
+      await prisma.tabletopPlayers.createMany({
+        data: tabletopPlayers.map((item) => {
+          return {
+            tabletopId: item.tabletopId.toString(),
+            playerId: item.playerId.toString(),
+            gameMaster: item.gameMaster,
+          }
+        }),
+      })
     })
   }
 

@@ -6,7 +6,6 @@ import {
   TabletopCadence,
   TabletopCommunicationType,
   TabletopExpertise,
-  TabletopType,
 } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop'
 import { CurrentUser } from 'src/infra/auth/current-user.decorator'
 import { UserPayload } from 'src/infra/auth/jwt.strategy'
@@ -17,7 +16,7 @@ const editTabletopBodySchema = z.object({
     name: z.string().optional().nullable(),
     slug: z.string().optional().nullable(),
     description: z.string().optional().nullable(),
-    type: z.nativeEnum(TabletopType).optional().nullable(),
+    tabletopTypeId: z.number(),
     playersLimit: z.number().optional(),
     tabletopSystemId: z.number().optional(),
     minAge: z.number().optional(),

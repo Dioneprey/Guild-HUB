@@ -5,7 +5,7 @@ import {
   HttpCode,
   Post,
 } from '@nestjs/common'
-import { ValidateAccountUseCase } from 'src/domain/tabletop/application/use-cases/accounts/validate-account'
+import { ValidateAccountUseCase } from 'src/domain/core/application/use-cases/accounts/validate-account'
 import { z } from 'zod'
 import { ZodValidationPipe } from '../../pipes/zod-validation.pipe'
 import { Public } from 'src/infra/auth/public'

@@ -8,7 +8,7 @@ import {
 import { z } from 'zod'
 import { ZodValidationPipe } from '../../pipes/zod-validation.pipe'
 import { Public } from 'src/infra/auth/public'
-import { SendAccountValidationTokenUseCase } from 'src/domain/tabletop/application/use-cases/accounts/send-account-validation-token'
+import { SendAccountValidationTokenUseCase } from 'src/domain/core/application/use-cases/accounts/send-account-validation-token'
 
 const sendAccountValidationTokenBodySchema = z.object({
   email: z.string().email(),

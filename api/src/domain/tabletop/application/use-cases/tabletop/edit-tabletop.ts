@@ -4,7 +4,6 @@ import {
   TabletopCadence,
   TabletopCommunicationType,
   TabletopExpertise,
-  TabletopType,
 } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop'
 import { TabletopRepository } from '../../repositories/tabletop-repository'
 import { PlayerRepository } from '../../repositories/player-repository'
@@ -22,7 +21,7 @@ interface EditTabletopUseCaseRequest {
     tabletopLanguageId?: number[] | null
     avatarFileId?: string | null
     minAge?: number
-    type?: TabletopType | null
+    tabletopTypeId?: number
     tabletopSystemId?: number
     expertiseLevel?: TabletopExpertise | null
     cadence?: TabletopCadence | null
@@ -99,7 +98,7 @@ export class EditTabletopUseCase {
     await this.tabletopRepository.save(tabletopExists)
 
     if (tabletopLanguageId) {
-      await this.tabletopRepository.createTabletopLanguage({
+      await this.tabletopRepository.updateTabletopLanguage({
         tabletopId,
         language: tabletopLanguageId,
       })

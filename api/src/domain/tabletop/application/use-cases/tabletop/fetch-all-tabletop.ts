@@ -6,7 +6,6 @@ import {
   Tabletop,
   TabletopCadence,
   TabletopExpertise,
-  TabletopType,
 } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop'
 
 interface FetchAllTabletopsUseCaseRequest {
@@ -21,11 +20,11 @@ interface FetchAllTabletopsUseCaseRequest {
     withGameMaster?: boolean
     minAge?: number
     onlyVerifiedTabletop?: boolean
-    tabletopType?: TabletopType
+    tabletopTypeId?: number[]
     tabletopCadence?: TabletopCadence
     tabletopExpertise?: TabletopExpertise
     timezoneId?: number
-    tabletopSystemId?: number
+    tabletopSystemId?: number[]
     tabletopLanguageId?: number[]
   }
 }

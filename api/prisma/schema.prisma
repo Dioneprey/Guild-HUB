@@ -13,53 +13,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// M = “Masculino” | F = “Feminino” | O = “outros"
 enum GenderOptions {
-  M
-  F
-  O
+  MALE
+  FEMALE
+  OTHER
 }
 
-// A = admin | U = player
 enum RoleOptions {
-  A
-  U
+  ADMIN
+  USER
 }
 
-// R = role-playing-game | W = Wargaming Table | B = Board Gaming Table
-enum TabletopType {
-  R
-  W
-  B
-}
-
-// A = Vídeo e voz | B = somente voz | C = texto
 enum TabletopCommunicationType {
-  A
-  B
-  C
+  VIDEO_VOIP
+  VOIP
+  TEXT
 }
 
-// B = Iniciante | I = Intermediario | A = Avançado
 enum TabletopExpertise {
-  B
-  I
-  A
+  BEGINNER
+  INTERMEDIARY
+  ADVANCED
 }
 
-// O = One - shot | S = semanal | Q = Quinzenal | M = mensal
 enum TabletopCadence {
-  O
-  S
-  Q
-  M
+  ONE_SHOT
+  WEEKLY
+  FORTWEEKLY
+  MONTHLY
 }
 
-// I = imagem | V = video | O = other
 enum FileType {
-  I
-  V
-  O
+  IMAGE
+  VIDEO
+  OTHER
 }
 
 enum AccountProvider {
@@ -242,6 +229,7 @@ model Tabletop {
   slug              String                     @unique @db.VarChar(100)
   description       String?                    @db.VarChar(500)
   playersLimit      Int?                       @map("players_limit") @db.SmallInt()
+  tabletopTypeId    Int?                       @map("tabletop_type_id")
   tabletopSystemId  Int?                       @map("tabletop_system_id")
   expertiseLevel    TabletopExpertise?         @map("expertise_level")
   cadence           TabletopCadence?
@@ -249,7 +237,6 @@ model Tabletop {
   coverFileId       String?                    @map("cover_file_id")
   minAge            Int?                       @map("min_age") @db.SmallInt()
   hasDungeonMaster  Boolean?                   @map("has_dungeon_master")
-  type              TabletopType?
   communication     TabletopCommunicationType?
   onlinePlataformId Int?                       @map("online_plataform_id")
   timezoneId        Int?                       @map("timezone_id")
@@ -259,6 +246,7 @@ model Tabletop {
 
   owner Player @relation(fields: [ownerId], references: [id])
 
+  tabletopType   TabletopType?   @relation(fields: [tabletopTypeId], references: [id])
   tabletopSystem TabletopSystem? @relation(fields: [tabletopSystemId], references: [id])
 
   tabletopPlayers       TabletopPlayers[]
@@ -275,7 +263,7 @@ model Tabletop {
   onlinePlataform OnlineGamePlataform? @relation(fields: [onlinePlataformId], references: [id])
   timezone        Timezone?            @relation(fields: [timezoneId], references: [id])
 
-  @@index([ownerId, playersLimit, tabletopSystemId, type, minAge])
+  @@index([ownerId, playersLimit, tabletopSystemId, tabletopTypeId, minAge])
   @@map("tabletop")
 }
 
@@ -356,6 +344,15 @@ model TabletopLocation {
   tabletop Tabletop @relation(fields: [tabletopId], references: [id])
 
   @@map("tabletop_location")
+}
+
+model TabletopType {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(100)
+
+  Tabletop Tabletop[]
+
+  @@map("tabletop_type")
 }
 
 model TabletopSystem {

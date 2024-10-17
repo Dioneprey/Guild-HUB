@@ -5,7 +5,6 @@ import {
   TabletopCadence,
   TabletopCommunicationType,
   TabletopExpertise,
-  TabletopType,
 } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop'
 import { TabletopRepository } from '../../repositories/tabletop-repository'
 import { PlayerRepository } from '../../repositories/player-repository'
@@ -22,19 +21,19 @@ interface RegisterTabletopUseCaseRequest {
     slug?: string
     description?: string
     playersLimit: number
-    tabletopLanguageId?: number[]
+    tabletopLanguageId: number[]
     avatarFileId?: string
-    minAge?: number
-    type: TabletopType
+    minAge: number
+    tabletopTypeId: number
     tabletopSystemId?: number
     expertiseLevel?: TabletopExpertise
     cadence?: TabletopCadence
     coverFileId?: string
     online?: boolean
-    hasDungeonMaster?: boolean
+    hasDungeonMaster: boolean
     onlinePlataformId?: number
     timezoneId?: number
-    communication?: TabletopCommunicationType
+    communication: TabletopCommunicationType
   }
 }
 
@@ -68,11 +67,15 @@ export class RegisterTabletopUseCase {
     ])
 
     if (!playerExists) {
-      return left(new ResourceNotFoundError(playerId))
+      return left(
+        new ResourceNotFoundError(`Player with id: ${playerId} doesn't exists`),
+      )
     }
 
     if (tabletopWithSameSlugExists) {
-      return left(new ResourceAlreadyExistsError(tabletopSlug))
+      return left(
+        new ResourceAlreadyExistsError(`Slug: ${tabletopSlug} already existss`),
+      )
     }
 
     const {
@@ -84,7 +87,7 @@ export class RegisterTabletopUseCase {
       avatarFileId,
       tabletopLanguageId,
       minAge,
-      type,
+      tabletopTypeId,
       expertiseLevel,
       cadence,
       coverFileId,
@@ -103,7 +106,7 @@ export class RegisterTabletopUseCase {
       playersLimit,
       tabletopSystemId,
       minAge,
-      type,
+      tabletopTypeId,
       expertiseLevel,
       cadence,
       avatarFileId,
@@ -115,23 +118,18 @@ export class RegisterTabletopUseCase {
       timezoneId,
     })
 
-    await this.tabletopRepository.create(tabletop)
-
-    if (tabletopLanguageId) {
-      await this.tabletopRepository.createTabletopLanguage({
-        tabletopId: tabletop.id.toString(),
-        language: tabletopLanguageId,
-      })
-    }
-    // TODO fazer um rollback caso de erro
-    // Se mesa tiver dungeo master no cadastro, usuário é cadastrado como gm
+    // Se mesa tiver dungeon master no cadastro, usuário é cadastrado como gm
     const tabletopPlayer = TabletopPlayer.create({
       playerId: new UniqueEntityID(playerId),
       tabletopId: tabletop.id,
       gameMaster: tabletop.hasDungeonMaster,
     })
 
-    await this.tabletopRepository.createTabletopPlayers([tabletopPlayer])
+    await this.tabletopRepository.create({
+      tabletop,
+      language: tabletopLanguageId,
+      tabletopPlayer,
+    })
 
     return right(undefined)
   }

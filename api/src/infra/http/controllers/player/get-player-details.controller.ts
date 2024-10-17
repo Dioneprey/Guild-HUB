@@ -1,7 +1,7 @@
 import { BadRequestException, Controller, Get, Param } from '@nestjs/common'
 import { Public } from 'src/infra/auth/public'
 import { PlayerPresenter } from '../../presenters/player-presenter'
-import { GetPlayerDetailsUseCase } from 'src/domain/tabletop/application/use-cases/player/get-player-details'
+import { GetPlayerDetailsUseCase } from 'src/domain/core/application/use-cases/player/get-player-details'
 
 @Controller('/players/:playerId')
 export class GetPlayerDetailsController {

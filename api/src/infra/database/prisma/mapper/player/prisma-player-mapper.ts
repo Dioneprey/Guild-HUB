@@ -25,7 +25,7 @@ export type PlayerWithInclude = Prisma.PlayerGetPayload<{
 
 export class PrismaPlayerMapper {
   static toDomain(raw: PlayerWithInclude): Player {
-    const role = raw?.role ? RoleOptions[raw.role] : RoleOptions.user
+    const role = raw?.role ? RoleOptions[raw.role] : RoleOptions.USER
     const gender = raw.gender ? GenderOptions[raw.gender] : null
 
     return Player.create(
@@ -61,7 +61,7 @@ export class PrismaPlayerMapper {
   static toPrisma(player: Player): Prisma.PlayerUncheckedCreateInput {
     const role = player?.role
       ? PrismaRoleOptions[player.role]
-      : PrismaRoleOptions.U
+      : PrismaRoleOptions.USER
     const gender = player.gender ? PrismaGenderOptions[player.gender] : null
 
     return {

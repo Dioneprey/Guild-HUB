@@ -3,9 +3,9 @@ import { UniqueEntityID } from 'src/core/entities/unique-entity-id'
 import { Optional } from 'src/core/types/optional'
 
 export enum FileType {
-  image = 'I',
-  video = 'V',
-  other = 'U',
+  IMAGE = 'IMAGE',
+  VIDEO = 'VIDEO',
+  OTHER = 'OTHER',
 }
 export interface FileProps {
   name?: string | null

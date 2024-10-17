@@ -9,30 +9,25 @@ import { OnlinePlataform } from '../online-plataform'
 import { Timezone } from '../timezone'
 import { Language } from '../language'
 import { createSlug } from 'src/core/utils/create-slug'
-
-export enum TabletopType {
-  rpg = 'R',
-  warGaming = 'W',
-  boardGaming = 'B',
-}
+import { TabletopType } from './tabletop-type'
 
 export enum TabletopExpertise {
-  beginner = 'B',
-  intermediate = 'I',
-  advanced = 'A',
+  BEGINNER = 'BEGINNER',
+  INTERMEDIARY = 'INTERMEDIARY',
+  ADVANCED = 'ADVANCED',
 }
 
 export enum TabletopCadence {
-  oneShot = 'O',
-  weekly = 'S',
-  fortnightly = 'Q',
-  monthly = 'M',
+  ONE_SHOT = 'ONE_SHOT',
+  WEEKLY = 'WEEKLY',
+  FORTWEEKLY = 'FORTWEEKLY',
+  MONTHLY = 'MONTHLY',
 }
 
 export enum TabletopCommunicationType {
-  videoVoice = 'A',
-  voice = 'B',
-  text = 'C',
+  VIDEO_VOIP = 'VIDEO_VOIP',
+  VOIP = 'VOIP',
+  TEXT = 'TEXT',
 }
 export interface TabletopProps {
   ownerId: UniqueEntityID
@@ -40,6 +35,8 @@ export interface TabletopProps {
   slug: string
   description?: string | null
   playersLimit?: number | null
+  tabletopTypeId?: number | null
+  tabletopType?: TabletopType | null
   tabletopSystemId?: number | null
   tabletopSystem?: TabletopSystem | null
   tabletopLanguage?: Language[] | null
@@ -51,7 +48,6 @@ export interface TabletopProps {
   coverFile?: File | null
   minAge?: number | null
   hasDungeonMaster?: boolean | null
-  type?: TabletopType | null
   online?: boolean | null
   communication?: TabletopCommunicationType | null
   onlinePlataformId?: number | null
@@ -209,12 +205,21 @@ export class Tabletop extends Entity<TabletopProps> {
     this.touch()
   }
 
-  get type() {
-    return this.props.type
+  get tabletopTypeId() {
+    return this.props.tabletopTypeId
   }
 
-  set type(type: TabletopType | null | undefined) {
-    this.props.type = type
+  set tabletopTypeId(tabletopTypeId: number | null | undefined) {
+    this.props.tabletopTypeId = tabletopTypeId
+    this.touch()
+  }
+
+  get tabletopType() {
+    return this.props.tabletopType
+  }
+
+  set tabletopType(tabletopType: TabletopType | null | undefined) {
+    this.props.tabletopType = tabletopType
     this.touch()
   }
 

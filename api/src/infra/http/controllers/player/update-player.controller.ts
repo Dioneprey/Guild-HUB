@@ -8,7 +8,7 @@ import {
   Patch,
 } from '@nestjs/common'
 import { ZodValidationPipe } from '../../pipes/zod-validation.pipe'
-import { UpdatePlayerUseCase } from 'src/domain/tabletop/application/use-cases/player/update-player'
+import { UpdatePlayerUseCase } from 'src/domain/core/application/use-cases/player/update-player'
 import { GenderOptions } from 'src/domain/tabletop/enterprise/entities/player/player'
 import { CurrentUser } from 'src/infra/auth/current-user.decorator'
 import { UserPayload } from 'src/infra/auth/jwt.strategy'

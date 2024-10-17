@@ -3,7 +3,6 @@ import {
   Tabletop,
   TabletopCadence,
   TabletopExpertise,
-  TabletopType,
 } from '../../enterprise/entities/tabletop/tabletop'
 import { TabletopPlayer } from '../../enterprise/entities/tabletop/tabletop-player'
 
@@ -25,10 +24,10 @@ interface TabletopRepositoryFindAllFilters {
   withGameMaster?: boolean
   minAge?: number
   onlyVerifiedTabletop?: boolean
-  tabletopType?: TabletopType
   tabletopCadence?: TabletopCadence
   tabletopExpertise?: TabletopExpertise
-  tabletopSystemId?: number
+  tabletopTypeId?: number[]
+  tabletopSystemId?: number[]
   timezoneId?: number
   tabletopLanguageId?: number[]
 }
@@ -44,6 +43,12 @@ export interface TabletopRepositoryFindAllByPlayerIdProps {
   include?: {
     tabletopPlayers?: boolean
   }
+}
+
+export interface TabletopRepositoryCreateProps {
+  tabletop: Tabletop
+  language: number[]
+  tabletopPlayer: TabletopPlayer
 }
 export abstract class TabletopRepository {
   abstract findByUniqueField({
@@ -62,8 +67,13 @@ export abstract class TabletopRepository {
     include,
   }: TabletopRepositoryFindAllByPlayerIdProps): Promise<Tabletop[]>
 
-  abstract create(tabletop: Tabletop): Promise<void>
-  abstract createTabletopLanguage({
+  abstract create({
+    tabletop,
+    language,
+    tabletopPlayer,
+  }: TabletopRepositoryCreateProps): Promise<void>
+
+  abstract updateTabletopLanguage({
     tabletopId,
     language,
   }: {
@@ -71,7 +81,7 @@ export abstract class TabletopRepository {
     language: number[]
   }): Promise<void>
 
-  abstract createTabletopPlayers(
+  abstract updateTabletopPlayers(
     tabletopPlayers: TabletopPlayer[],
   ): Promise<void>
 

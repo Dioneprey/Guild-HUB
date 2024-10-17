@@ -6,6 +6,7 @@ import { TimezonePresenter } from './timezone-presenter'
 import { TabletopSystemPresenter } from './tabletop-system-presenter'
 import { OnlinePlataformPresenter } from './online-plataform-presenter'
 import { LanguagePresenter } from './language-presenter'
+import { TabletopTypePresenter } from './tabletop-type-presenter'
 
 export class TabletopPresenter {
   static toHTTP(tabletop: Tabletop | null) {
@@ -16,7 +17,6 @@ export class TabletopPresenter {
     return {
       id: tabletop.id.toString() ?? null,
       ownerId: tabletop.ownerId.toString() ?? null,
-      type: tabletop.type ?? null,
       slug: tabletop.slug ?? null,
       name: tabletop.name ?? null,
       description: tabletop.description ?? null,
@@ -43,6 +43,9 @@ export class TabletopPresenter {
         : null,
       tabletopSystem: tabletop.tabletopSystem
         ? TabletopSystemPresenter.toHTTP(tabletop.tabletopSystem)
+        : null,
+      tabletopType: tabletop.tabletopType
+        ? TabletopTypePresenter.toHTTP(tabletop.tabletopType)
         : null,
       tabletopPlayer: tabletop.tabletopPlayers
         ? tabletop.tabletopPlayers.map(TabletopPlayerPresenter.toHTTP)

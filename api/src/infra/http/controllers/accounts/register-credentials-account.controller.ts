@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common'
 import { Public } from 'src/infra/auth/public'
 import { ZodValidationPipe } from '../../pipes/zod-validation.pipe'
-import { RegisterCredentialsAccountUseCase } from 'src/domain/tabletop/application/use-cases/accounts/register-credentials-account'
+import { RegisterCredentialsAccountUseCase } from 'src/domain/core/application/use-cases/accounts/register-credentials-account'
 import { ResourceAlreadyExistsError } from 'src/domain/tabletop/application/use-cases/@errors/resource-already-exists.error'
 
 const registerCredentialsAccountBodySchema = z.object({

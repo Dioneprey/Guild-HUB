@@ -7,7 +7,6 @@ import { TabletopPresenter } from '../../presenters/tabletop-presenter'
 import {
   TabletopCadence,
   TabletopExpertise,
-  TabletopType,
 } from 'src/domain/tabletop/enterprise/entities/tabletop/tabletop'
 
 const fetchAllTabletopsQuerySchema = z.object({
@@ -24,12 +23,12 @@ const fetchAllTabletopsQuerySchema = z.object({
     .transform((value) => value === 'true'),
   minAge: z.coerce.number().optional(),
   onlyVerifiedTabletop: z.boolean().optional(),
-  tabletopType: z.nativeEnum(TabletopType).optional(),
-  tabletopSystemId: z.coerce.number().optional(),
+  tabletopTypeId: z.array(z.number()).optional(),
+  tabletopSystemId: z.array(z.number()).optional(),
   timezoneId: z.coerce.number().optional(),
   tabletopCadence: z.nativeEnum(TabletopCadence).optional(),
   tabletopExpertise: z.nativeEnum(TabletopExpertise).optional(),
-  tabletopLanguageId: z.string().optional(),
+  tabletopLanguageId: z.array(z.number()).optional(),
 })
 
 type FetchAllTabletopsQuerySchema = z.infer<typeof fetchAllTabletopsQuerySchema>
@@ -44,46 +43,11 @@ export class FetchAllTabletopsController {
   async handle(
     @Query(queryValidationPipe) query: FetchAllTabletopsQuerySchema,
   ) {
-    const {
-      pageIndex,
-      online,
-      countryId,
-      stateId,
-      cityId,
-      playersLimit,
-      onlyOpenSlots,
-      withGameMaster,
-      minAge,
-      onlyVerifiedTabletop,
-      tabletopType,
-      tabletopSystemId,
-      tabletopLanguageId,
-      timezoneId,
-      tabletopCadence,
-      tabletopExpertise,
-    } = fetchAllTabletopsQuerySchema.parse(query)
+    const { pageIndex, ...filters } = fetchAllTabletopsQuerySchema.parse(query)
 
     const result = await this.fetchAllTabletops.execute({
       pageIndex,
-      filters: {
-        online,
-        countryId,
-        stateId,
-        cityId,
-        playersLimit,
-        onlyOpenSlots,
-        withGameMaster,
-        minAge,
-        onlyVerifiedTabletop,
-        tabletopType,
-        tabletopSystemId,
-        tabletopCadence,
-        tabletopExpertise,
-        timezoneId,
-        tabletopLanguageId: tabletopLanguageId
-          ? JSON.parse(tabletopLanguageId).map((id: string) => parseInt(id))
-          : undefined,
-      },
+      filters,
     })
 
     if (result.isLeft()) {
