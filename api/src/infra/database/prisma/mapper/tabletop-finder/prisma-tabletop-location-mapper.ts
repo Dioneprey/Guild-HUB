@@ -8,13 +8,27 @@ import { TabletopLocation } from 'src/domain/tabletop-finder/enterprise/entities
 export class PrismaTabletopLocationMapper {
   static toDomain(
     raw: PrismaTabletopLocation & {
+      name?: string | null
+      slug?: string | null
+      playersLimit?: number | null
+      cadence?: string | null
+      minAge?: string | null
+      hasDungeonMaster?: string | null
       avatarUrl?: string | null
     },
   ): TabletopLocation {
     return TabletopLocation.create(
       {
         ...raw,
-        avatarUrl: raw.avatarUrl,
+        tabletopData: {
+          name: raw.name,
+          slug: raw.slug,
+          playersLimit: raw.playersLimit,
+          cadence: raw.cadence,
+          minAge: raw.minAge,
+          hasDungeonMaster: raw.hasDungeonMaster,
+          avatarUrl: raw.avatarUrl,
+        },
         tabletopId: new UniqueEntityID(raw.tabletopId),
       },
       new UniqueEntityID(raw.id),

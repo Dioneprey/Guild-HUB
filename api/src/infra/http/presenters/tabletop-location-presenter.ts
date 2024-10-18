@@ -10,7 +10,7 @@ export class TabletopLocationPresenter {
       id: tabletopLocation.id.toString(),
       tabletopId: tabletopLocation.tabletopId.toString(),
       title: tabletopLocation.title ?? null,
-      avatarUrl: tabletopLocation.avatarUrl ?? null,
+      tabletopData: tabletopLocation.tabletopData ?? null,
       postalCode: tabletopLocation.postalCode ?? null,
       cityId: tabletopLocation.cityId ?? null,
       countryId: tabletopLocation.countryId ?? null,

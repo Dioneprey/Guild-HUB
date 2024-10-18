@@ -1,10 +1,19 @@
 import { Entity } from 'src/core/entities/entity'
 import { UniqueEntityID } from 'src/core/entities/unique-entity-id'
 
+export type CustomTabletopData = {
+  name?: string | null
+  slug?: string | null
+  playersLimit?: number | null
+  cadence?: string | null
+  minAge?: string | null
+  hasDungeonMaster?: string | null
+  avatarUrl?: string | null
+}
 export interface TabletopLocationProps {
   tabletopId: UniqueEntityID
   title?: string | null
-  avatarUrl?: string | null
+  tabletopData?: CustomTabletopData | null
   postalCode?: string | null
   cityId?: string | null
   stateId?: string | null
@@ -33,12 +42,12 @@ export class TabletopLocation extends Entity<TabletopLocationProps> {
     this.props.title = title
   }
 
-  get avatarUrl() {
-    return this.props.avatarUrl
+  get tabletopData() {
+    return this.props.tabletopData
   }
 
-  set avatarUrl(avatarUrl: string | null | undefined) {
-    this.props.avatarUrl = avatarUrl
+  set tabletopData(tabletopData: CustomTabletopData | null | undefined) {
+    this.props.tabletopData = tabletopData
   }
 
   get postalCode() {

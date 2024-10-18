@@ -64,6 +64,12 @@ export class PrismaTabletopLocationRepository
           WITH numbered_rows AS (
             SELECT 
               tabletop_location.*,
+              tabletop.name as tabletop_name,
+              tabletop.slug as tabletop_slug,
+              tabletop.players_limit as tabletop_players_limit,
+              tabletop.cadence as tabletop_cadence,
+              tabletop.min_age as tabletop_min_age,
+              tabletop.has_dungeon_master as tabletop_has_dungeon_master,
               avatar.path as avatar_url,
               ROW_NUMBER() OVER (PARTITION BY "tabletop"."id" ORDER BY "tabletop"."created_at" DESC) as row_num
             FROM tabletop_location
@@ -87,6 +93,12 @@ export class PrismaTabletopLocationRepository
       tabletopId: item.tabletop_id,
       avatarUrl: item.avatar_url,
       title: item.title,
+      name: item.name,
+      slug: item.slug,
+      playersLimit: item.players_limit,
+      cadence: item.cadence,
+      minAge: item.min_age,
+      hasDungeonMaster: item.has_dungeon_master,
       postalCode: item.postal_code,
       cityId: item.city_id,
       countryId: item.country_id,

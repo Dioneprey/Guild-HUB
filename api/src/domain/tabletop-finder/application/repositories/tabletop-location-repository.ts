@@ -4,6 +4,12 @@ export interface RawTabletopLocation {
   id: string
   tabletop_id: string
   title: string | null
+  name?: string | null
+  slug?: string | null
+  players_limit?: number | null
+  cadence?: string | null
+  min_age?: string | null
+  has_dungeon_master?: string | null
   avatar_url: string | null
   postal_code: string
   city_id: string | null

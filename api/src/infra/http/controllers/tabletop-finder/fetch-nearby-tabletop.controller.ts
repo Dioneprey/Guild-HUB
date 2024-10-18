@@ -11,7 +11,7 @@ const fetchNearbyTabletopQuerySchema = z.object({
   distanceRangeInKm: z.coerce.number().optional().default(10),
   onlyOpenSlots: z.coerce
     .string()
-    .optional()
+    .default('true')
     .transform((value) => value === 'true'),
   minAge: z.coerce.number().optional(),
   onlyVerifiedTabletop: z.coerce
