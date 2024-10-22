@@ -8,4 +8,4 @@ import { UploadGateway } from './websocket/gateways/upload.gateway'
   providers: [NotificationGateway, SocketService, SocketGateway, UploadGateway],
   exports: [NotificationGateway, UploadGateway],
 })
-export class EventsModule {}
+export class SocketModule {}

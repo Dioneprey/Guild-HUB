@@ -1,7 +1,7 @@
 import { Either, left, right } from 'src/core/either'
 import { Player } from '../../../enterprise/player/player'
 import { Injectable } from '@nestjs/common'
-import { ResourceAlreadyExistsError } from '../../@errors/resource-already-exists.error'
+import { ResourceAlreadyExistsError } from '../../../../shared/@errors/resource-already-exists.error'
 import { PlayerRepository } from '../../repositories/player-repository'
 import { HashGenerator } from '../../cryptography/hash-generator'
 import {

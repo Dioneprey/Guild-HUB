@@ -9,8 +9,8 @@ import {
 import { UniqueEntityID } from 'src/core/entities/unique-entity-id'
 import { TabletopPlayer } from 'src/domain/tabletop-finder/enterprise/entities/tabletop/tabletop-player'
 import { createSlug } from 'src/core/utils/create-slug'
-import { ResourceAlreadyExistsError } from 'src/domain/core/application/@errors/resource-already-exists.error'
-import { ResourceNotFoundError } from 'src/domain/core/application/@errors/resource-not-found.error'
+import { ResourceAlreadyExistsError } from 'src/domain/shared/@errors/resource-already-exists.error'
+import { ResourceNotFoundError } from 'src/domain/shared/@errors/resource-not-found.error'
 import { PlayerRepository } from 'src/domain/core/application/repositories/player-repository'
 import { TabletopRepository } from '../repositories/tabletop-repository'
 

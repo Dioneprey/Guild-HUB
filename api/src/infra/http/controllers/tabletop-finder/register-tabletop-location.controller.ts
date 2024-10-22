@@ -11,7 +11,7 @@ import { ZodValidationPipe } from 'src/infra/http/pipes/zod-validation.pipe'
 import { CurrentUser } from 'src/infra/auth/current-user.decorator'
 import { UserPayload } from 'src/infra/auth/jwt.strategy'
 import { RegisterTabletopLocationUseCase } from 'src/domain/tabletop-finder/application/use-cases/register-tabletop-location'
-import { ResourceAlreadyExistsError } from 'src/domain/core/application/@errors/resource-already-exists.error'
+import { ResourceAlreadyExistsError } from 'src/domain/shared/@errors/resource-already-exists.error'
 
 const registerTabletopLocationBodySchema = z.object({
   tabletopId: z.string(),

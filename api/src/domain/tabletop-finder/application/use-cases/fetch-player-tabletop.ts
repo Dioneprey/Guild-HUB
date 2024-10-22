@@ -1,7 +1,7 @@
 import { Either, left, right } from 'src/core/either'
 import { Injectable } from '@nestjs/common'
 import { Tabletop } from 'src/domain/tabletop-finder/enterprise/entities/tabletop/tabletop'
-import { ResourceNotFoundError } from 'src/domain/core/application/@errors/resource-not-found.error'
+import { ResourceNotFoundError } from 'src/domain/shared/@errors/resource-not-found.error'
 import { PlayerRepository } from 'src/domain/core/application/repositories/player-repository'
 import { TabletopRepository } from '../repositories/tabletop-repository'
 

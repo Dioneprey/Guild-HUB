@@ -16,7 +16,7 @@ import {
 } from 'src/domain/tabletop-finder/enterprise/entities/tabletop/tabletop'
 import { CurrentUser } from 'src/infra/auth/current-user.decorator'
 import { UserPayload } from 'src/infra/auth/jwt.strategy'
-import { ResourceAlreadyExistsError } from 'src/domain/core/application/@errors/resource-already-exists.error'
+import { ResourceAlreadyExistsError } from 'src/domain/shared/@errors/resource-already-exists.error'
 
 const registerTabletopBodySchema = z.object({
   name: z.string(),

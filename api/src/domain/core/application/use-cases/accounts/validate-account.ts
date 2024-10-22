@@ -1,9 +1,9 @@
 import { Either, left, right } from 'src/core/either'
 import { Injectable } from '@nestjs/common'
 import { PlayerRepository } from '../../repositories/player-repository'
-import { ResourceNotFoundError } from '../../@errors/resource-not-found.error'
+import { ResourceNotFoundError } from '../../../../shared/@errors/resource-not-found.error'
 import { TokenRepository } from '../../repositories/token-repository'
-import { ForbiddenActionError } from '../../@errors/forbidden-action.error'
+import { ForbiddenActionError } from '../../../../shared/@errors/forbidden-action.error'
 
 interface ValidateAccountUseCaseRequest {
   registrationValidateToken: string

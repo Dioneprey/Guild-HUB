@@ -3,7 +3,6 @@ import { Server } from 'socket.io'
 
 @WebSocketGateway({
   cors: '*',
-  namespace: '/io',
 })
 export class UploadGateway {
   @WebSocketServer() server: Server

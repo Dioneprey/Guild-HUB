@@ -3,8 +3,8 @@ import { GenderOptions } from '../../../enterprise/player/player'
 import { Injectable } from '@nestjs/common'
 import { PlayerRepository } from '../../repositories/player-repository'
 import { HashGenerator } from '../../cryptography/hash-generator'
-import { ResourceNotFoundError } from '../../@errors/resource-not-found.error'
-import { ResourceAlreadyExistsError } from '../../@errors/resource-already-exists.error'
+import { ResourceNotFoundError } from '../../../../shared/@errors/resource-not-found.error'
+import { ResourceAlreadyExistsError } from '../../../../shared/@errors/resource-already-exists.error'
 
 interface UpdatePlayerUseCaseRequest {
   playerId: string

@@ -16,14 +16,14 @@ import {
   FILES_UPLOAD_QUEUE,
   FilesUploadProcessor,
 } from './processor/upload-files.processor'
-import { EventsModule } from 'src/infra/events/events.module'
+import { SocketModule } from 'src/infra/socket/socket.module'
 
 @Module({
   imports: [
     forwardRef(() => HttpModule),
     DatabaseModule,
     MailModule,
-    EventsModule,
+    SocketModule,
     BullModule.forRootAsync({
       imports: [EnvModule],
       inject: [EnvService],

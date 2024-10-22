@@ -1,10 +1,10 @@
 import { Either, left, right } from 'src/core/either'
-import { ImageCouldNotBeSentError } from '../@errors/image-could-not-be-send.error'
+import { ImageCouldNotBeSentError } from '../../../shared/@errors/image-could-not-be-send.error'
 import { Injectable } from '@nestjs/common'
 import { Uploader } from '../storage/uploader'
 import { FileRepository } from '../repositories/file.repository'
 import { File } from 'src/domain/core/enterprise/file'
-import { verifyMediaType } from '../utils/verify-media-format'
+import { verifyMediaType } from 'src/domain/shared/utils/verify-media-format'
 
 interface UploadFileUseCaseRequest {
   fileName: string

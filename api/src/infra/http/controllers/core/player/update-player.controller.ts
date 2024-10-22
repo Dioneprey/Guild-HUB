@@ -12,7 +12,7 @@ import { UpdatePlayerUseCase } from 'src/domain/core/application/use-cases/playe
 import { GenderOptions } from 'src/domain/core/enterprise/player/player'
 import { CurrentUser } from 'src/infra/auth/current-user.decorator'
 import { UserPayload } from 'src/infra/auth/jwt.strategy'
-import { ResourceAlreadyExistsError } from 'src/domain/core/application/@errors/resource-already-exists.error'
+import { ResourceAlreadyExistsError } from 'src/domain/shared/@errors/resource-already-exists.error'
 
 const updatePlayerBodySchema = z.object({
   playerData: z.object({

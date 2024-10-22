@@ -11,7 +11,7 @@ import { ZodValidationPipe } from 'src/infra/http/pipes/zod-validation.pipe'
 
 import { z } from 'zod'
 import { Public } from 'src/infra/auth/public'
-import { WrongCredentialsError } from 'src/domain/core/application/@errors/wrong-credentials.error'
+import { WrongCredentialsError } from 'src/domain/shared/@errors/wrong-credentials.error'
 import { CredentialsAuthenticateUseCase } from 'src/domain/core/application/use-cases/sessions/credentials-authenticate'
 
 const CredentialsAuthenticateBodyBodySchema = z.object({

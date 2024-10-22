@@ -10,7 +10,7 @@ import {
 import { Public } from 'src/infra/auth/public'
 import { ZodValidationPipe } from 'src/infra/http/pipes/zod-validation.pipe'
 import { RegisterCredentialsAccountUseCase } from 'src/domain/core/application/use-cases/accounts/register-credentials-account'
-import { ResourceAlreadyExistsError } from 'src/domain/core/application/@errors/resource-already-exists.error'
+import { ResourceAlreadyExistsError } from 'src/domain/shared/@errors/resource-already-exists.error'
 
 const registerCredentialsAccountBodySchema = z.object({
   name: z.string(),

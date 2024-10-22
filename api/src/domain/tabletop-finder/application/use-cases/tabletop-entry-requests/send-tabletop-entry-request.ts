@@ -2,10 +2,11 @@ import { Either, left, right } from 'src/core/either'
 import { Injectable } from '@nestjs/common'
 import { TabletopEntryRequest } from 'src/domain/tabletop-finder/enterprise/entities/tabletop/tabletop-entry-request'
 import { UniqueEntityID } from 'src/core/entities/unique-entity-id'
-import { ResourceAlreadyExistsError } from 'src/domain/core/application/@errors/resource-already-exists.error'
-import { ResourceNotFoundError } from 'src/domain/core/application/@errors/resource-not-found.error'
+import { ResourceAlreadyExistsError } from 'src/domain/shared/@errors/resource-already-exists.error'
+import { ResourceNotFoundError } from 'src/domain/shared/@errors/resource-not-found.error'
 import { TabletopEntryRequestRepository } from '../../repositories/tabletop-entry-request-repository'
 import { TabletopRepository } from '../../repositories/tabletop-repository'
+import { NoAvailableSlotsError } from 'src/domain/shared/@errors/no-available-slots.error'
 
 interface SendTabletopEntryRequestUseCaseRequest {
   playerId: string
@@ -13,7 +14,7 @@ interface SendTabletopEntryRequestUseCaseRequest {
 }
 
 type SendTabletopEntryRequestUseCaseResponse = Either<
-  ResourceNotFoundError | ResourceAlreadyExistsError,
+  ResourceNotFoundError | ResourceAlreadyExistsError | NoAvailableSlotsError,
   undefined
 >
 
@@ -32,6 +33,9 @@ export class SendTabletopEntryRequestUseCase {
       this.tabletopRepository.findByUniqueField({
         key: 'id',
         value: tabletopId,
+        include: {
+          tabletopPlayers: true,
+        },
       }),
       this.tabletopEntryRequestRepository.findInTabletopByPlayerId({
         playerId,
@@ -47,6 +51,14 @@ export class SendTabletopEntryRequestUseCase {
       return left(
         new ResourceAlreadyExistsError('Entry request already exists'),
       )
+    }
+
+    const tabletopHasOpenSlots =
+      Number(tabletopExists?.playersLimit) <
+      Number(tabletopExists.tabletopPlayers?.length)
+
+    if (!tabletopHasOpenSlots) {
+      return left(new NoAvailableSlotsError())
     }
 
     const entryRequest = TabletopEntryRequest.create({

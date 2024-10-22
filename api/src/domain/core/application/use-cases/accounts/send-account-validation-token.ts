@@ -1,7 +1,7 @@
 import { Either, left, right } from 'src/core/either'
 import { Injectable } from '@nestjs/common'
 import { PlayerRepository } from '../../repositories/player-repository'
-import { ResourceNotFoundError } from '../../@errors/resource-not-found.error'
+import { ResourceNotFoundError } from '../../../../shared/@errors/resource-not-found.error'
 import { SendEmail } from '../../mail/send-email'
 import { env } from '../../env/domain-env'
 import { InjectQueue } from '@nestjs/bull'

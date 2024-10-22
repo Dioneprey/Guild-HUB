@@ -11,7 +11,6 @@ import { SocketService } from '../socket.service'
 
 @WebSocketGateway({
   cors: '*',
-  namespace: '/io',
 })
 export class SocketGateway implements OnGatewayConnection {
   @WebSocketServer() server: Server

@@ -1,4 +1,4 @@
-import { FileType } from '../../enterprise/file'
+import { FileType } from 'src/domain/core/enterprise/file'
 
 export function verifyMediaType(mimeType: string) {
   if (mimeType.startsWith('image/')) {

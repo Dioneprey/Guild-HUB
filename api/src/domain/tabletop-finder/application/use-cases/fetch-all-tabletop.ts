@@ -1,11 +1,11 @@
-import { Either, right } from 'src/core/either'
+import { Either, left, right } from 'src/core/either'
 import { Injectable } from '@nestjs/common'
 import {
   Tabletop,
   TabletopCadence,
   TabletopExpertise,
 } from 'src/domain/tabletop-finder/enterprise/entities/tabletop/tabletop'
-import { ResourceNotFoundError } from 'src/domain/core/application/@errors/resource-not-found.error'
+import { ResourceNotFoundError } from 'src/domain/shared/@errors/resource-not-found.error'
 import { TabletopRepository } from '../repositories/tabletop-repository'
 
 interface FetchAllTabletopsUseCaseRequest {
@@ -55,7 +55,8 @@ export class FetchAllTabletopsUseCase {
           tabletopPlayers: false,
         },
       })
-
+    return left(new ResourceNotFoundError(`oi`))
+    throw new Error('')
     return right({
       tabletops: data,
       pageIndex,
